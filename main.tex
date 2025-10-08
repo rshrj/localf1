@@ -111,8 +111,55 @@ We can eliminate the constant term by shifting $y \to y - \frac{1}{m}$,
 \begin{equation}
   f(x, y) = x^2 y + x y^2 - \frac{x^2}{m} - \frac{(2u + m) x y}{u m} + m y + \frac{(m + u)x}{m^2 u}.
 \end{equation}
-We follow a series of affine transformations on $x$ and $y$ known as Nagell's algorithm as described in \cite{ConnellHandbook}.
+We perform a series of affine transformations on $x$ and $y$ known as Nagell's algorithm as described in \cite{ConnellHandbook} to bring the curve into Weierstrass form. Note that in order for the curve to be elliptic, $m$ and $u$ cannot vanish simultaneously. Since we would be interested in the $m \to 0$ limit (Local $\mathbb{P}^2$), we switch $x \leftrightarrow y$ and assume generically that $m + u \neq 0$. We thus have
+\begin{equation}
+  f(x, y) = x^2 y + x y^2 - \frac{y^2}{m} - \frac{(2u + m) x y}{u m} + m x + \frac{(m + u)y}{m^2 u}.
+\end{equation}
+Let us homogenize by writing $x = X/Z$, $y = X/Z$ and clearing denominators. We get,
+\begin{equation}
+  F(X, Y, Z) = F_3(X, Y) + F_2(X, Y) Z + F_1(X, Y) Z^2.
+\end{equation}
+where
+\begin{align}
+  F_3 &= X^2 Y + X Y^2, \\
+  F_2 &= -\frac{(2u + m)}{u m} X Y - \frac{Y^2}{m}, \\
+  F_1 &= m X + \frac{(m+u)}{m^2 u}  Y.
+\end{align}
+Note that the point $P = [0, 0, 1]$ is rational by construction (after eliminating the constant term). The tangent at $P$ is given by $F_1 = m X + \frac{(m+u)}{m^2 u} Y = 0$ and meets the curve at another point $Q$. We also define $e_i = F_i\qty(\frac{(m+u)}{m^2 u}, -m)$ ($e_1 = 0$ by definition) ---
+\begin{align}
+  e_2 &= \frac{2}{m^2}+\frac{3}{m u}-m+\frac{1}{u^2}, \\
+  e_3 &= \frac{(m+u) \left(u-\frac{m+u}{m^3}\right)}{u^2}.
+\end{align}
+The coordinates of $Q$ are given by
+\begin{equation}
+  \begin{split}
+    Q = \Big[& \frac{(m+u) \left(m^3 u^2-m^2-3 m u-2 u^2\right)}{m^4 u^3}, \\
+    &-m^2+\frac{m}{u^2}+\frac{2}{m}+\frac{3}{u},\quad \frac{(m+u) \left(u-\frac{m+u}{m^3}\right)}{u^2} \Big].
+  \end{split}
+\end{equation}
+For the curve to be elliptic, $e_2$ and $e_3$ cannot vanish simultaneously. On the real section of the $m$ -- $u$ plane, these conditions are plotted in \cref{fig:e2e3Vanish}.
 
+\begin{figure}[htbp]
+  \centering
+  % first subfigure
+  \begin{subfigure}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/e3Vanish}
+    \caption{$e_3 = 0$}
+    \label{fig:e3Vanish}
+  \end{subfigure}
+  \hfill
+  % second subfigure
+  \begin{subfigure}[t]{0.4\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/e2Vanish}
+    \caption{$e_2 = 0$}
+    \label{fig:e2Vanish}
+  \end{subfigure}
+
+  \caption{The loci where $e_2$, $e_3$ vanish.}
+  \label{fig:e2e3Vanish}
+\end{figure}
 
 \printbibliography
 
