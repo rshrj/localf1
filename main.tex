@@ -1,0 +1,119 @@
+\documentclass[12pt, a4paper]{article}
+
+% Fonts
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+% Math, Physics
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{physics, tensor}
+
+% Margins and spacing
+\usepackage{geometry}
+\geometry{left=25mm, right=25mm, top=30mm, bottom=30mm, headheight=15pt}
+\usepackage{setspace}
+\singlespacing % or \onehalfspacing or \doublespacing
+
+% Misc
+\usepackage[none]{hyphenat}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% Titles
+\usepackage{titlesec}
+\titleformat
+{\section} % command
+{\sffamily\bfseries\Large} % format
+{\thesection.} % label
+{1ex} % sep
+{} % before-code
+[] % after-code
+
+% Title page
+\usepackage{titling}
+\pretitle{\LARGE\bfseries\sffamily\noindent}
+\posttitle{
+    \par
+    \noindent\makebox[\linewidth]{\rule{\linewidth}{1pt}}
+    \vspace{2ex}
+}
+\preauthor{
+    \par\large\bfseries\sffamily\noindent
+}
+\postauthor{\par}
+\predate{\par\vspace{1ex}}
+\postdate{\par\vspace{2ex}}
+
+% Headers and Footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[L]{Title or Section}
+\fancyhead[R]{Page \thepage}
+\fancyfoot[C]{}
+
+% References
+\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex}
+\usepackage{csquotes}
+\addbibresource{references/figures.bib}
+\addbibresource{references/papers.bib}
+
+% Figures
+\usepackage{graphicx, float}
+\graphicspath{{figures/}}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Tables
+\usepackage{booktabs}
+
+\title{Notes on Local \texorpdfstring{$\mathbb{F}_1$}{F1}}
+\author{Rishi Raj}
+\date{
+    \noindent\textit{Sorbonne Université, Paris, FR}\\[0.2cm]
+    \href{mailto:rishiraj.1012exp@gmail.com}{\texttt{rishi.raj@sorbonne-universite.fr}}
+}
+
+\numberwithin{equation}{section}
+
+\renewenvironment{abstract}
+ {\par\noindent\textbf{\abstractname}\ \ignorespaces\\[1ex]}
+ {\par\medskip}
+
+\begin{document}
+
+\thispagestyle{empty}
+\maketitle
+
+\begin{abstract}
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tempor orci eu lobortis elementum nibh tellus. Varius vel pharetra vel turpis. Viverra maecenas accumsan lacus vel facilisis volutpat est. Non curabitur gravida arcu ac tortor. Mattis nunc sed blandit libero volutpat sed cras ornare. Etiam tempor orci eu lobortis. Netus et malesuada fames ac turpis egestas maecenas pharetra. Velit dignissim sodales ut eu sem integer. Non arcu risus quis varius quam quisque id diam vel. Lacus suspendisse faucibus interdum posuere lorem ipsum. Diam phasellus vestibulum lorem sed risus. Etiam sit amet nisl purus. Ut sem nulla pharetra diam. Nibh nisl condimentum id venenatis a.
+\end{abstract}
+
+\noindent\today
+
+\tableofcontents
+
+\setlength{\parindent}{1ex}
+\setlength{\parskip}{2ex}
+\raggedright
+
+\section{Local \texorpdfstring{$\mathbb{F}_1$}{F1} in Weierstrass form}
+We start from the equation of local $\mathbb{F}_1$ defined as the locus in $\mathbb{C}^2$,
+\begin{equation}
+  x + y + \frac{1}{x y} + \frac{m}{x} = \frac{1}{u},
+\end{equation}
+where $m$ and $u$ are a priori free complex parameters. After multiplying by $x y$, we have
+\begin{equation}
+  f(x, y) = x^2 y + x y^2 - \frac{x y}{u} + m y + 1 = 0.
+\end{equation}
+We can eliminate the constant term by shifting $y \to y - \frac{1}{m}$,
+\begin{equation}
+  f(x, y) = x^2 y + x y^2 - \frac{x^2}{m} - \frac{(2u + m) x y}{u m} + m y + \frac{(m + u)x}{m^2 u}.
+\end{equation}
+We follow a series of affine transformations on $x$ and $y$ known as Nagell's algorithm as described in \cite{ConnellHandbook}.
+
+
+\printbibliography
+
+\end{document}
