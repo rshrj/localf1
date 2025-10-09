@@ -137,7 +137,7 @@ The coordinates of $Q$ are given by
     &-m^2+\frac{m}{u^2}+\frac{2}{m}+\frac{3}{u},\quad \frac{(m+u) \left(u-\frac{m+u}{m^3}\right)}{u^2} \Big].
   \end{split}
 \end{equation}
-For the curve to be elliptic, $e_2$ and $e_3$ cannot vanish simultaneously. On the real section of the $m$ -- $u$ plane, these conditions are plotted in \cref{fig:e2e3Vanish}.
+For the curve to be elliptic, $e_2$ and $e_3$ cannot vanish simultaneously which is true provided $m$ and $u$ don't vanish simultaneously. On the real section of the $m$ -- $u$ plane, these conditions are plotted in \cref{fig:e2e3Vanish}.
 
 \begin{figure}[htbp]
   \centering
@@ -160,6 +160,48 @@ For the curve to be elliptic, $e_2$ and $e_3$ cannot vanish simultaneously. On t
   \caption{The loci where $e_2$, $e_3$ vanish.}
   \label{fig:e2e3Vanish}
 \end{figure}
+
+Assuming generically that $e_3 \neq 0$, we make the coordinate change
+\begin{align}
+  X &= X' + \frac{m u \left(\frac{2}{m^2}+\frac{3}{m u}-m+\frac{1}{u^2}\right)}{m+u-m^3 u} Z' \\
+  Y &= Y' - \frac{m^2 \left(m^3 \left(-u^2\right)+m^2+3 m u+2 u^2\right)}{(m+u) \left(m+u-m^3 u\right)} Z' \\
+  Z &= Z'
+\end{align}
+which shifts $Q$ to the origin, $[X', Y', Z'] = [0, 0, 1]$. We now shift back to affine coordinates $x' = X'/Z'$, $y' = Y'/Z'$. The curve can now be written as
+\begin{equation}
+  f'(x', y') = f_3'(x', y') + f_2'(x', y') + f_1'(x', y')
+\end{equation}
+where
+\begin{align}
+  f_3' \ = \ & x'^2 y' + x' y'^2 \\
+  f_2' \ = \ & \frac{(m+u)^2}{m u \left(m+u-m^3 u\right)} y'^2 + \qty(\frac{2 \left(m+u-m^3 u\right)}{m (m+u)}+\frac{1}{u}) x' y' \notag \\
+  & + \frac{m^2 \left(-\left(m^3-2\right) u^2+m^2+3 m u\right)}{(m+u) \left(\left(m^3-1\right) u-m\right)} x'^2 \\
+  f_1' \ = \ & \frac{(m+u) \left(2 m^6 u^2-m^5-5 m^4 u-4 m^3 u^2+m^2+2 m u+u^2\right)}{m^2 u \left(m+u-m^3 u\right)^2} y' \notag \\
+  & + \frac{m}{u (m+u)^2 \left(m+u-m^3 u\right)^2} \bigl( -m^5-6 m^4 u+\left(m^3-15\right) m^3 u^2 \notag \\
+  & \qquad -3 \left(m^6-3 m^3+4\right) m u^4+\left(6 m^3-19\right) m^2 u^3 \notag \\
+  & \qquad +\left(m^9-3 m^6+4 m^3-3\right) u^5 \bigr) x'
+\end{align}
+We define $\phi_i = f_i'(1, t)$ and
+\begin{equation}
+  \begin{split}
+    \delta &= \phi_2^2 - 4 \phi_1 \phi_3 \\
+    &= \frac{(m+u)^4}{m^2 u^2 \left(m+u-m^3 u\right)^2} t^4 \\
+    & \quad - \frac{2 (m+u) \left(-\left(5 m^3+1\right) u^2-m \left(m^3+2\right) u-m^2+2 m^2 \left(m^3-2\right) u^3\right)}{m u^2 \left(m+u-m^3 u\right)^2} t^3 \\
+    & \quad + \frac{1}{u^2 \left(m+u-m^3 u\right)^2} \bigl( 2 m \left(2 m^3+1\right) u+m^2+2 m \left(-2 m^6+m^3+4\right) u^4 \\
+    & \qquad +\left(m^6+18 m^3+1\right) u^2+2 m^2 \left(m^3+11\right) u^3 \bigr) t^2 \\
+    & \quad + \frac{2 m}{u (m+u) \left(m+u-m^3 u\right)^2} \bigl( m^4+\left(m^3+4\right) m^3 u+2 \left(-m^6+m^3+1\right) u^4 \\
+    & \qquad +\left(-3 m^6+7 m^3+6\right) m u^3+\left(6 m^3+7\right) m^2 u^2 \bigr) t \\
+    & \quad + \frac{m^4 \left(-\left(m^3-2\right) u^2+m^2+3 m u\right)^2}{(m+u)^2 \left(m+u-m^3 u\right)^2}
+  \end{split}
+\end{equation}
+Note that $\delta = 0$ whenever $t$ is the slope of a tangent to the curve that passes through $Q$, in particular for $t = -\frac{m^3 u}{m+u}$ (can be checked). We write $t = \frac{1}{\tau} -\frac{m^3 u}{m+u}$ and define $\rho = \tau^4 \delta$ which is a cubic in $\tau$
+\begin{equation}
+  \begin{split}
+    \rho \ = \ &\frac{4 m \left(m+u-m^3 u\right)}{m+u} \tau^3 + \qty(8 m+\frac{1}{u^2}) \tau^2 + \frac{2 (m+u) \left(2 m^2 u^2+m+u\right)}{m u^2 \left(m+u-m^3 u\right)} \tau \\
+    & + \frac{(m+u)^4}{m^2 u^2 \left(m+u-m^3 u\right)^2}
+  \end{split}
+\end{equation}
+
 
 \printbibliography
 
