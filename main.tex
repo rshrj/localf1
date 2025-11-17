@@ -1,9 +1,27 @@
-\documentclass[12pt, a4paper]{article}
+\documentclass[11pt, a4paper]{article}
 
-% Fonts
-\usepackage[english]{babel}
-\usepackage{lmodern}
 \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+% --- Fonts --------------------------------------------------------------------
+% Serif (main text)
+\usepackage{erewhon}
+
+% Sans (headings, small UI, captions). sfdefault -> \sffamily becomes default sans.
+\usepackage[sfdefault]{FiraSans}
+
+% Monospace (code/listings)
+\usepackage{FiraMono}
+
+% Math font: newtxmath is a dependable pdfLaTeX math package.
+% Some useful options you can try: upint, varg, slantedGreek, smbb, cmintegrals.
+% Example: \usepackage[upint,slantedGreek]{newtxmath}
+\usepackage[upint]{newtxmath}
+
+% Micro-typography (always recommended for professional docs)
+\usepackage{microtype}
+\microtypesetup{protrusion=true,expansion=true}
 
 % Math, Physics
 \usepackage{mathtools}
@@ -17,8 +35,13 @@
 \singlespacing % or \onehalfspacing or \doublespacing
 
 % Misc
+\usepackage{xcolor}
 \usepackage[none]{hyphenat}
-\usepackage[hidelinks]{hyperref}
+\usepackage[colorlinks=true,
+  linkcolor=black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+]{hyperref}
 \usepackage{cleveref}
 
 % Titles
@@ -54,10 +77,38 @@
 \fancyfoot[C]{}
 
 % References
-\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex}
+\usepackage[
+  backend=biber,
+  style=numeric-comp,
+  sorting=none,
+  giveninits=true,
+  doi=false,
+  isbn=false
+]{biblatex}
 \usepackage{csquotes}
 \addbibresource{references/figures.bib}
 \addbibresource{references/papers.bib}
+% 1. If there is an arXiv/eprint, hide URL + urldate
+\AtEveryBibitem{%
+  \iffieldundef{eprint}
+    {}
+    {\clearfield{url}\clearfield{urldate}}%
+}
+
+% 3. Make labels ([1], [2], …) bold and aligned
+\DeclareFieldFormat{labelnumber}{\textbf{#1}}
+\setlength{\biblabelsep}{0.75em}
+
+% 4. Slightly smaller, tighter bib font
+\renewcommand*{\bibfont}{\small}
+
+% 5. Don’t print “URL:” in front of URLs (when they appear)
+\DeclareFieldFormat{url}{\url{#1}}
+
+
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\Li}{\operatorname{Li}}
+
 
 % Figures
 \usepackage{graphicx, float}
@@ -98,7 +149,7 @@
 \setlength{\parskip}{2ex}
 \raggedright
 
-\section{Local \texorpdfstring{$\mathbb{F}_1$}{F1} in Weierstrass form}
+\section{Nagell's algorithm on \texorpdfstring{$\mathbb{F}_1$}{F1}}
 We start from the equation of local $\mathbb{F}_1$ defined as the locus in $\mathbb{C}^2$,
 \begin{equation}
   x + y + \frac{1}{x y} + \frac{m}{x} = \frac{1}{u},
@@ -216,6 +267,225 @@ with
   g_3 &= -\frac{8}{27} \qty(-64 m^3+\frac{48 m^2}{u^2}-\frac{12 m}{u^4}+\frac{144 m}{u}+\frac{1}{u^6}-\frac{36}{u^3}+216).
 \end{align}
 
-\printbibliography
+
+\section{Testing N\'eron \texorpdfstring{$N$}{N}-gon result for \texorpdfstring{$\mathbb{F}_0$}{F0}}
+
+We write the mirror curve to $\mathbb{F}_0$ as the following embedding in $\mathbb{C}^* \times \mathbb{C}^* \ni (w, X)$
+\begin{equation}
+  w + \frac{1}{w} + R^2 \qty(X + \frac{1}{X} + U) = 0.
+\end{equation}
+We can write this curve as a quartic by introducing $Y = -R^2 X \qty(w - \frac{1}{w})$,
+\begin{equation}\label{eqn:F0quartic}
+  Y^2 = f_4(X) = (X^2 + U X + 1)^2 - 4 X^2 R^2.
+\end{equation}
+The discriminant $\delta$ turns out to be (upto a numerical constant)
+\begin{equation}
+  \delta = R^8 \, \Delta(U, R), \quad \Delta(U, R) = 16 R^8-8 R^4 \left(U^2+4\right)+\left(U^2-4\right)^2.
+\end{equation}
+The equation $\Delta(U, R) = 0$ has four solutions
+\begin{equation} \label{eqn:delt0sol}
+  U_1 = 2 - 2R^2, \quad U_2 = -2 + 2R^2, \quad U_3 = -2 - 2R^2, \quad U_4 = 2 + 2 R^2.
+\end{equation} 
+In the real $U-R$ slice, the condition is plotted in \cref{fig:Delt0}. 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.7\textwidth]{Delt0}
+  \caption{The locus $\Delta(U, R) = 0$}
+  \label{fig:Delt0}
+\end{figure}
+
+\subsection{Cubic Form}
+We can turn the quartic in \cref{eqn:F0quartic} to cubic form by the following rational transformation
+\begin{equation}
+  X = \frac{a x + b}{c x + d}, \quad Y = \frac{a d - b c}{(c x + d)^2} y.
+\end{equation}
+The curve now looks like
+\begin{equation}
+  Y^2 = \frac{(a d - b c)^2}{(c x + d)^4} y^2 = f_4\qty(\frac{a x + b}{c x + d}).
+\end{equation}
+This implies,
+\begin{equation}
+  (a d - b c)^2 y^2 = f_4\qty(\frac{a x + b}{c x + d})(c x + d)^4 = c^4 f_4\qty(\frac{a}{c}) x^4 + f_3(x),
+\end{equation}
+where $f_3$ is a cubic polynomial in $x$ whose coefficient of $x^3$ is directly proportional to $f_4'(a/c)$. It follows that if we set $a/c$ to be a simple root of $f_4$ and $a d - b c = 1$ then we obtain the desired cubic form. We can then scale and translate so as to get the cubic in the usual Weierstrass form: $y^2 = 4 x^3 - g_2 x - g_3$.
+
+Performing this procedure on the quartic in \cref{eqn:F0quartic}, one gets
+\begin{equation}
+  \begin{aligned}
+    g_2 &= \frac{1}{12} \left(16 R^8-8 R^4 \left(U^2+2\right)+\left(U^2-4\right)^2\right), \\
+    g_3 &= \frac{1}{216} \left(4 R^4-U^2+4\right) \left(16 R^8-8 R^4 \left(U^2+5\right)+\left(U^2-4\right)^2\right).
+  \end{aligned}
+\end{equation}
+We also find the $j$-invariant defined as $j = \frac{g_2^3}{g_2^3 - g_3^2}$,
+\begin{equation}
+  j = \frac{\left(16 R^8-8 R^4 \left(U^2+2\right)+\left(U^2-4\right)^2\right)^3}{R^8 \left(16 R^8-8 R^4 \left(U^2+4\right)+\left(U^2-4\right)^2\right)}.
+\end{equation}
+
+
+\subsection{Nodal curve}
+
+As shown in \cref{eqn:delt0sol}, the curve in \cref{eqn:F0quartic} develops four distinct branches of nodes. These correspond to points in parameter space where the elliptic curve degenerates. Following the procedure outlined in \cite{kerr2008}, we rationally parametrize each nodal curve using a parameter $z$, such that the limits $z \to 0$ and $z \to \infty$ map to the node of the curve.
+
+The quartic polynomial in \cref{eqn:F0quartic} takes the following forms along the four branches, each associated with a corresponding node:
+\begin{equation}
+  \begin{aligned}
+    U_1 &= 2 - 2R^2, &\qquad f_4(X) = (X+1)^2 \left(X^2 + \qty(2-4 R^2) X+1\right), && X_0 = -1, \\
+    U_2 &= -2 + 2R^2, &\qquad f_4(X) = (X-1)^2 \left(X^2 + \qty(4 R^2-2) X+1\right), && X_0 = 1, \\
+    U_3 &= -2 - 2R^2, &\qquad f_4(X) = (X-1)^2 \left(X^2+ \qty(-4 R^2-2) X+1\right), && X_0 = 1, \\
+    U_4 &= 2 + 2 R^2, &\qquad f_4(X) = (X+1)^2 \left(X^2+\qty(4 R^2+2) X+1\right), && X_0 = -1.
+  \end{aligned}
+\end{equation}
+
+To obtain a rational parametrization for the first branch ($U_1$), it suffices to find a rational expression for $X$ such that $\left(X^2 + \qty(2-4 R^2) X+1\right)$ becomes a perfect square. One convenient choice is
+\begin{equation}
+  X = \frac{2 \left(-2 R^2-t+1\right)}{t^2-1},
+  \qquad
+  \Rightarrow \qquad
+  \left(X^2 + \qty(2-4 R^2) X+1\right) = 
+  \qty(\frac{\left(4 R^2-2\right) t+t^2+1}{t^2-1})^2.
+\end{equation}
+The remaining parametrizations follow from the transformations $R^2 \to -R^2$ and $X \to -X$:
+\begin{equation}
+\begin{aligned}
+  X_1 &= \frac{2 \left(-2 R^2-t+1\right)}{t^2-1}, &\quad
+  Y_1 = \frac{-16 R^4 t+4 R^2 (t-1)^3+(t-1)^4}{\left(t^2-1\right)^2}, \\
+  X_2 &= -\frac{2 \left(-2 R^2-t+1\right)}{t^2-1}, &\quad
+  Y_2 = \frac{-16 R^4 t+4 R^2 (t-1)^3+(t-1)^4}{\left(t^2-1\right)^2}, \\
+  X_3 &= -\frac{2 \left(2 R^2-t+1\right)}{t^2-1}, &\quad
+  Y_3 = \frac{-16 R^4 t-4 R^2 (t-1)^3+(t-1)^4}{\left(t^2-1\right)^2}, \\
+  X_4 &= \frac{2 \left(2 R^2-t+1\right)}{t^2-1}, &\quad
+  Y_4 = \frac{-16 R^4 t-4 R^2 (t-1)^3+(t-1)^4}{\left(t^2-1\right)^2}.
+\end{aligned}
+\end{equation}
+Each pair $(X_i, Y_i)$ satisfies \cref{eqn:F0quartic} for the corresponding value of $U_i$.
+
+Returning to the original toric coordinates $(X, w)$, the parametrizations become
+\begin{equation}
+  \begin{aligned}
+  w_1 &= \frac{(t-1) \left(2 R^2+t-1\right)}{2 R^2 (t+1)}, \quad
+  w_2 = -\frac{(t-1) \left(2 R^2+t-1\right)}{2 R^2 (t+1)}, \\
+  w_3 &= \frac{(t-1) \left(2 R^2-t+1\right)}{2 R^2 (t+1)}, \quad
+  w_4 = -\frac{(t-1) \left(2 R^2-t+1\right)}{2 R^2 (t+1)}.
+  \end{aligned}
+\end{equation}
+
+This yields a rational parametrization of the nodal curve in toric coordinates, though the node still lies at a finite distance rather than at $0$ or $\infty$. To remedy this, we perform one final change of variables. For $U_1$, the node at $X_0 = -1$ corresponds to $t = 1 \pm 2R$, so we define
+\begin{equation}
+  z = \frac{t - (1-2R)}{t - (1+2R)},
+\end{equation}
+similarly, for $U_2$. For $U_3$ and $U_4$, the node corresponds to $t = 1 \pm 2 \ii R$, so we define
+\begin{equation}
+  z = \frac{t - (1-2\ii R)}{t - (1+2\ii R)}.
+\end{equation}
+Therefore, for each branch we get $X$ and $w$ in the $z$-parametrization:
+\begin{equation}
+  \begin{aligned}
+    X_1 &= -\frac{(z-1) (R (z-1)+z+1)}{(z+1) (R z+R+z-1)}, &\quad
+    w_1 = \frac{(z+1) (R (z-1)+z+1)}{(z-1) (R z+R+z-1)}, \\
+    X_2 &= \frac{(z-1) (R (z-1)+z+1)}{(z+1) (R z+R+z-1)}, &\quad
+    w_2 = -\frac{(z+1) (R (z-1)+z+1)}{(z-1) (R z+R+z-1)}, \\
+    X_3 &= \frac{(z-1) (R (z-1)+i (z+1))}{(z+1) (R (z+1)+i (z-1))}, &\quad
+    w_3 = \frac{(z+1) (R (z-1)+i (z+1))}{(z-1) (R (z+1)+i (z-1))}, \\
+    X_4 &= -\frac{(z-1) (R (z-1)+i (z+1))}{(z+1) (R (z+1)+i (z-1))}, &\quad
+    w_4 = -\frac{(z+1) (R (z-1)+i (z+1))}{(z-1) (R (z+1)+i (z-1))}.
+  \end{aligned}
+\end{equation}
+
+Applying the method of \cite[Section~4.2]{kerr2008}, we find for the first branch the exponents and roots of the linear factors (with $i=1$, $j = 1,\dots,4$):
+\begin{equation}
+  \begin{aligned}
+    (d_j) &= (1, 1, -1, -1), &\quad (\alpha_j) = \qty(1,\frac{R-1}{R+1},-1,\frac{1-R}{R+1}), \\
+    (e_j) &= (1, 1, -1, -1), &\quad (\beta_j) = \qty(-1,\frac{R-1}{R+1},1,\frac{1-R}{R+1}).
+  \end{aligned}
+\end{equation}
+
+The (imaginary part of the) non-vanishing period at the conifold point is then
+\begin{equation}
+  \mathcal{P}(R) = \frac{1}{2\pi} \sum_{j, k} d_j e_k D_2\qty(\frac{\alpha_j}{\beta_k}),
+\end{equation}
+where $D_2(z)$ is the Bloch--Wigner function,
+\begin{equation}
+  D_2(z) = \Im\!\qty(\operatorname{Li}_2(z)) + \arg(1-z)\,\log\abs{z},
+\end{equation}
+and $\operatorname{Li}_2(z)$ denotes the ordinary dilogarithm \cite{zagier:dilogarithm}.
+
+We thus find, up to an overall sign,
+\begin{equation}
+  \mathcal{P}(R) = \frac{1}{\pi} \qty[-D_2\!\left(\frac{R+1}{1-R}\right)
+  + D_2\!\left(\frac{R+1}{R-1}\right)
+  + D_2\!\left(\frac{1-R}{R+1}\right)
+  - D_2\!\left(\frac{R-1}{R+1}\right)].
+\end{equation}
+Using the Bloch--Wigner identities \cite[Eq.~(3)]{zagier:dilogarithm},
+\begin{equation}
+  D_2(z) = D_2\!\qty(1-\frac{1}{z}) = D_2\!\qty(\frac{1}{1-z})
+  = -D_2\!\qty(\frac{1}{z}) = -D_2(1-z)
+  = -D_2\!\qty(\frac{-z}{1-z}),
+\end{equation}
+we note that
+\begin{equation}
+  D_2\!\qty(\frac{1-R}{1+R}) = -D_2\!\left(\frac{R+1}{1-R}\right),
+  \qquad
+  D_2\!\left(\frac{R-1}{R+1}\right) = -D_2\!\left(\frac{R+1}{R-1}\right),
+\end{equation}
+so that
+\begin{equation}\label{eqn:realPeriod}
+  \mathcal{P}(R) = \frac{2}{\pi}
+  \qty[D_2\!\left(\frac{R+1}{R-1}\right)
+  - D_2\!\left(\frac{R+1}{1-R}\right)].
+\end{equation}
+Since $D_2(\bar{z}) = -D_2(z)$, it follows that
+\begin{equation}
+  \mathcal{P}(R) = 0 \qquad \text{for real } R.
+\end{equation}
+
+Repeating the analysis for $U_2$ yields identical exponents and roots, and thus the same result. For $U_3$ and $U_4$, the change of variables is $t = \frac{-2 \ii R (z+1)+z-1}{z-1}$, giving
+\begin{equation}
+  \begin{aligned}
+    (d_j) &= (1, 1, -1, -1), &\quad
+    (\alpha_j) = \qty(1,\frac{R-\ii}{R+\ii},-1,\frac{\ii-R}{R+\ii}), \\
+    (e_j) &= (1, 1, -1, -1), &\quad
+    (\beta_j) = \qty(-1,\frac{R-\ii}{R+\ii},1,\frac{\ii-R}{R+\ii}).
+  \end{aligned}
+\end{equation}
+Hence,
+\begin{equation}\label{eqn:imagPeriod}
+  \begin{aligned}
+    \mathcal{P}(R)
+    &= \frac{1}{\pi}\qty[-D_2\!\left(\frac{R+i}{-R+i}\right)
+      + D_2\!\left(\frac{R+i}{R-i}\right)
+      + D_2\!\left(\frac{-R+i}{R+i}\right)
+      - D_2\!\left(\frac{R-i}{R+i}\right)] \\
+    &= \frac{2}{\pi} \qty[D_2\!\left(\frac{-R+i}{R+i}\right)
+      - D_2\!\left(\frac{R-i}{R+i}\right)].
+  \end{aligned}
+\end{equation}
+And this time we see that
+\begin{equation}
+  \mathcal{P}(R) = 0 \qquad \text{for imaginary } R.
+\end{equation}
+
+We want to now understand how (and/or if) the formulas \cref{eqn:realPeriod,eqn:imagPeriod} reproduce the formulas for the 'quantum volumes' in \cite[eq. (A.85) and eq. (A.107)]{LeFloch:2024cwl} which we copy below for reference after identifying $\lambda = e^{2\pi\ii m}$ and from the parametrization of the mirror curve, we identify $R = \lambda^\frac{1}{4} = e^{\ii \pi m/2}$,
+\begin{align}
+  \mathcal{V}(R) &= \frac{2 \ii}{\pi^2} \qty(\Li_2(-\ii R) - \Li_2(\ii R)), \\
+  \tilde{\mathcal{V}}(R) &= \frac{2 \ii}{\pi^2} \qty(\Li_2(-R) - \Li_2(R)) = \mathcal{V}(-\ii R).
+\end{align}
+
+\subsection{Full period}
+In fact, apart from the imaginary part of the period, \cite[eq. (4.12)]{kerr2008} also gives a formula for the full non-vanishing period at the conifold points. We copy it here
+\begin{equation}
+\begin{aligned}
+  \mathcal{Q} &= \frac{1}{2\pi} \sum_{j, k} d_j e_k \qty[ \Li_2\qty(\frac{\alpha_j}{\beta_k}) + \qty(\log \alpha_j - \log \beta_k) \log(1 - \frac{\alpha_j}{\beta_k}) ] \\
+  &\quad -\frac{1}{2\pi} \log y(0) \qty(\log x(0) - \log x(\infty))
+  + \log y(0) \sum_j d_j \log \alpha_j \\
+  &\quad - \log x(\infty) \sum_k e_k \log \beta_k.
+\end{aligned}
+\end{equation}
+where as before, $x(z)$ and $y(z)$ are rational parametrizations of the nodal curve in the original toric coordinates and the node corresponds to $z \to 0, \infty$.
+
+
+
+
+\printbibliography[title={References}]
 
 \end{document}

@@ -330,3 +330,7 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+working_copy/
+*.nb.pdf
