@@ -151,7 +151,7 @@
 
 \section{Nagell's algorithm on \texorpdfstring{$\mathbb{F}_1$}{F1}}
 We start from the equation of the local mirror of $\mathbb{F}_1$ defined as the elliptic curve,
-\begin{equation}
+\begin{equation}\label{eqn:F1localmirror}
   x + y + \frac{1}{x y} + \frac{m}{x} = \frac{1}{u},
 \end{equation}
 where $m$ and $u$ are a priori free complex parameters. After multiplying by $x y$, we have
@@ -270,9 +270,23 @@ with
 
 \subsection{Rational change of coordinates}
 
-We saw in the last section that Nagell's algorithm turns the local mirror of $\mathbb{F}_1$ into Weierstrass form but gives a very complicated transcendental change of coordinates. A simpler change of coordinates is given by
+We saw in the last section that Nagell's algorithm turns the local mirror of $\mathbb{F}_1$ into Weierstrass form but gives a very complicated transcendental change of coordinates. A simpler change of coordinates is given by \cite{Marino:LocalF1Notes},
 \begin{equation}
-  
+  \begin{aligned}
+    x &= \frac{36 u^2 (m+3 u)+6 X+\sqrt{2} Y-9}{6 u \left(12 m u^2+2 X-3\right)}, \\
+    y &= \frac{36 u^2}{-12 m u^2-2 X+3}.
+  \end{aligned}
+\end{equation}
+which also turns \cref{eqn:F1localmirror} into Weierstrass form $Y^2 = 4 X^3 - g_2 X - g_3$ with
+\begin{equation}\label{eqn:F1localmirrorg2g3}
+  \begin{aligned}
+    g_2 &= 27 \left(16 m^2 u^4-8 m u^2-24 u^3+1\right) \\
+    g_3 &= 27 \left(64 m^3 u^6-48 m^2 u^4-144 m u^5+12 m u^2-216 u^6+36 u^3-1\right)
+  \end{aligned}
+\end{equation}
+
+\begin{equation}
+  \ell!
 \end{equation}
 
 
