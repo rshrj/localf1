@@ -150,7 +150,7 @@
 \raggedright
 
 \section{Nagell's algorithm on \texorpdfstring{$\mathbb{F}_1$}{F1}}
-We start from the equation of local $\mathbb{F}_1$ defined as the locus in $\mathbb{C}^2$,
+We start from the equation of the local mirror of $\mathbb{F}_1$ defined as the elliptic curve,
 \begin{equation}
   x + y + \frac{1}{x y} + \frac{m}{x} = \frac{1}{u},
 \end{equation}
@@ -268,6 +268,14 @@ with
 \end{align}
 
 
+\subsection{Rational change of coordinates}
+
+We saw in the last section that Nagell's algorithm turns the local mirror of $\mathbb{F}_1$ into Weierstrass form but gives a very complicated transcendental change of coordinates. A simpler change of coordinates is given by
+\begin{equation}
+  
+\end{equation}
+
+
 \section{Testing N\'eron \texorpdfstring{$N$}{N}-gon result for \texorpdfstring{$\mathbb{F}_0$}{F0}}
 
 We write the mirror curve to $\mathbb{F}_0$ as the following embedding in $\mathbb{C}^* \times \mathbb{C}^* \ni (w, X)$
@@ -378,7 +386,7 @@ similarly, for $U_2$. For $U_3$ and $U_4$, the node corresponds to $t = 1 \pm 2 
   z = \frac{t - (1-2\ii R)}{t - (1+2\ii R)}.
 \end{equation}
 Therefore, for each branch we get $X$ and $w$ in the $z$-parametrization:
-\begin{equation}
+\begin{equation}\label{eqn:F0rationalparam}
   \begin{aligned}
     X_1 &= -\frac{(z-1) (R (z-1)+z+1)}{(z+1) (R z+R+z-1)}, &\quad
     w_1 = \frac{(z+1) (R (z-1)+z+1)}{(z-1) (R z+R+z-1)}, \\
@@ -471,9 +479,11 @@ We want to now understand how (and/or if) the formulas \cref{eqn:realPeriod,eqn:
   \tilde{\mathcal{V}}(R) &= \frac{2 \ii}{\pi^2} \qty(\Li_2(-R) - \Li_2(R)) = \mathcal{V}(-\ii R).
 \end{align}
 
+Since $D_2$ is the imaginary part of $\Li_2$, we must look at the full non-vanishing period to make this identification. 
+
 \subsection{Full period}
 In fact, apart from the imaginary part of the period, \cite[eq. (4.12)]{kerr2008} also gives a formula for the full non-vanishing period at the conifold points. We copy it here
-\begin{equation}
+\begin{equation}\label{eqn:fullperiodkerrdonan}
 \begin{aligned}
   \mathcal{Q} &= \frac{1}{2\pi} \sum_{j, k} d_j e_k \qty[ \Li_2\qty(\frac{\alpha_j}{\beta_k}) + \qty(\log \alpha_j - \log \beta_k) \log(1 - \frac{\alpha_j}{\beta_k}) ] \\
   &\quad -\frac{1}{2\pi} \log y(0) \qty(\log x(0) - \log x(\infty))
@@ -482,8 +492,45 @@ In fact, apart from the imaginary part of the period, \cite[eq. (4.12)]{kerr2008
 \end{aligned}
 \end{equation}
 where as before, $x(z)$ and $y(z)$ are rational parametrizations of the nodal curve in the original toric coordinates and the node corresponds to $z \to 0, \infty$.
+From now on, we work with the branches $U_1$ and $U_2$ but all the results can be generalized to $U_3$ and $U_4$ by taking $R \to \ii R$.
+Evaluating \cref{eqn:fullperiodkerrdonan} for the parametrization in \cref{eqn:F0rationalparam}, we find the following after assuming $\Im R > 0$ and simplifying logs
+\begin{equation}
+  \begin{aligned}
+    \mathcal{Q} &= \frac{1}{\pi} \qty(\Li_2\left(\frac{-R-1}{R-1}\right)-\Li_2\left(\frac{R+1}{R-1}\right)-\Li_2\left(\frac{1-R}{R+1}\right)+\Li_2\left(\frac{R-1}{R+1}\right)) \\
+    &\quad -\frac{2}{\pi} \log (R) \log (R-1)+i  \log (R-1)+2 i  \log (R)\\
+    &\quad +\frac{2}{\pi} \log (R) \log (R+1)-i  \log (R+1).
+    \end{aligned}
+\end{equation}
 
+This expression can be simplified further thanks to various identities of the dilogarithm. We use in particular the following identities \cite{zagier:dilogarithm}
+\begin{align}
+  \Li_2\qty(\frac{1}{z}) &= -\Li_2(z) - \frac{\pi^2}{6} - \frac{1}{2}\log(-z)^2, \label{eqn:Li2Inversion}\\
+  \Li_2\qty(1-z) &= -\Li_2(z) + \frac{\pi^2}{6} - \log(z) \log(1-z). \label{eqn:Li2Reflection}
+\end{align}
+We also have the so-called \textit{five term relation},
+\begin{equation}
+  \begin{aligned}
+    &\Li_2(x)+\Li_2(y)+\Li_2\left(\frac{x-1}{x y-1}\right)+\Li_2\left(\frac{y-1}{x y-1}\right)+\Li_2(1-x y) \\
+    &= \frac{\pi ^2}{2} - \log (1-x) \log (x)- \log (1-y) \log (y) -\log \left(\frac{1-x}{1-x y}\right) \log \left(\frac{1-y}{1-x y}\right),
+  \end{aligned}
+\end{equation}
+which only holds near the viscinity of $x, y \in (0, 1)$ due to branch cuts. However, it is easy to find a generalized version of this identify for the domain we are interested in by starting with the identity in it's twice differentiated form (where it reduces to a trivial algebraic identity) and integrating twice and fixing the integration constants.
 
+Using the inversion identity \cref{eqn:Li2Inversion}, we get
+\begin{equation}
+  \begin{aligned}
+  \mathcal{Q} &= -\frac{\pi}{2} -\frac{2}{\pi} \qty[\Li_2\left(\frac{1-R}{R+1}\right)- \Li_2\left(\frac{R-1}{R+1}\right) -  \log \left(\frac{1-R}{R+1}\right) \log (R)].
+  \end{aligned}
+\end{equation}
+We now invoke the five term relation with $(x, y) = (R, -1)$ and correct it with the procedure explained. After applying the reflection identity to some of the arguments \cref{eqn:Li2Reflection} and noting that $\Li_2(-1) = \frac{-\pi^2}{12}$, the identity reads simply
+\begin{equation}
+  -\Li_2(-R)+\Li_2(R)+\Li_2\left(\frac{1-R}{R+1}\right)-\Li_2\left(\frac{R-1}{R+1}\right)
+  = \frac{\pi ^2}{4}-\log (R) \log \left(\frac{1-R}{R+1}\right).
+\end{equation}
+Applying this to $Q$, we get our final expression
+\begin{equation}
+  \mathcal{Q} = - \pi - \frac{2}{\pi} \qty(\Li_2(-R)-2 \Li_2(R)).
+\end{equation}
 
 
 \printbibliography[title={References}]
