@@ -384,6 +384,14 @@ so that
   \qty[D_2\!\left(\frac{R+1}{R-1}\right)
   - D_2\!\left(\frac{R+1}{1-R}\right)].
 \end{equation}
+We now use the five-term relation for the Bloch-Wigner,
+\begin{equation}
+  D_2\left(\frac{1-x}{1-x y}\right)+D_2\left(\frac{1-y}{1-x y}\right)+D_2(1-x y)+D_2(x)+D_2(y) = 0,
+\end{equation}
+with $x = R$, $y = -1$, to simplify the imaginary part of the period to the simple expression
+\begin{equation}
+  \mathcal{P}(R) = \frac{2}{\pi } \bigl[D_2(-R)-D_2(R)\bigr].
+\end{equation}
 Since $D_2(\bar{z}) = -D_2(z)$, it follows that
 \begin{equation}
   \mathcal{P}(R) = 0 \qquad \text{for real } R.
@@ -409,6 +417,10 @@ Hence,
     &= \frac{2}{\pi} \qty[D_2\!\left(\frac{-R+i}{R+i}\right)
       - D_2\!\left(\frac{R-i}{R+i}\right)].
   \end{aligned}
+\end{equation}
+Applying the five term relation gives us
+\begin{equation}
+  \mathcal{\tilde{P}}(R) = \frac{2}{\pi} \bigl[D_2(\ii R)-D_2(-\ii R)\bigr]
 \end{equation}
 And this time we see that \bp{But the formula should not apply}
 \begin{equation}
@@ -470,7 +482,7 @@ We now invoke the five term relation with $(x, y) = (R, -1)$ and correct it with
 \end{equation}
 Applying this to $Q$, we get our final expression
 \begin{equation}
-  \mathcal{Q} = - \pi - \frac{2}{\pi} \qty(\Li_2(-R)- \Li_2(R)).
+  \mathcal{Q} = - \pi - \frac{2}{\pi} \qty[\Li_2(-R)- \Li_2(R)].
 \end{equation}
 
 
