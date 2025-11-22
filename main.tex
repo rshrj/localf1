@@ -158,7 +158,7 @@
 
 We write the mirror curve to $\mathbb{F}_0$ as the following embedding in $\mathbb{C}^* \times \mathbb{C}^* \ni (w, X)$
 \begin{equation}
-  w + \frac{1}{w} + R^2 \qty(X + \frac{1}{X} + U) = 0.
+  w + \frac{1}{w} + \frac{1}{R^2} \qty(X + \frac{1}{X} + U) = 0.
 \end{equation}
 We can write this curve as a quartic by introducing $Y = -R^2 X \qty(w - \frac{1}{w})$,
 \begin{equation}\label{eqn:F0quartic}
@@ -222,22 +222,22 @@ From the GLSM charges defining the toric geometry,
 we see that the periods of the mirror curve are given by the double sum
 \begin{equation}
   \begin{aligned}
-  \omega_1 =& \sum_{k,\ell\geq 0} \frac{(2k+2\ell)!}{(k!)^2 (\ell!)^2} z^{k+\ell} \lambda^{\ell}  \\
+  \omega_1 =& \sum_{k,\ell\geq 0} \frac{(2k+2\ell)!}{(k!)^2 (\ell!)^2} z^{k+\ell} \lambda^{\ell} = F_4\qty(\tfrac12, 1; 1, 1; 4 z, 4 z \lambda)  \\
   \omega_2 =& (2\log z+ \log\lambda) \omega_1 - 2  
   \sum_{k+\ell>0} \frac{(2k+2\ell)!}{(k!)^2 (\ell!)^2} 
   \left( H_k + H_\ell - 2 H_{2k+2\ell} \right) 
   z^{k+\ell} \lambda^{\ell}
   \end{aligned}
 \end{equation} 
-where $H_n=\sum_{k=1}^n (1/k)$ are the harmonic numbers. 
+where $F_4$ is the Appell hypergeometric series, and $H_n=\sum_{k=1}^n (1/k)$ are the harmonic numbers. 
 For $\lambda=1$, we recover \cite[A.39]{LeFloch:2024cwl}, 
 \begin{equation}
-\omega_1 = {}_2F_1(\tfrac12,\tfrac12;1;1;16 z), \quad 
+\omega_1 = {}_2F_1(\tfrac12,\tfrac12;1;1-16 z), \quad 
 \omega_2 = -2\pi\  {}_2F_1(\tfrac12,\tfrac12;1;1;1-16 z),
 \end{equation} 
 Similarly, for $\lambda=-1$, we recover \cite[A.46]{LeFloch:2024cwl}, 
 \begin{equation}
-\omega_1 = {}_2F_1(\tfrac14,\tfrac34;1;1;-64z^2), \quad 
+\omega_1 = {}_2F_1(\tfrac14,\tfrac34;1;1-64z^2), \quad 
 \omega_2 = -\pi \sqrt2\  {}_2F_1(\tfrac14,\tfrac34;1;1;1+64 z^2),
 \end{equation} 
 The CY periods satisfy $z\partial_z \varpi_2=\omega_1, z\partial_z \varpi_3=\omega_2$.
