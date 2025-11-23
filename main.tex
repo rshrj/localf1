@@ -612,41 +612,81 @@ with
 From the GLSM charges defining the toric geometry, 
 \begin{equation}
     \begin{array}{ccc|cc} 
-    0 & 0 & 1 & -2 & -3 \\
-    1 & 0 & 1 & 1 & 1 \\
+    0 & 0 & 1 & -2 & -1 \\
+    1 & 0 & 1 & 1 & 0 \\
     -1 & -1 & 1 & 0 &1 \\
-   -1 & 0 & 1 & 1 & 0 \\
+   -1 & 0 & 1 & 1 & -1 \\
    0  & 1 & 1 & 0 & 1 \\
    \end{array}
 \end{equation}
-\bp{To do for F1:}
-we see that the periods of the mirror curve are given by the double sum
+we see that the A-period of the mirror curve is given by the double sum
 \begin{equation}
   \begin{aligned}
-  \omega_1 =& \sum_{k,\ell\geq 0} \frac{(3k+2\ell)!}{(k!)^2 (k+\ell)! (\ell!)} 
-  (-u)^{-3k-2\ell} \lambda^{\ell}  \\
-  \omega_2 =& (2\log z+ \log\lambda) \omega_1 - 2  
-  \sum_{3k+2\ell>0} \frac{(3k+2\ell)!}{(k!)^2 (k+\ell)! (\ell!)} 
-  \left( H_k + H_\ell - 2 H_{3k+2\ell} \right) 
- (-u)^{-3k-2\ell} \lambda^{\ell} 
+  \omega_1 =& 
+  \sum_{k,\ell\geq 0} \frac{(k+2\ell)!}{(k!)^2 (k)! (\ell-k)!} 
+  (-u)^{-k-2\ell} \lambda^{\ell-k}  \\
+  = &
+  \sum_{k,\ell\geq 0} \frac{(3k+2\ell)!}{(k!)^2 (k+\ell)! (\ell!)} 
+  (-u)^{-3k-2\ell} \lambda^{\ell} 
+  \end{aligned}
+\end{equation}   
+where in the second line we shifted $\ell\mapsto \ell+k$, observing that terms with $k>\ell$ do not contribute in the sum in the first line. Indeed, we check that $\omega_1$ is annihilated by the second order operator 
+\begin{equation}
+\begin{aligned}
+        \mathcal{D}
+    =& (8 \lambda  u-9) \left(16 \lambda ^3+\lambda  u^4-u^3-8 \lambda ^2 u^2+36 \lambda  u-27\right) \theta_u^2 \\ &
+     +(-729 + 1512 u \lambda - 
+     u^4 \lambda - 936 u^2 \lambda^2 + 432 \lambda^3 + 
+     128 u^3 \lambda^3 - 512 u \lambda^4) \theta_u 
+      \\ &   
+     -2 (-243 + 486 u \lambda - 282 u^2 \lambda^2 + 
+     144 \lambda^3 + 32 u^3 \lambda^3 - 
+     192 u \lambda^4) 
+     \end{aligned}
+\end{equation}\
+such that $\mathcal{D}_3= u^{-3} \partial_u \mathcal{D}$. 
+Using the Frobenius period, we find two logarithmic solutions
+\begin{equation}
+  \begin{aligned}
+  \omega_2 =& (-\log u -\log\lambda) \omega_1 + 2  
+  \sum_{-2\ell<k\leq \ell} 
+  \frac{(k+2\ell)!}{(k!)^2 (k)! (\ell-k)!} 
+  \left( H_{2\ell+k} + H_{\ell-k} - 2 H_{k} \right) 
+ (-u)^{-k-2\ell} \lambda^{\ell-k} \\ & 
+ + \sum_{0\leq \ell<k} (-1)^{\ell}  \frac{\Gamma(k-\ell) (k+2\ell)!}{\ell!\, (k!)^2} 
+ u^{-k-2\ell} \lambda^{\ell} 
+ \\
+ \omega'_2 =& (-2\log u +\log\lambda) \omega_1 + 2  
+  \sum_{-2\ell<k\leq \ell} 
+  \frac{(k+2\ell)!}{(k!)^2 (k)! (\ell-k)!} 
+  \left( 2H_{2\ell+k} - H_{\ell-k} -  H_{\ell} \right) 
+ (-u)^{-k-2\ell} \lambda^{\ell-k}\\ & 
+ - \sum_{0\leq \ell<k} (-1)^{\ell}  \frac{\Gamma(k-\ell) (k+2\ell)!}{\ell!\, (k!)^2} 
+ u^{-k-2\ell} \lambda^{\ell} 
   \end{aligned}
 \end{equation} 
-where $H_n=\sum_{k=1}^n (1/k)$ are the harmonic numbers. 
-The CY periods satisfy $z\partial_z \varpi_2=\omega_1, z\partial_z \varpi_3=\omega_2$.
-Hence they are obtained by integrating once with respect to $z$, 
+where $H_n=\sum_{k=1}^n (1/k)$ are the harmonic numbers. In fact, only the linear combination $2\omega_2+3\omega'_2$ is annihilated by $\mathcal{D}$, while
+$\omega_2$ and $\omega'_2$ satisfy it with a source term proportional to $9\lambda u^4 +96 \lambda^3 u^3$. 
+
+The CY periods satisfy $u\partial_u \varpi_2=\omega_1, u\partial_u \varpi_3=\frac14(2\omega_2+3\omega'_2)$.
+Hence they are obtained by integrating once with respect to $u$,
 \begin{equation}
       \begin{aligned}
-  \varpi_2 =& -\log(u) + 
+  \varpi_2 =& -\log u + 
   \sum_{3k+2\ell>0} \frac{(3k+2\ell-1)!}{(k!)^2 (\ell!)(k+\ell)!} 
   (-u)^{-3k-2\ell} \lambda^{\ell}  \\
   \varpi_3 =& \log^2 u + (2\log u - \frac14 \log \lambda) \varpi_2 + \frac18 \log^2\lambda 
-   - 2  
-  \sum_{3k+2\ell>0} 
-  \frac{(3k+2\ell)! (3k+2\ell)}{(k!)^2 \ell! (\ell+k)!} 
-  \left( H_k + H_\ell - 2 H_{2k+2\ell} + \frac{1}{k+\ell} \right) 
-  (-u)^{-3k-2\ell} \lambda^{\ell} 
+  \\ &
+-2  \sum_{-2\ell<k\leq \ell} 
+  \frac{(k+2\ell-1)!}{(k!)^2 (k)! (\ell-k)!} 
+  \left( 2H_{2\ell+k} - H_{\ell-k} -  H_{\ell} \right) 
+ (-u)^{-k-2\ell} \lambda^{\ell-k}\\ & 
+ + \sum_{0\leq \ell<k} (-1)^{\ell}  \frac{\Gamma(k-\ell) (k+2\ell-1)!}{\ell!\, (k!)^2} 
+ u^{-k-2\ell} \lambda^{\ell} 
+ -2 \sum_{k+2\ell>0}  \frac{(k+2\ell-1)!}{(k+2\ell)(k!)^2 (k)! (\ell-k)!} u^{-k-2\ell} \lambda^{\ell} 
   \end{aligned}
 \end{equation}
+\bp{To be checked numerically}
 
 \subsection{Kerr-Doran formula for the conifold period}
 
