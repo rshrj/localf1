@@ -241,11 +241,12 @@ Similarly, for $\lambda=-1$, we recover \cite[A.46]{LeFloch:2024cwl},
 \omega_2 = -\pi \sqrt2\  {}_2F_1(\tfrac14,\tfrac34;1;1;1+64 z^2),
 \end{equation} 
 The CY periods satisfy $z\partial_z \varpi_2=\omega_1, z\partial_z \varpi_3=\omega_2$.
-Hence they are obtained by integrating once with respect to $z$, 
+Hence they are obtained by integrating once with respect to $z$, \rishi{There seems to be a factor of 2 in front of the regular part of $\varpi_2$}
 \begin{equation}
       \begin{aligned}
   \varpi_2 =& \log z + 
-  \sum_{k+\ell>0} \frac{(2k+2\ell-1)!}{(k!)^2 (\ell!)^2} z^{k+\ell} \lambda^{\ell}  \\
+  \sum_{k+\ell>0} \frac{(2k+2\ell-1)!}{(k!)^2 (\ell!)^2} z^{k+\ell} \lambda^{\ell}  \rishi{\quad \to \quad \log z + 
+  2 \sum_{k+\ell>0} \frac{(2k+2\ell-1)!}{(k!)^2 (\ell!)^2} z^{k+\ell} \lambda^{\ell}} \\
   \varpi_3 =& -\log^2 z 
   +  \left( 2\log z + \log\lambda\right) \varpi_2
    - 2  
