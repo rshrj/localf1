@@ -748,9 +748,38 @@ where
 \begin{equation}
   \begin{gathered}
   b = \frac{t_1-\sqrt{6X_0}}{t_1+\sqrt{6X_0}}, \quad a = \frac{3+2t_1+\sqrt{6 X_0}}{3+2t_1-\sqrt{6 X_0}} = \frac{1}{b^2}, \quad c = \frac{t_1+\sqrt{6X_0}}{t_1-\sqrt{6X_0}} = \frac{1}{b}, \\
-  \alpha = \frac{t_1+3}{6 u}, \quad \beta = -\frac{18 u^2}{t_1^2+3 t_1}
+  \alpha = \frac{t_1+3}{6 u} = \left(\sqrt{b}+\frac{1}{\sqrt{b}}\right)^{-\tfrac43}, \quad \beta = \left(\sqrt{b}+\frac{1}{\sqrt{b}}\right)^{\tfrac23}.
   \end{gathered}
 \end{equation}
+
+Applying the formula for the imaginary part of the period in terms of the roots and exponents,
+\begin{equation}
+  \mathcal{P} = \frac{1}{2\pi} \sum_{j, k} d_j e_k D_2\qty(\frac{\alpha_j}{\beta_k}),
+\end{equation}
+gives us
+\begin{equation}
+  \mathcal{P}(b) = \frac{1}{2\pi} \bigl[ D_2(b^3) - 4 D_2(b^2) + 5 D_2(b)  \bigr].
+\end{equation}
+
+Finally, applying the full formula for the non-vanishing period
+\begin{equation}
+\begin{aligned}
+  \mathcal{Q} &= \frac{1}{2\pi} \sum_{j, k} d_j e_k \qty[ \Li_2\qty(\frac{\alpha_j}{\beta_k}) + \qty(\log \alpha_j - \log \beta_k) \log(1 - \frac{\alpha_j}{\beta_k}) ] \\
+  &\quad -\frac{1}{2\pi} \log y(0) \qty(\log x(0) - \log x(\infty))
+  + \log y(0) \sum_j d_j \log \alpha_j \\
+  &\quad - \log x(\infty) \sum_k e_k \log \beta_k.
+\end{aligned}
+\end{equation}
+gives us
+\begin{equation}
+  \begin{aligned}
+    \mathcal{Q}(b) &= \frac{1}{2\pi} \left[\Li_2(b^3)-4 \Li_2(b^2)+5 \Li_2(b)\right]\\
+    &\quad +\frac{1}{4\pi} \log (b) \left(6 \log \left(b^2+b+1\right)+\log (b)-16 \log (b+1) - 4\ii \pi \right).
+  \end{aligned}
+\end{equation}
+\rishi{However, numerically the real part does not quite match the result for $(m, u) = (1, u_*(1))$. \\
+But the discrepency in the imaginary part for $(m, u) = (2, u_*(2))$ in \cite{Marino:LocalF1Notes} is resolved by this expression.}
+
 
 
 \printbibliography[title={References}]
