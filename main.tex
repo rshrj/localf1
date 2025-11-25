@@ -493,7 +493,7 @@ Applying this to $Q$, we get our final expression
 
 \subsection{Nagell's algorithm for the mirror curve}
 We start from the equation of the local mirror of $\mathbb{F}_1$ defined as the elliptic curve,
-\begin{equation}
+\begin{equation}\label{eqn:F1mirror}
   x + y + \frac{1}{x y} + \frac{m}{x} = \frac{1}{u},
 \end{equation}
 where $m$ and $u$ are a priori free complex parameters. After multiplying by $x y$, we have
@@ -604,7 +604,7 @@ we obtain the final Weierstrass form,
   V^2 = 4 U^3 - g_2 U + g_3,
 \end{equation}
 with
-\begin{align}
+\begin{align}\label{eqn:F1g23Nagell}
   g_2 &= -\frac{4}{3} \qty(-16 m^2+\frac{8 m}{u^2}-\frac{1}{u^4}+\frac{24}{u}), \\
   g_3 &= -\frac{8}{27} \qty(-64 m^3+\frac{48 m^2}{u^2}-\frac{12 m}{u^4}+\frac{144 m}{u}+\frac{1}{u^6}-\frac{36}{u^3}+216).
 \end{align}
@@ -696,9 +696,54 @@ Hence they are obtained by integrating once with respect to $u$,
 
 \subsection{Rational change of coordinates}
 
-We saw in the last section that Nagell's algorithm turns the local mirror of $\mathbb{F}_1$ into Weierstrass form but gives a very complicated transcendental change of coordinates. A simpler change of coordinates is given by
+We saw in the last section that Nagell's algorithm turns the local mirror of $\mathbb{F}_1$ into Weierstrass form but gives a very complicated transcendental change of coordinates. A simpler change of coordinates is given by \cite{Marino:LocalF1Notes} which we copy below
 \begin{equation}
- A
+  x = \frac{36 u^2 (m+3 u)+6 X+\sqrt{2} Y-9}{6 u \left(12 m u^2+2 X-3\right)}, \quad y = \frac{36 u^2}{-12 m u^2-2 X+3}.
+\end{equation}
+The curve in \cref{eqn:F1mirror} takes Weierstrass form in the $(X, Y)$ coordinates $Y^2 = 4X^3 - g_2 X -g_3$ with
+\begin{equation}
+  \begin{aligned}
+    g_2 &= 27 \left(16 m^2 u^4-8 m u^2-24 u^3+1\right), \\
+    g_3 &= 27 \left(64 m^3 u^6-48 m^2 u^4-144 m u^5+12 m u^2-216 u^6+36 u^3-1\right),
+  \end{aligned}
+\end{equation}
+which is the same as \cref{eqn:F1g23Nagell} upto an overall factor (which is fixed by scaling $X$ and $Y$). The discriminant is given by
+\begin{equation}
+  \Delta \propto u^8 \delta(u, m), \quad \delta(u, m) = 16 m^3 u^4-8 m^2 u^2-36 m u^3+m-27 u^4+u,
+\end{equation}
+which tells us that generically for a given $m$, there are 4 branches of $u$ corresponding to a nodal degeneration.
+One can treat all the branches in one shot by the following general formalism (taken verbatim from \cite{Marino:LocalF1Notes}) ---
+We take for the nodal curve
+\begin{equation}\label{eqn:nodalcurve}
+  Y^2 = 4(X - X_0)^2(X-X_1).
+\end{equation}
+For there to be no $X^2$ terms, we require $X_1 = -2X_0$. Comparing coefficients, it is easy to see that
+\begin{equation}
+  X_0 = -\frac{3 g_3}{2 g_2},
+\end{equation}
+where the r.h.s. is evaluated on the locus $\delta(u, m) = 0$. A simple rational parametrization of \cref{eqn:nodalcurve} is given by
+\begin{equation}\label{eqn:nodalcurveparamorig}
+  X = \frac{1}{2} \left(t^2-4 X_0\right), \quad Y = \frac{t \left(t^2-6 X_0\right)}{\sqrt{2}},
+\end{equation}
+or, in the original toric coordinates,
+\begin{equation}
+  x = \frac{36 u^2 (m+3 u)+3 \left(t^2-4 X_0\right)+t \left(t^2-6 X_0\right)-9}{6 u \left(12 m u^2+t^2-4 X_0-3\right)}, \quad y = \frac{36 u^2}{-12 m u^2-t^2+4 X_0+3}
+\end{equation}
+We define $t_1^2 = -12 m u^2+4 X_0+3$ which turns the denominators into $t^2 - t_1^2 = (t-t_1)(t+t_1)$. It is possible to show that on the support of $\delta = 0$, the numerator of $x$ above factorizes as
+\begin{equation}
+  36 u^2 (m+3 u)+3 \left(t^2-4 X_0\right)+t \left(t^2-6 X_0\right)-9 = (t-t_1)^2 (t+2 t_1+3),
+\end{equation}
+which gives us the (one-parameter) parametrization,
+\begin{equation}\label{eqn:tparam}
+  x = \frac{(t-t_1) (t+2 t_1+3)}{6 u (t+t_1)}, \quad y = -\frac{36 u^2}{t^2-t_1^2}.
+\end{equation}
+Lastly, we have to shift the nodes to $0, \infty$ to apply the Kerr-Doran prescription. From \cref{eqn:nodalcurveparamorig}, the node is at $t^2 = 6X_0$ or $t = \pm \sqrt{6 X_0}$. We thus define
+\begin{equation}
+  z = \frac{t-\sqrt{6 X_0}}{t+\sqrt{6X_0}}.
+\end{equation}
+The curve \cref{eqn:tparam} takes the form
+\begin{equation}
+  z =
 \end{equation}
 
 
