@@ -691,95 +691,140 @@ Hence they are obtained by integrating once with respect to $u$,
 \end{equation}
 \bp{To be checked numerically}
 
-\subsection{Kerr-Doran formula for the conifold period}
 
-\subsection{Rational change of coordinates}
+\subsection{Rational change of coordinates and the Kerr-Doran prescription}
 
-We saw in the last section that Nagell's algorithm turns the local mirror of $\mathbb{F}_1$ into Weierstrass form but gives a very complicated transcendental change of coordinates. A simpler change of coordinates is given by \cite{Marino:LocalF1Notes} which we copy below
+Nagell’s algorithm provides a systematic procedure to convert the mirror curve of local $\mathbb{F}_1$ into Weierstrass form, but it does so at the price of introducing a transcendental change of variables. A significantly simpler rational transformation, originally presented in \cite{Marino:LocalF1Notes}, is given by
 \begin{equation}
-  x = \frac{36 u^2 (m+3 u)+6 X+\sqrt{2} Y-9}{6 u \left(12 m u^2+2 X-3\right)}, \quad y = \frac{36 u^2}{-12 m u^2-2 X+3}.
+  x = \frac{36 u^2 (m+3 u)+6 X+\sqrt{2}\, Y-9}{6 u \left(12 m u^2+2 X-3\right)}, 
+  \qquad 
+  y = \frac{36 u^2}{-12 m u^2-2 X+3}.
 \end{equation}
-The curve in \cref{eqn:F1mirror} takes Weierstrass form in the $(X, Y)$ coordinates $Y^2 = 4X^3 - g_2 X -g_3$ with
+In these coordinates the mirror curve \cref{eqn:F1mirror} assumes Weierstrass form,
 \begin{equation}
-  \begin{aligned}
-    g_2 &= 27 \left(16 m^2 u^4-8 m u^2-24 u^3+1\right), \\
-    g_3 &= 27 \left(64 m^3 u^6-48 m^2 u^4-144 m u^5+12 m u^2-216 u^6+36 u^3-1\right),
-  \end{aligned}
+  Y^2 = 4X^3 - g_2 X - g_3,
 \end{equation}
-which is the same as \cref{eqn:F1g23Nagell} upto an overall factor (which is fixed by scaling $X$ and $Y$). The discriminant is given by
+with
 \begin{equation}
-  \Delta \propto u^8 \delta(u, m), \quad \delta(u, m) = 16 m^3 u^4-8 m^2 u^2-36 m u^3+m-27 u^4+u,
+\begin{aligned}
+  g_2 &= 27\left( 16 m^2 u^4 - 8 m u^2 - 24 u^3 + 1 \right), \\
+  g_3 &= 27\left( 64 m^3 u^6 - 48 m^2 u^4 - 144 m u^5 + 12 m u^2 - 216 u^6 + 36 u^3 - 1 \right).
+\end{aligned}
 \end{equation}
-which tells us that generically for a given $m$, there are 4 branches of $u$ corresponding to a nodal degeneration.
-One can treat all the branches in one shot by the following general formalism (taken verbatim from \cite{Marino:LocalF1Notes}) ---
-We take for the nodal curve
+These expressions agree with \cref{eqn:F1g23Nagell} up to an overall normalization, which can be absorbed by rescaling $X$ and $Y$. The discriminant takes the form
+\begin{equation}
+  \Delta \propto u^8\, \delta(u,m),
+  \qquad
+  \delta(u,m) = 16 m^3 u^4 - 8 m^2 u^2 - 36 m u^3 + m - 27 u^4 + u,
+\end{equation}
+showing that for fixed $m$ the curve generically develops four nodal degenerations corresponding to the roots of $\delta(u,m)=0$.
+
+To treat all nodal branches uniformly we follow the formalism of \cite{Marino:LocalF1Notes}. At the nodal locus the curve can be written as
 \begin{equation}\label{eqn:nodalcurve}
-  Y^2 = 4(X - X_0)^2(X-X_1).
+  Y^2 = 4 (X - X_0)^2 (X - X_1).
 \end{equation}
-For there to be no $X^2$ terms, we require $X_1 = -2X_0$. Comparing coefficients, it is easy to see that
+Eliminating the $X^2$ term enforces $X_1 = -2 X_0$. Matching coefficients with the Weierstrass form then yields
 \begin{equation}
   X_0 = -\frac{3 g_3}{2 g_2},
 \end{equation}
-where the r.h.s. is evaluated on the locus $\delta(u, m) = 0$. A simple rational parametrization of \cref{eqn:nodalcurve} is given by
+evaluated on the discriminant locus $\delta(u,m)=0$. A convenient rational parametrization of \cref{eqn:nodalcurve} is
 \begin{equation}\label{eqn:nodalcurveparamorig}
-  X = \frac{1}{2} \left(t^2-4 X_0\right), \quad Y = \frac{t \left(t^2-6 X_0\right)}{\sqrt{2}},
+  X = \frac{1}{2}\left(t^2 - 4 X_0\right),
+  \qquad
+  Y = \frac{t\left(t^2 - 6 X_0\right)}{\sqrt{2}}.
 \end{equation}
-or, in the original toric coordinates,
-\begin{equation}
-  x = \frac{36 u^2 (m+3 u)+3 \left(t^2-4 X_0\right)+t \left(t^2-6 X_0\right)-9}{6 u \left(12 m u^2+t^2-4 X_0-3\right)}, \quad y = \frac{36 u^2}{-12 m u^2-t^2+4 X_0+3}
-\end{equation}
-We define $t_1^2 = -12 m u^2+4 X_0+3$ which turns the denominators into $t^2 - t_1^2 = (t-t_1)(t+t_1)$. It is possible to show that on the support of $\delta = 0$, the numerator of $x$ above factorizes as
-\begin{equation}
-  36 u^2 (m+3 u)+3 \left(t^2-4 X_0\right)+t \left(t^2-6 X_0\right)-9 = (t-t_1)^2 (t+2 t_1+3),
-\end{equation}
-which gives us the (one-parameter) parametrization,
-\begin{equation}\label{eqn:tparam}
-  x = \frac{(t-t_1) (t+2 t_1+3)}{6 u (t+t_1)}, \quad y = -\frac{36 u^2}{t^2-t_1^2}.
-\end{equation}
-Lastly, we have to shift the nodes to $0, \infty$ to apply the Kerr-Doran prescription. From \cref{eqn:nodalcurveparamorig}, the node is at $t^2 = 6X_0$ or $t = \pm \sqrt{6 X_0}$. We thus define
-\begin{equation}
-  z = \frac{t-\sqrt{6 X_0}}{t+\sqrt{6X_0}}.
-\end{equation}
-The curve \cref{eqn:tparam} takes the form
-\begin{equation}
-  x = \alpha \frac{(z-a)(z-b)}{(z-c)(z-1)}, \quad y = \beta \frac{(z-1)^2}{(z-b)(z-c)},
-\end{equation}
-where
-\begin{equation}
-  \begin{gathered}
-  b = \frac{t_1-\sqrt{6X_0}}{t_1+\sqrt{6X_0}}, \quad a = \frac{3+2t_1+\sqrt{6 X_0}}{3+2t_1-\sqrt{6 X_0}} = \frac{1}{b^2}, \quad c = \frac{t_1+\sqrt{6X_0}}{t_1-\sqrt{6X_0}} = \frac{1}{b}, \\
-  \alpha = \frac{t_1+3}{6 u} = \left(\sqrt{b}+\frac{1}{\sqrt{b}}\right)^{-\tfrac43}, \quad \beta = \left(\sqrt{b}+\frac{1}{\sqrt{b}}\right)^{\tfrac23}.
-  \end{gathered}
-\end{equation}
-
-Applying the formula for the imaginary part of the period in terms of the roots and exponents,
-\begin{equation}
-  \mathcal{P} = \frac{1}{2\pi} \sum_{j, k} d_j e_k D_2\qty(\frac{\alpha_j}{\beta_k}),
-\end{equation}
-gives us
-\begin{equation}
-  \mathcal{P}(b) = \frac{1}{2\pi} \bigl[ D_2(b^3) - 4 D_2(b^2) + 5 D_2(b)  \bigr].
-\end{equation}
-
-Finally, applying the full formula for the non-vanishing period
+Expressed back in the original toric coordinates, this leads to
 \begin{equation}
 \begin{aligned}
-  \mathcal{Q} &= \frac{1}{2\pi} \sum_{j, k} d_j e_k \qty[ \Li_2\qty(\frac{\alpha_j}{\beta_k}) + \qty(\log \alpha_j - \log \beta_k) \log(1 - \frac{\alpha_j}{\beta_k}) ] \\
-  &\quad -\frac{1}{2\pi} \log y(0) \qty(\log x(0) - \log x(\infty))
-  + \log y(0) \sum_j d_j \log \alpha_j \\
-  &\quad - \log x(\infty) \sum_k e_k \log \beta_k.
+  x &= \frac{36 u^2 (m+3 u)+3 (t^2 - 4 X_0) + t(t^2 - 6 X_0) - 9}{6 u \left(12 m u^2 + t^2 - 4 X_0 - 3\right)}, \\
+  y &= \frac{36 u^2}{-12 m u^2 - t^2 + 4 X_0 + 3}.
 \end{aligned}
 \end{equation}
-gives us
+Introducing the notation
 \begin{equation}
-  \begin{aligned}
-    \mathcal{Q}(b) &= \frac{1}{2\pi} \left[\Li_2(b^3)-4 \Li_2(b^2)+5 \Li_2(b)\right]\\
-    &\quad +\frac{1}{4\pi} \log (b) \left(6 \log \left(b^2+b+1\right)+\log (b)-16 \log (b+1) - 4\ii \pi \right).
-  \end{aligned}
+  t_1^2 = -12 m u^2 + 4 X_0 + 3,
 \end{equation}
+the denominators become $t^2 - t_1^2 = (t - t_1)(t + t_1)$. On the discriminant locus one may verify that the numerator of $x$ factorizes as
+\begin{equation}
+  36 u^2 (m+3 u)+3(t^2 - 4 X_0) + t(t^2 - 6 X_0) - 9 
+  = (t - t_1)^2 (t + 2 t_1 + 3),
+\end{equation}
+which leads to the one-parameter family
+\begin{equation}\label{eqn:tparam}
+  x = \frac{(t - t_1)(t + 2 t_1 + 3)}{6 u (t + t_1)},
+  \qquad
+  y = -\frac{36 u^2}{t^2 - t_1^2}.
+\end{equation}
+
+To apply the Kerr–Doran prescription we shift the nodes to $0$ and $\infty$. From \cref{eqn:nodalcurveparamorig} the node occurs at $t=\pm\sqrt{6X_0}$, leading to the coordinate
+\begin{equation}
+  z = \frac{t - \sqrt{6 X_0}}{t + \sqrt{6 X_0}}.
+\end{equation}
+In terms of $z$, the parametrization \cref{eqn:tparam} takes the form
+\begin{equation}
+  x = \alpha\, \frac{(z-a)(z-b)}{(z-c)(z-1)},
+  \qquad
+  y = \beta\, \frac{(z-1)^2}{(z-b)(z-c)},
+\end{equation}
+where
+\begin{equation}\label{eqn:nodalcurveparams}
+\begin{gathered}
+  b = \frac{t_1 - \sqrt{6X_0}}{t_1 + \sqrt{6X_0}},
+  \qquad
+  a = \frac{3 + 2t_1 + \sqrt{6X_0}}{3 + 2t_1 - \sqrt{6X_0}} = \frac{1}{b^2},
+  \qquad
+  c = \frac{t_1 + \sqrt{6X_0}}{t_1 - \sqrt{6X_0}} = \frac{1}{b},
+  \\
+  \alpha = \frac{t_1 + 3}{6 u}
+  = \left(\sqrt{b} + \frac{1}{\sqrt{b}}\right)^{-\tfrac{4}{3}},
+  \qquad
+  \beta = -\frac{18 u^2}{t_1^2+3 t_1} = \left(\sqrt{b} + \frac{1}{\sqrt{b}}\right)^{\tfrac{2}{3}}.
+\end{gathered}
+\end{equation}
+
+Using the general expression for the imaginary part of the period,
+\begin{equation}
+  \mathcal{P} = \frac{1}{2\pi} \sum_{j,k} d_j e_k\, D_2\!\left(\frac{\alpha_j}{\beta_k}\right),
+\end{equation}
+one finds
+\begin{equation}
+  \mathcal{P}(b)
+  = \frac{1}{2\pi}\left[ D_2(b^3) - 4D_2(b^2) + 5 D_2(b) \right].
+\end{equation}
+
+The full non-vanishing period follows from
+\begin{equation}
+\begin{aligned}
+  \mathcal{Q} 
+  &= \frac{1}{2\pi} \sum_{j,k} d_j e_k 
+     \left[
+       \Li_2\!\left(\frac{\alpha_j}{\beta_k}\right)
+       + (\log\alpha_j - \log\beta_k)\,
+         \log\!\left(1 - \frac{\alpha_j}{\beta_k}\right)
+     \right] \\
+  &\quad - \frac{1}{2\pi} \log y(0)\,
+        \left(\log x(0) - \log x(\infty)\right)
+        + \log y(0) \sum_j d_j \log\alpha_j
+        - \log x(\infty) \sum_k e_k \log\beta_k,
+\end{aligned}
+\end{equation}
+giving the explicit expression
+\begin{equation}
+\begin{aligned}
+  \mathcal{Q}(b)
+  &= \frac{1}{2\pi}\left[\Li_2(b^3) - 4\Li_2(b^2) + 5\Li_2(b)\right] \\
+  &\quad + \frac{1}{4\pi}\log b\,
+      \Bigl( 6\log(b^2+b+1) + \log b - 16\log(b+1) - 4\ii\pi \Bigr).
+\end{aligned}
+\end{equation}
+
+\vspace{-1em}
 \rishi{
-  However, numerically the real part does not quite match the result for $(m, u) = (1, u_*(1))$. \\
-  But the discrepency in the imaginary part for $(m, u) = (2, u_*(2))$ in \cite{Marino:LocalF1Notes} is resolved by this expression.
+  \begin{enumerate}
+    \item A minor mismatch remains in the real part of the period when evaluated at $(m,u) = (1, u_*(1))$.  
+    \item In contrast, the discrepancy in the imaginary part noted in \cite{Marino:LocalF1Notes} for $(m,u) = (2, u_*(2))$ is fully resolved by the above formula.
+    \item The expressions for $\alpha$ and $\beta$ in terms of $b$ given in \cref{eqn:nodalcurveparams} apply only to the branch corresponding to $m=1$ with $u=u_*(1)\approx 0.26318$.
+  \end{enumerate}
 }
 
 
