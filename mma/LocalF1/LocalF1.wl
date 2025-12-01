@@ -54,6 +54,22 @@ BW::usage = "BW[z] Bloch Wigner Dilog";
 
 Li2::usage = "Ordinary dilogarithm";
 
+EulerChi::usage = "TODO";
+
+DSZ::usage = "TODO";
+
+ToFB::usage = "TODO";
+
+ToHC::usage = "TODO";
+
+GiesekerSlope::usage = "TODO";
+
+BogomolovDiscriminant::usage = "TODO";
+
+MonodromySqrtLV::usage = "TODO";
+
+SpectralFlow::usage = "TODO";
+
 (* Usage messages for exported functions *)
 
 Begin["`Private`"];
@@ -147,6 +163,25 @@ KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
       2 (Li2[b] + Log[1 - b] Log[b]) - (Log[1/b] - Log[b]) Log[
         1 - b^2]));
 
+
+
+EulerChi[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dB dBp - dBp dF - dB dFp + ch2p r + (dBp r)/2 + dFp r + ch2 rp - (dB rp)/2 - dF rp + r rp;
+
+DSZ[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dBp r + 2 dFp r - dB rp - 2 dF rp;
+
+ToFB[{r_, dH_, dC_, ch2_}] := {r, dH, dH + dC, ch2};
+
+ToHC[{r_, dF_, dB_, ch2_}] := {r, dF, dB - dF, ch2};
+
+GiesekerSlope[{r_, dF_, dB_, ch2_}, M_]:= (dB - dB M + dF (2 + M))/r;
+
+BogomolovDiscriminant[{r_, dF_, dB_, ch2_}] := -(dB^2/(2 r^2)) + (dB dF)/r^2 - ch2/r;
+
+ZLV[{r_, dF_, dB_, ch2_}, T_, m_] := -ch2 + dF m - r/6 + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T);
+
+MonodromySqrtLV[{T_, TD_, m_}] := {1/2 + T, 1 + m/2 + 4 T + TD, m};
+
+SpectralFlow[{r_, dF_, dB_, ch2_}, {mF_, mB_}] := {r, dF + r mF, dB + r mB, ch2 - dB mB + dF mB + dB mF - (mB^2 r)/2 + mB mF r};
 
 
 End[]; (* `Private` *)
