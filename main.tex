@@ -693,6 +693,215 @@ Hence they are obtained by integrating once with respect to $u$,
 \bp{To be checked numerically}
 
 
+\subsection{Convergence domain of Frobenius solution as a function of \texorpdfstring{$m$}{m}}
+
+Consider the series
+\begin{equation}
+  f(u,m)
+  \;=\;
+  \log u \;+\; \sum_{n\ge 2} \sum_{3k+2\ell=n}
+  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell\,u^n\,.
+\end{equation}
+For fixed complex parameter $m$, this is a series in the complex variable $u$.
+We are interested in the radius of convergence $R(m)$ of the power--series part
+around $u=0$.
+
+The logarithmic term $\log u$ contributes a singularity at $u=0$, but it does
+\emph{not} affect the radius of convergence of the power--series part. Thus we
+focus on
+\begin{equation}
+  g(u,m) := \sum_{n\ge 2} a_n(m)\,u^n,
+  \qquad
+  a_n(m)
+  := \sum_{3k+2\ell=n}
+  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell.
+\end{equation}
+The radius of convergence for fixed $m$ is
+\begin{equation}
+  \frac{1}{R(m)}
+  = \limsup_{n\to\infty} |a_n(m)|^{1/n}.
+\end{equation}
+
+\subsubsection{Rewriting as a double series}
+
+It is convenient to write the power series directly as a sum over $(k,\ell)$:
+\begin{equation}
+  g(u,m) \;=\; \sum_{k,\ell\ge 0}
+  \frac{(3k+2\ell-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,
+  m^\ell\,u^{3k+2\ell}.
+\end{equation}
+For fixed $m$, $u$, the general term in absolute value is
+\begin{equation}
+  T_{k,\ell}(R,M) \;:=\;
+  \left|
+  \frac{(3k+2\ell-1)!}{(k+\ell)!\,(k!)^2\,\ell!}
+  \right|\,
+  R^{3k+2\ell}\,M^\ell,
+  \qquad
+  R = |u|,\quad M = |m|.
+\end{equation}
+The radius $R(m)$ is determined by the exponential growth of the coefficients in
+$n := 3k+2\ell$, i.e. by $\limsup |a_n(m)|^{1/n}$.
+
+\subsubsection{Saddle--point analysis via Stirling}
+
+For large $k,\ell$ with fixed ratio, we approximate factorials using Stirling's
+formula:
+\begin{equation}
+  n! \sim n^n e^{-n}\sqrt{2\pi n}.
+\end{equation}
+Introduce the scaling
+\begin{equation}
+  k = \alpha n,\qquad \ell = \beta n,\qquad
+  n := 3k+2\ell,
+\end{equation}
+so that
+\begin{equation}
+  3\alpha + 2\beta = 1,\qquad \alpha,\beta\ge 0.
+\end{equation}
+A single term in the inner sum defining $a_n(m)$ then behaves like
+\begin{equation}
+  \log\left|
+  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell
+  \right|
+  \sim n\,\phi(\alpha,\beta;M),
+\end{equation}
+for some function $\phi$ that can be extracted from the Stirling approximation.
+Using the constraint $3\alpha+2\beta=1$, we can solve
+\begin{equation}
+  \alpha = \frac{1-2\beta}{3},\qquad 0\le \beta\le \frac12.
+\end{equation}
+In terms of $\beta$ alone, one finds
+\begin{equation}
+  \phi(\beta;M)
+  \;=\;
+  \log\!\left(
+  \frac{M^\beta}{\alpha^{2\alpha}\,\beta^\beta\,(\alpha+\beta)^{\alpha+\beta}}
+  \right),
+  \qquad
+  \alpha = \frac{1-2\beta}{3},
+\end{equation}
+up to subleading (subexponential in $n$) terms.
+
+For large $n$, the sum over $\ell$ (equivalently over $\beta$) is dominated by
+the value of $\beta$ that maximizes $\phi(\beta;M)$ for fixed $M=|m|$. Hence
+\begin{equation}
+  \limsup_{n\to\infty} |a_n(m)|^{1/n}
+  = \exp\!\left(
+    \sup_{0\le \beta\le 1/2} \phi(\beta;M)
+  \right).
+\end{equation}
+Denote
+\begin{equation}
+  \log \Lambda(M)
+  := \sup_{0\le \beta\le 1/2} \phi(\beta;M).
+\end{equation}
+Then the radius of convergence is
+\begin{equation}
+  R(m) = \frac{1}{\Lambda(|m|)}.
+\end{equation}
+
+\subsubsection{Stationary point and parametric description}
+
+The dominant contribution comes from a saddle point $\beta_*(M)$ where
+\begin{equation}
+  \frac{d\phi}{d\beta}(\beta_*(M);M) = 0.
+\end{equation}
+A straightforward differentiation and simplification give
+\begin{equation}
+  \frac{d\phi}{d\beta}
+  =
+  \log\!\left(\frac{M}{3\beta(\beta+1)^{1/3}}\right)
+  + \frac{4}{3}\log(1-2\beta).
+\end{equation}
+The saddle condition thus reads
+\begin{equation}
+  \log\!\left(\frac{M}{3\beta(\beta+1)^{1/3}}\right)
+  = -\frac{4}{3}\log(1-2\beta),
+\end{equation}
+or equivalently
+\begin{equation}
+  M
+  = 3\beta(\beta+1)^{1/3}(1-2\beta)^{-4/3}.
+  \label{eq:M-beta-relation}
+\end{equation}
+For each $M = |m|>0$, there is (under suitable regularity assumptions) a unique
+$\beta_*(M)\in(0,1/2)$ solving this equation.
+
+Evaluating the growth factor $\Lambda(M)$ at the saddle, one finds that the
+corresponding exponential growth rate can be written as
+\begin{equation}
+  \Lambda(M) = E(\beta_*(M)),
+\end{equation}
+where
+\begin{equation}
+  E(\beta) = 3\,\frac{(1-2\beta)^{-2/3}}{(1+\beta)^{1/3}}.
+\end{equation}
+Therefore, the radius of convergence is
+\begin{equation}
+  R(m)
+  = \frac{1}{\Lambda(|m|)}
+  = \frac{1}{3}\,(1-2\beta_*)^{2/3}(1+\beta_*)^{1/3},
+\end{equation}
+with $\beta_* = \beta_*(|m|)$ determined implicitly by
+\eqref{eq:M-beta-relation}.
+
+In other words, we can give a parametric description of the boundary of the
+convergence domain in the $(|u|,|m|)$--plane. Introducing a real parameter
+$\beta \in (0,1/2)$, we set
+\begin{equation}
+  \boxed{
+  \begin{aligned}
+    M(\beta) &= 3\beta\,(1+\beta)^{1/3}(1-2\beta)^{-4/3},\\[3pt]
+    R(\beta) &= \frac{1}{3}\,(1-2\beta)^{2/3}(1+\beta)^{1/3},
+  \end{aligned}
+  }
+\end{equation}
+so that for fixed $m$ with $M=|m|$, one determines the corresponding $\beta$ via
+$M(\beta)=|m|$, and then the radius of convergence is $R(m)=R(\beta)$.
+
+\subsubsection{Special limits}
+
+\paragraph{The case $m=0$.}
+Taking the limit $M\to 0$ corresponds to $\beta\to 0$. From
+$M(\beta)\sim 3\beta$ as $\beta\to 0$, we have $\beta\sim M/3$, while
+\begin{equation}
+  R(\beta)\xrightarrow[\beta\to 0]{}\frac{1}{3}.
+\end{equation}
+Thus
+\begin{equation}
+  R(0) = \frac{1}{3}.
+\end{equation}
+
+\paragraph{Large \texorpdfstring{$|m|$}{|m|}.}
+For $|m|\to\infty$, the parameter $\beta$ approaches $1/2$ from below. From the
+parametric form one can extract the asymptotic behaviour
+\begin{equation}
+  R(m) \sim C\,|m|^{-1/2},
+  \qquad |m|\to\infty,
+\end{equation}
+for some explicit constant $C>0$ (which can be worked out from the leading
+behaviour of $M(\beta)$ and $R(\beta)$ near $\beta=1/2$).
+
+\subsubsection{Summary}
+
+For each fixed value of the parameter $m\in\mathbb{C}$, the power--series part
+of $f(u,m)$ in $u$ has a finite radius of convergence $R(m)$ given implicitly
+by a saddle--point analysis:
+\begin{itemize}
+  \item Introduce $M=|m|$ and a parameter $\beta\in(0,1/2)$.
+  \item The pair $(M,R)$ is parametrized by
+  \begin{equation}
+    M(\beta) = 3\beta\,(1+\beta)^{1/3}(1-2\beta)^{-4/3},\qquad
+    R(\beta) = \frac{1}{3}\,(1-2\beta)^{2/3}(1+\beta)^{1/3}.
+  \end{equation}
+  \item Given $m$, solve $M(\beta)=|m|$ for $\beta$ and then
+  $R(m)=R(\beta)$.
+\end{itemize}
+The logarithmic term $\log u$ does not affect the radius of convergence of the
+power--series part, though it introduces a singularity at $u=0$ itself.
+
+
 \subsection{Rational change of coordinates and the Kerr-Doran prescription}
 
 Nagell’s algorithm provides a systematic procedure to convert the mirror curve of local $\mathbb{F}_1$ into Weierstrass form, but it does so at the price of introducing a transcendental change of variables. A significantly simpler rational transformation, originally presented in \cite{Marino:LocalF1Notes}, is given by
@@ -848,6 +1057,10 @@ Whereas, under the large volume monodromies sending $\log(\tilde{u}) \to \log(\t
 \begin{equation}
   T \to T - k, \quad T_D \to T_D - 8 k T - k m + 4 k^2.
 \end{equation}
+
+
+
+
 
 
 \printbibliography[title={References}]
