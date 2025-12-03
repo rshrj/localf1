@@ -1,3 +1,5 @@
+(* ::Package:: *)
+
 (* :Title:    LocalF1 Package
    :Context:  LocalF1`
    :Author:   Rishi Raj
@@ -8,7 +10,11 @@
      0.1.0 - 2025-12-01 - Initial version.
 *)
 
+
+
 (* ::Package:: *)
+(**)
+
 
 BeginPackage["LocalF1`"];
 
@@ -27,6 +33,8 @@ MirrorCurveg2::usage = "TODO";
 MirrorCurveg3::usage = "TODO";
 
 MirrorCurveDelta::usage = "TODO";
+
+MirrorCurveJ::usage = "TODO";
 
 NodalCurveParam::usage = "TODO";
 
@@ -96,6 +104,8 @@ MirrorCurveg3[m_, u_] := 27 (-1 + 12 m u^2 + 36 u^3 - 48 m^2 u^4 - 144 m u^5 - 2
    64 m^3 u^6);
 
 MirrorCurveDelta[m_, u_] := m + u - 8 m^2 u^2 - 36 m u^3 - 27 u^4 + 16 m^3 u^4;
+
+MirrorCurveJ[m_,u_]:=(1-8 m u^2-24 u^3+16 m^2 u^4)^3/(u^8 (m+u-8 m^2 u^2-36 m u^3-27 u^4+16 m^3 u^4));
 
 NodalCurveParam[X_,Y_,t_,X0_] := {X -> 1/2 (t^2 - 4 X0), Y -> (t (t^2 - 6 X0))/Sqrt[2]};
 
@@ -182,6 +192,9 @@ ZLV[{r_, dF_, dB_, ch2_}, T_, m_] := -ch2 + dF m - r/6 + (m^2 r)/2 + 2 dF T - m 
 MonodromySqrtLV[{T_, TD_, m_}] := {1/2 + T, 1 + m/2 + 4 T + TD, m};
 
 SpectralFlow[{r_, dF_, dB_, ch2_}, {mF_, mB_}] := {r, dF + r mF, dB + r mB, ch2 - dB mB + dF mB + dB mF - (mB^2 r)/2 + mB mF r};
+
+
+
 
 
 End[]; (* `Private` *)
