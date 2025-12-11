@@ -23,6 +23,8 @@ BeginPackage["LocalF1`"];
 (*   Public symbols      *)
 (* ===================== *)
 
+RichardsonResum::usage = "TODO";
+
 MirrorCurve::usage = "MirrorCurveF1[x, y, m, u] is the affine mirror-curve equation of local F1 \
 in the variables x, y and parameters m, u.";
 
@@ -35,6 +37,10 @@ MirrorCurveg3::usage = "TODO";
 MirrorCurveDelta::usage = "TODO";
 
 MirrorCurveJ::usage = "TODO";
+
+URoots::usage = "TODO";
+
+PlotURoots::usage = "TODO";
 
 NodalCurveParam::usage = "TODO";
 
@@ -92,6 +98,14 @@ Begin["`Private`"];
 (*   Public definitions  *)
 (* ===================== *)
 
+
+RichardsonResum[PartSum_, n_] := 
+  With[{d = Length[PartSum] - n - 1}, 
+   Sum[PartSum[[Length[PartSum] + k - n]] (d + k)^
+      n (-1)^(k + n)/k!/(n - k)!, {k, 0, n}]];
+
+
+
 MirrorCurve[x_,y_,m_,u_] := x + y + 1/x/y + m/x - 1/u;
 
 MirrorCurvef3[X_, m_, u_] := 5832 u^6 - 1728 m^3 u^6 - 
@@ -106,6 +120,15 @@ MirrorCurveg3[m_, u_] := 27 (-1 + 12 m u^2 + 36 u^3 - 48 m^2 u^4 - 144 m u^5 - 2
 MirrorCurveDelta[m_, u_] := m + u - 8 m^2 u^2 - 36 m u^3 - 27 u^4 + 16 m^3 u^4;
 
 MirrorCurveJ[m_,u_]:=(1-8 m u^2-24 u^3+16 m^2 u^4)^3/(u^8 (m+u-8 m^2 u^2-36 m u^3-27 u^4+16 m^3 u^4));
+
+URoots[m_] := u /. NSolve[MirrorCurveDelta[m, u] == 0, u];
+
+PlotURoots[m_] := ComplexListPlot[Thread[{URoots[m]}],
+   PlotRange -> {{-1, 1}, {-1, 1}},
+   PlotStyle -> {PointSize[.02]},
+   AspectRatio -> 1,
+   PlotLegends -> N[Abs /@ URoots[m]]
+   ];
 
 NodalCurveParam[X_,Y_,t_,X0_] := {X -> 1/2 (t^2 - 4 X0), Y -> (t (t^2 - 6 X0))/Sqrt[2]};
 
@@ -173,6 +196,7 @@ KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
       2 (Li2[b] + Log[1 - b] Log[b]) - (Log[1/b] - Log[b]) Log[
         1 - b^2]));
 
+(* add KerrDoran direct from m, u *)
 
 
 EulerChi[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dB dBp - dBp dF - dB dFp + ch2p r + (dBp r)/2 + dFp r + ch2 rp - (dB rp)/2 - dF rp + r rp;
