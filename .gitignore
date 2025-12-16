@@ -556,3 +556,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# temporary documents for figures etc
+docs/
