@@ -122,6 +122,11 @@ WallCircle::usage = "WallCircle[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, 
 
 InitialPosition::usage = "InitialPosition[{r, dF, dB, ch2}, m] calculates the initial s value of the ray when it intersects the real axis. Only works for real m.";
 
+(* from F0Scattering.m *)
+SameHalfPlaneQ::usage = "SameHalfPlaneQ[Zlist] gives True if all elements of Zlist are in a common half plane";
+
+QuiverDomain::usage = "QuiverDomain[Coll, psi, m] plots the region where the LV central charges Z of Coll have Re[e^{-I psi} Z] < 0, and the region where they are in same half-plane."; 
+
 
 Begin["`Private`"];
 
@@ -254,6 +259,9 @@ GiesekerSlope[{r_, dF_, dB_, ch2_}, M_]:= (dB - dB M + dF (2 + M))/r;
 BogomolovDiscriminant[{r_, dF_, dB_, ch2_}] := -(dB^2/(2 r^2)) + (dB dF)/r^2 - ch2/r;
 
 ZLV[{r_, dF_, dB_, ch2_}, T_, m_] := -ch2 + dF m + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T);
+ZLV[{r_, dF_, dB_, ch2_}, {s_,t_}, m_] := -ch2 + dB (-m + s + I t) + 
+ 1/2 (2 dF + r (m - 4 s - 4 I t)) (m + 2 s + 2 I t);
+
 
 SpectralFlow[{r_, dF_, dB_, ch2_}, {mF_, mB_}] := {r, dF + r mF, dB + r mB, ch2 - dB mB + dF mB + dB mF - (mB^2 r)/2 + mB mF r};
 
@@ -327,6 +335,27 @@ WallCircle[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, m_ : 0] :=
 
 InitialPosition[{r_, dF_, dB_, ch2_}, m_: 0] := (dB + 2 dF - m r - Sqrt[
  dB^2 - 16 ch2 r + 2 dB (2 dF - 9 m r) + (2 dF + 3 m r)^2])/(8 r);
+
+
+(* from F0Scattering.m *)
+SameHalfPlaneQ[{}] := True;
+SameHalfPlaneQ[Zlist_List] := 
+  If[AnyTrue[Zlist, # == 0 &], 
+   False, -Subtract @@ MinMax[Arg[Zlist/Zlist[[1]]]] < Pi];
+
+Options[QuiverDomain] = {"Style" -> LightBlue};
+QuiverDomain[Coll_, psi_, m_, 
+   OptionsPattern[]] := {RegionPlot[(And @@ 
+       Table[Re[Exp[-I psi] ZLV[Coll[[i]], {s, t}, m]] < 0, {i, 
+         Length[Coll]}]) && t > 0, {s, -1.5, 1.5}, {t, 0, 1}, 
+    PlotPoints -> 100, AspectRatio -> 1, 
+    PlotStyle -> Flatten[{OptionValue["Style"], Opacity[.5]}]], 
+   RegionPlot[
+    SameHalfPlaneQ[
+     Table[ZLV[Coll[[i]], {s, t}, m], {i, Length[Coll]}]], {s, -1.5, 
+     1.5}, {t, 0, 1}, PlotPoints -> 100, AspectRatio -> 1, 
+    BoundaryStyle -> Directive[Dashed], 
+    PlotStyle -> Flatten[{OptionValue["Style"], Opacity[.3]}]]};
 
 
 End[]; (* `Private` *)
