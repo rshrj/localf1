@@ -23,6 +23,8 @@ BeginPackage["LocalF1`"];
 (*   Public symbols      *)
 (* ===================== *)
 
+(* Usage messages for exported functions *)
+
 RichardsonResum::usage = "TODO";
 
 MirrorCurve::usage = "MirrorCurveF1[x, y, m, u] is the affine mirror-curve equation of local F1 \
@@ -68,6 +70,13 @@ BW::usage = "BW[z] Bloch Wigner Dilog";
 
 Li2::usage = "Ordinary dilogarithm";
 
+
+(* Large volume stuff *)
+
+Ch::usage = "Ch[p, q] represents the Chern vector of the sheaf O(p F + q B).";
+
+repCh::usage = "Expands Ch[p, q] Ch[p, q][1] and GV[p, q, n]";
+
 EulerChi::usage = "TODO";
 
 DSZ::usage = "TODO";
@@ -80,11 +89,39 @@ GiesekerSlope::usage = "TODO";
 
 BogomolovDiscriminant::usage = "TODO";
 
-MonodromySqrtLV::usage = "TODO";
+ZLV::usage = "ZLV[{r, dF, dB, ch2}, T, m] is the large volume central charge for local F1 given by Z = -ch2 + dF m + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T)";
 
 SpectralFlow::usage = "TODO";
 
-(* Usage messages for exported functions *)
+Sigma::usage = "Sigma such that ZLV = gam.Sigma.Pi\[Transpose]";
+
+MLV::usage = "LV monodromy";
+
+MSF::usage = "MSF[mF, mB] -> Spectral flow monodromy by object Ch[mF, mB]";
+
+MonodromyFromSphericalTwist::usage = "MonodromyFromSphericalTwist[mF, mB] -> Spherical twist monodromy by spherical object Ch[mF, mB]";
+
+M1p::usage = "F1Global.pdf eq. (5.59): Conifold monodromy at special lambda";
+
+M2p::usage = "F1Global.pdf eq. (5.59): Conifold monodromy at special lambda";
+
+MonodromyOnCharge::usage = "MonodromyOnCharge[M, {r, dF, dB, ch2}] -> Action of M on charge gam = Sigma.Inverse[M].Inverse[Sigma]";
+
+MonodromyOnTau::usage = "MonodromyOnCharge[M, tau] is the action on tau";
+
+
+(* Large volume scattering *)
+
+Rays::usage = "Rays[{r, dF, dB, ch2}, t, psi, m] computes s = Re(T) for the ray Re(e^{-i psi} Z) = 0 at a given value of t = Im(T)";
+
+Wall::usage = "Wall[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] computes the equation of the wall of marginal stability between the two objects. Only works for real m.";
+
+WallRadius::usage = "WallRadius[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] computes the radius of the wall circle. Only works for real m.";
+
+WallCircle::usage = "WallCircle[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] gives the Circle object for the wall circle. Only works for real m.";
+
+InitialPosition::usage = "InitialPosition[{r, dF, dB, ch2}, m] calculates the initial s value of the ray when it intersects the real axis. Only works for real m.";
+
 
 Begin["`Private`"];
 
@@ -103,6 +140,7 @@ RichardsonResum[PartSum_, n_] :=
   With[{d = Length[PartSum] - n - 1}, 
    Sum[PartSum[[Length[PartSum] + k - n]] (d + k)^
       n (-1)^(k + n)/k!/(n - k)!, {k, 0, n}]];
+
 
 
 
@@ -199,6 +237,10 @@ KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
 (* add KerrDoran direct from m, u *)
 
 
+repCh = {Ch[mF_, mB_][1] :> -{1, mF, mB, -(mB^2/2) + mB mF}, 
+   Ch[mF_, mB_] :> {1, mF, mB, -(mB^2/2) + mB mF}, 
+   GV[mF_, mB_, n_] :> {0, mF, mB, n}};
+
 EulerChi[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dB dBp - dBp dF - dB dFp + ch2p r + (dBp r)/2 + dFp r + ch2 rp - (dB rp)/2 - dF rp + r rp;
 
 DSZ[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dBp r + 2 dFp r - dB rp - 2 dF rp;
@@ -211,14 +253,80 @@ GiesekerSlope[{r_, dF_, dB_, ch2_}, M_]:= (dB - dB M + dF (2 + M))/r;
 
 BogomolovDiscriminant[{r_, dF_, dB_, ch2_}] := -(dB^2/(2 r^2)) + (dB dF)/r^2 - ch2/r;
 
-ZLV[{r_, dF_, dB_, ch2_}, T_, m_] := -ch2 + dF m - r/6 + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T);
-
-MonodromySqrtLV[{T_, TD_, m_}] := {1/2 + T, 1 + m/2 + 4 T + TD, m};
+ZLV[{r_, dF_, dB_, ch2_}, T_, m_] := -ch2 + dF m + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T);
 
 SpectralFlow[{r_, dF_, dB_, ch2_}, {mF_, mB_}] := {r, dF + r mF, dB + r mB, ch2 - dB mB + dF mB + dB mF - (mB^2 r)/2 + mB mF r};
 
+Sigma = {{0, 0, 0, -1}, {0, 1, 2, 0}, {0, -1, 1, 0}, {-1, 0, 0, 0}};
+
+MLV = {{1, 0, 0, 0}, {0, 1, 0, 0}, {1, 0, 1, 0}, {4, 1, 8, 1}};
+
+MSF[mF_, mB_] := {{1, mF, mB, -(mB^2/2) + mB mF}, {0, 1, 0, mB}, {0, 0, 
+    1, -mB + mF}, {0, 0, 0, 1}};
+
+MonodromyFromSphericalTwist[mF_, mB_] := {{1, 0, 0, 0}, {0, 1, 0, 0}, {1/2 mB (mB - 2 mF), -mB + mF,
+     1 + mB + 2 mF, -1}, {1/2 mB (mB^2 - 4 mF^2), -mB^2 - mB mF + 
+     2 mF^2, (mB + 2 mF)^2, 1 - mB - 2 mF}};
+
+M1p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {-1/2, 1, 0, 1}, {-1/2, 1, -1, 1}};
+M2p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, -1, 3, 1}, {0, -2, -4, -1}};
+
+MonodromyOnCharge[M_, gam_] :=
+   If[Length[M] == 0, gam,
+    If[ArrayDepth[M] == 2,
+     (*a single matrix*)
+     gam . Sigma . Inverse[M] . Inverse[Sigma],
+     (*a list of matrices*)
+     MonodromyOnCharge[Drop[M, 1], 
+      gam . Sigma . Inverse[First[M]] . Inverse[Sigma]]
+     ]
+    ];
+
+MonodromyOnTau[M_, tau_] := (M[[4, 3]] + 8 tau M[[4, 4]])/(8 M[[3, 3]] + 
+     64 tau M[[3, 4]]);  
 
 
+Rays[{r_, dF_, dB_, ch2_}, t_, psi_, m_ : 0] := (
+   ch2 + (dB - dF) Re[m] - (dB + 2 dF) t Tan[psi] + (dB - dF) Im[
+      m] Tan[psi])/(dB + 2 dF) /; r == 0;
+Rays[{r_, dF_, dB_, ch2_}, t_, psi_, m_ : 0] := -(1/(
+    8 r)) (-dB - 2 dF + r Re[m] + r (8 t + Im[m]) Tan[psi] + 
+     Sec[psi] \[Sqrt](Cos[
+          psi]^2 ((dB + 2 dF)^2 + 
+           9 r^2 (-Im[m] + Re[m]) (Im[m] + Re[m]) - 
+           2 r (8 ch2 + (9 dB - 6 dF) Re[m]) + 
+           r^2 (8 t + Im[m])^2 Sec[psi]^2 + 
+           6 r Im[m] (-3 dB + 2 dF + 3 r Re[m]) Tan[psi])));
+
+Wall[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, {s_, t_}, 
+   m_ : 0] := (cch2 (dB + 2 dF - m r) - ch2 (ddB + 2 ddF - m rr) + 
+     1/2 m (-6 dB ddF + 6 ddB dF - ddB m r + 
+        4 ddF m r + (dB - 4 dF) m rr) + 
+     8 (-((cch2 + (ddB - ddF) m) r) + (ch2 + (dB - dF) m) rr) s + 
+     4 (ddB r + 2 ddF r - (dB + 2 dF) rr) (s^2 + t^2))/(4 (ddB r + 
+       2 ddF r - dB rr - 2 dF rr));
+
+WallRadius[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, 
+   m_ : 0] := (r (2 (ddB + 2 ddF) (ch2 ddB + 2 ch2 ddF - 
+           cch2 (dB + 2 dF) + 3 dB ddF m - 3 ddB dF m) + (2 cch2 + 
+           3 ddB m) (4 cch2 + 3 (ddB - 2 ddF) m) r) + 
+     2 ((dB + 2 dF) (-ch2 (ddB + 2 ddF) + cch2 (dB + 2 dF) - 
+           3 dB ddF m + 3 ddB dF m) + (-8 cch2 ch2 + 
+           3 (-3 cch2 dB - 3 ch2 ddB + 2 ch2 ddF + 2 cch2 dF) m + 
+           9 (dB (-ddB + ddF) + ddB dF) m^2) r) rr + (2 ch2 + 
+        3 dB m) (4 ch2 + 3 (dB - 2 dF) m) rr^2)/(8 (ddB r + 
+       2 ddF r - (dB + 2 dF) rr)^2);
+
+WallCircle[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, m_ : 0] := 
+  Module[{R},
+   R = WallRadius[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, m];
+   If[R > 0, 
+    Circle[{(cch2 r + ddB m r - ddF m r - ch2 rr - dB m rr + 
+       dF m rr)/(ddB r + 2 ddF r - dB rr - 2 dF rr), 0}, 
+     Sqrt[R], {0, Pi}], {}]];
+
+InitialPosition[{r_, dF_, dB_, ch2_}, m_: 0] := (dB + 2 dF - m r - Sqrt[
+ dB^2 - 16 ch2 r + 2 dB (2 dF - 9 m r) + (2 dF + 3 m r)^2])/(8 r);
 
 
 End[]; (* `Private` *)
