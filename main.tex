@@ -1064,7 +1064,7 @@ Whereas, under the large volume monodromies sending $\log(\tilde{u}) \to \log(\t
 \subsection{Large Volume Scattering}
 
 We take for the large volume central charge of an object $E$ of chern Character $\gamma = (r, \ d_F, \ d_B, \ \ch_2)$, the function
-\begin{equation}
+\begin{equation}\label{eqn:LVCentralCharge}
   Z_\LV(\gamma) = -r \qty(4 T^2 + m T - \frac{m^2}{2}) + d_F (2T+m) + d_B(T-m) - \ch_2.
 \end{equation}
 
@@ -1075,12 +1075,42 @@ Walls of marginal stability between two objects of charge $\gamma$ and $\gamma'$
 \end{equation}
 on the real axis, while the radius $R$ can be written as
 \begin{equation}
-  R = 
+  R^2 = T_0^2 + \frac{T_0 (-d_B'-2 d_F'+m r')}{4 r'} + \frac{2 \ch_2'-m (-2 d_B'+2 d_F'+m r')}{8 r'}
 \end{equation}
 
-
-\subsubsection{Initial Rays}
-
+\subsubsection{Rays}
+Given a phase $\psi \in [0, \pi)$, the ray corresponding to an object $E$ of charge $\gamma$ is given by
+\begin{equation}
+  \text{Ray equation: } \quad \mathcal{F}(\gamma, T, m, \psi) = \Re(e^{-\ii \psi} Z_\LV(\gamma)) = 0.
+\end{equation}
+and $\Im(e^{-\ii \psi} Z_\LV(\gamma)) > 0$. Of course, this ray may or may not be populated over the entire $T$ plane but the equation above is the support of the ray whenever it exists (also for the object of charge $-\gamma$).
+A direct evaluation of $\mathcal{F}$ for the central charge in \cref{eqn:LVCentralCharge} shows that the rays are rectangular hyperbolas in the plane of $T = s + \ii t$. The center of the hyperbola is at
+\begin{equation}
+  T_0 = \frac18 \qty[\frac{(d_B + 2 d_F)}{r} - m],
+\end{equation}
+% Thinking of T as a vector, $\vec{T} = (s, t)$,
+% \begin{equation}
+%   \mathcal{F} = \vec{T}^T  Q  \vec{T} - 2 \vec{T} \cdot \vec{b} + F,
+% \end{equation}
+% where $Q$ is a matrix with eigenvalues $\pm 1$ which is diagonalized by the rotation matrix
+% \begin{equation}
+%   R = \begin{pmatrix}
+%     \cos \frac{\psi}{2} & \sin \frac{\psi}{2} \\
+%     -\sin \frac{\psi}{2} & \cos \frac{\psi}{2}
+%   \end{pmatrix} \quad
+%   Q = R^{-1} \mathrm{diag}(-1, 1) R
+% \end{equation}
+% and $b$ is such that the center of the hyperbola is at $\vec{T}_0 = Q^{-1}(-\vec{b})$. In complex notation,
+% \begin{equation}
+%   \text{Ray center: } \quad  T_0 = \frac18 \qty[\frac{(d_B + 2 d_F)}{r} - m],
+% \end{equation}
+After performing a rotation by $\frac{\psi}{2}$ and shifting the center, defining $T' = e^{-\ii \frac{\psi}{2}}\qty(T - T_0) = s' + \ii t'$ and $m = m_1 + \ii m_2$, the ray equation looks like
+\begin{equation}
+  \begin{split}
+    s'^2 - t'^2 &= \frac{-2 r (8 \ch_2+(9 d_B -6 d_F) m_1)+(d_B+2 d_F)^2+9 r^2 (m_1^2-m_2^2)}{64 r^2} \cos \psi \\
+    &\quad + \frac{3 m_2 (-3 d_B+2 d_F+3 m_1 r)}{32 r} \sin \psi.
+  \end{split}
+\end{equation}
 
 
 
