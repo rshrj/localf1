@@ -77,7 +77,7 @@ Ch::usage = "Ch[p, q] represents the Chern vector of the sheaf O(p F + q B).";
 
 repCh::usage = "Expands Ch[p, q] Ch[p, q][1] and GV[p, q, n]";
 
-EulerChi::usage = "TODO";
+Euler::usage = "TODO";
 
 DSZ::usage = "TODO";
 
@@ -122,11 +122,32 @@ WallCircle::usage = "WallCircle[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, 
 
 InitialPosition::usage = "InitialPosition[{r, dF, dB, ch2}, m] calculates the initial s value of the ray when it intersects the real axis. Only works for real m.";
 
+CollDBridgeland::usage = "";
+CollDArcaraII::usage = "";
+CollDArcaraI::usage = "";
+
+CollBridgeland::usage = "";
+CollArcaraII::usage = "";
+CollArcaraI::usage = "";
+
+(* XY plane scattering *)
+XYParabolaY::usage = "";
+
 (* from F0Scattering.m *)
 SameHalfPlaneQ::usage = "SameHalfPlaneQ[Zlist] gives True if all elements of Zlist are in a common half plane";
 
 QuiverDomain::usage = "QuiverDomain[Coll, psi, m] plots the region where the LV central charges Z of Coll have Re[e^{-I psi} Z] < 0, and the region where they are in same half-plane."; 
 
+ExtFromStrong::usage = "ExtFromStrong[Coll] computes the Chern vectors of the objects in the Ext collection dual to the given strong collection Coll"
+StrongFromExt::usage = "StrongFromExt[Coll] computes the Chern vectors of the objects in the strong collection dual to the given Ext collection Coll";
+
+TreeFromListRays::usage = "Remains to be implemented";
+LVTreesFromListRays::usage = "Remains to be implemented";
+
+KroneckerDims::usage = "KroneckerDims[m, Nn] gives the list of populated dimension vectors {n1,n2} for Kronecker quiver with m arrows, with (n1,n2) coprime and 0<=n1,n2<=Nn"; 
+IntersectRaysNoTest::usage = "IntersectRays[{r, dF, dB, ch2}, {rr, ddB, ddF, cch2}, z, zz, m] returns intersection point (x,y) of two rays if the intersection point lies strictly upward from z and z', or {} otherwise, without testing non-vanishing of DSZ product";  
+CostPhi::usage = "CostPhi[{r, dF, dB, ch2}, s, mu] gives the cost function \\phi_s(\\gamma) = dB + 2 dF - r (mu + 8 s)";
+ConstructLVDiagram::usage = "ConstructLVDiagram1[smin, smax, phimax, Nm, m, ListRays] constructs the LV scattering diagram for F1 with initial rays in the interval [smin,smax], cost function up to phimax, scattering products with n1 + n2 <= Nn at each intersection; m is assumed to be real; The output consists of a list of  { charge, {x,y}, parent1, parent2, n1, n2 }; If ListRays is not empty, then uses it as initial rays.";
 
 Begin["`Private`"];
 
@@ -246,7 +267,7 @@ repCh = {Ch[mF_, mB_][1] :> -{1, mF, mB, -(mB^2/2) + mB mF},
    Ch[mF_, mB_] :> {1, mF, mB, -(mB^2/2) + mB mF}, 
    GV[mF_, mB_, n_] :> {0, mF, mB, n}};
 
-EulerChi[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dB dBp - dBp dF - dB dFp + ch2p r + (dBp r)/2 + dFp r + ch2 rp - (dB rp)/2 - dF rp + r rp;
+Euler[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dB dBp - dBp dF - dB dFp + ch2p r + (dBp r)/2 + dFp r + ch2 rp - (dB rp)/2 - dF rp + r rp;
 
 DSZ[{r_, dF_, dB_, ch2_}, {rp_, dFp_, dBp_, ch2p_}] := dBp r + 2 dFp r - dB rp - 2 dF rp;
 
@@ -277,7 +298,7 @@ MonodromyFromSphericalTwist[mF_, mB_] := {{1, 0, 0, 0}, {0, 1, 0, 0}, {1/2 mB (m
      2 mF^2, (mB + 2 mF)^2, 1 - mB - 2 mF}};
 
 M1p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {-1/2, 1, 0, 1}, {-1/2, 1, -1, 1}};
-M2p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, -1, 3, 1}, {0, -2, -4, -1}};
+M2p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 1, 3, 1}, {0, -2, -4, -1}};
 
 MonodromyOnCharge[M_, gam_] :=
    If[Length[M] == 0, gam,
@@ -336,6 +357,24 @@ WallCircle[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, m_ : 0] :=
 InitialPosition[{r_, dF_, dB_, ch2_}, m_: 0] := (dB + 2 dF - m r - Sqrt[
  dB^2 - 16 ch2 r + 2 dB (2 dF - 9 m r) + (2 dF + 3 m r)^2])/(8 r);
 
+CollDBridgeland = {{1, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 1, 1/2}, {1, 2, 1, 3/2}};
+
+CollDArcaraII = {{1, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 1, 1/2}, {2, 1, 1, -(1/2)}};
+
+CollDArcaraI = {{1, 0, 0, 0}, {1, 0, 1, -(1/2)}, {1, 1, 1, 1/2}, {2, 1, 1, -(1/2)}};
+
+CollBridgeland = {{1, 0, 0, 0}, {-1, 1, 0, 0}, {-1, 0, 1, 1/2}, {1, -1, -1, 1/2}};
+
+CollArcaraII = {{1, 0, 0, 0}, {0, 0, -1, 1/2}, {1, -2, -1, 3/2}, {-1, 1, 1, -(1/2)}}
+
+CollAracaraI = {{1, 0, 0, 0}, {0, 0, 1, -(1/2)}, {1, -2, -1, 3/2}, {-1, 1, 0, 0}};
+
+
+(* XY plane scattering *)
+
+XYParabolaY[x_,mu_,m2_,psi_] := 1/4 (18 m2^2 + mu^2 - 2 mu x - 
+    8 x^2 + (mu^2 - 2 mu x - 8 x^2) Cos[2 psi]) Sec[psi]^2;
+
 
 (* from F0Scattering.m *)
 SameHalfPlaneQ[{}] := True;
@@ -356,6 +395,111 @@ QuiverDomain[Coll_, psi_, m_,
      1.5}, {t, 0, 1}, PlotPoints -> 100, AspectRatio -> 1, 
     BoundaryStyle -> Directive[Dashed], 
     PlotStyle -> Flatten[{OptionValue["Style"], Opacity[.3]}]]};
+
+ExtFromStrong[Coll_]:=Module[{S,Si},
+   S=Table[Euler[Coll[[i]],Coll[[j]]],{i,Length[Coll]},{j,Length[Coll]}];
+   Si=Inverse[Transpose[S]];
+   Si . Coll
+   ]
+
+StrongFromExt[Coll_]:=Module[{S,Si},
+   S=Table[Euler[Coll[[j]],Coll[[i]]],{i,Length[Coll]},{j,Length[Coll]}];
+   Si=Inverse[Transpose[S]];
+   Si . Coll
+   ]
+
+TreeFromListRays[ListRays_,k_]:=If[ListRays[[k,3]]==0,ListRays[[k,1]],{ListRays[[k,5]]TreeFromListRays[ListRays,ListRays[[k,3]]],ListRays[[k,6]]TreeFromListRays[ListRays,ListRays[[k,4]]]}];
+
+LVTreesFromListRays[ListRays_,{r_,d1_,d2_,ch2_},m_]:=Module[{Lipos,Div,LiTrees},
+   Div=Divisors[GCD@@{r,d1,d2,ch2}];
+   Lipos=Flatten[Join[Table[Position[ListRays,{r,d1,d2,ch2}/k],{k,Div}]],1];
+   If[Lipos=={},
+   Print["No such dimension vector in the list"],
+   LiTrees=(GCD[r,d1,d2,ch2]/GCD@@ListRays[[#,1]])TreeFromListRays[ListRays,#]&/@First[Transpose[Lipos]]
+   (* ScattSort[DeleteDuplicatesBy[SortBy[LiTrees,Length[TreeConstituents[#]]&],ScattGraph[#,m]&],m] *)
+]];
+
+KroneckerDims[m_,Nn_]:=KroneckerDims[m,Nn]=Module[{Ta={}},
+   Do[If[m n1 n2-n1^2-n2^2+1>=0&&GCD[n1,n2]==1,AppendTo[Ta,{n1,n2}]],{n1,0,Nn},{n2,0,Nn-n1}];Drop[Ta,2]];
+
+IntersectRaysNoTest[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, 
+   z_, zz_, mu_ : 0] :=(*returns (x,
+  y) coordinate of intersection point of two rays,
+  or {} if they don't intersect*)(*here do not test if DSZ<>0,
+  and require strictly in future of z and zz*)
+  Module[{zi}, 
+   zi = {(cch2 r + ddB mu r - ddF mu r - ch2 rr - dB mu rr + 
+      dF mu rr)/(ddB r + 2 ddF r - dB rr - 2 dF rr), (
+     ch2 ddB + 2 ch2 ddF - cch2 (dB + 2 dF) + 3 dB ddF mu - 
+      3 ddB dF mu)/(ddB r + 2 ddF r - (dB + 2 dF) rr)};
+   If[CostPhi[{r, dF, dB, ch2}, zi[[1]], mu] > 
+      CostPhi[{r, dF, dB, ch2}, z[[1]], mu] && 
+     CostPhi[{rr, ddF, ddB, cch2}, zi[[1]], mu] > 
+      CostPhi[{rr, ddF, ddB, cch2}, zz[[1]], mu], zi, {}]];
+
+CostPhi[{r_,dF_,dB_,ch2_},s_,m_]:=dB + 2 dF - r (m + 8 s);
+
+ConstructLVDiagram[smin_, smax_, phimax_, Nm_, m_, ListRays0_] := 
+  Module[{eps = .001, mi, mf, Inter, ListInter, ListRays, ListNewRays,
+     kappa, KTab}, mi = Floor[m]; mf = m - mi;
+   (*initial rays {charge,{x,y},parent1,parent2,n1,n2}*)
+   If[ListRays0 == {}, ListRays = Flatten[{
+        Table[{Ch[3 k, 2 k], {k - m/8, -4 k^2}, 0, 0, 0, 0, 0}, {k, 
+          Ceiling[(smin + m/8)], Floor[(smin + m/8)]}],
+        Table[{Ch[3 k, 2 k][1], {k - m/8, -4 k^2}, 0, 0, 0, 0, 0}, {k,
+           Ceiling[(smin + m/8)], Floor[(smin + m/8)]}],
+        Table[{Ch[3 k + 1, 
+           2 k], {1/4 + k - m/8, -(1/2) - 2 k - 4 k^2 - (3 m)/4}, 0, 
+          0, 0, 0, 0}, {k, Ceiling[-(1/4) + m/8 + smin], 
+          Floor[-(1/4) + m/8 + smax]}],
+        Table[{Ch[3 k + 1, 2 k][
+           1], {1/4 + k - m/8, -(1/2) - 2 k - 4 k^2 - (3 m)/4}, 0, 0, 
+          0, 0, 0}, {k, Ceiling[-(1/4) + m/8 + smin], 
+          Floor[-(1/4) + m/8 + smax]}],
+        Table[{Ch[3 k + 1, 
+           2 k + 1], {3/8 + k - m/8, -(5/8) - 3 k - 4 k^2 + (3 m)/8}, 
+          0, 0, 0, 0, 0}, {k, Ceiling[-(3/8) + m/8 + smin], 
+          Floor[-(3/8) + m/8 + smax]}], 
+        Table[{Ch[3 k + 1, 2 k + 1][
+           1], {3/8 + k - m/8, -(5/8) - 3 k - 4 k^2 + (3 m)/8}, 0, 0, 
+          0, 0, 0}, {k, Ceiling[-(3/8) + m/8 + smin], 
+          Floor[-(3/8) + m/8 + smax]}], 
+        Table[{Ch[3 k + 2, 
+           2 k + 1], {5/8 + k - m/8, -(13/8) - 5 k - 4 k^2 - (3 m)/8},
+           0, 0, 0, 0, 0}, {k, Ceiling[-(5/8) + m/8 + smin], 
+          Floor[-(5/8) + m/8 + smax]}], 
+        Table[{Ch[3 k + 2, 2 k + 1][
+           1], {5/8 + k - m/8, -(13/8) - 5 k - 4 k^2 - (3 m)/8}, 0, 0,
+           0, 0, 0}, {k, Ceiling[-(5/8) + m/8 + smin], 
+          Floor[-(5/8) + m/8 + smax]}]}, 1] /. repCh;
+    ListInter = {};,
+    (*If list of rays is already provided*)
+    ListRays = ListRays0;
+    ListInter = 
+     Select[Table[{ListRays[[i, 3]], ListRays[[i, 4]]}, {i, 
+        Length[ListRays]}], First[#] > 0 &]];
+   While[True, ListNewRays = {};
+    Monitor[
+     Do[If[! MemberQ[ListInter, {i, j}], AppendTo[ListInter, {i, j}];
+       kappa = DSZ[ListRays[[i, 1]], ListRays[[j, 1]]];
+       If[kappa != 0, 
+        Inter = IntersectRaysNoTest[ListRays[[i, 1]], ListRays[[j, 1]],
+           ListRays[[i, 2]], ListRays[[j, 2]], m];
+        If[Inter != {}, KTab = KroneckerDims[Abs[kappa], Nm];
+         
+         Do[If[CostPhi[
+             KTab[[k, 1]] ListRays[[i, 1]] + 
+              KTab[[k, 2]] ListRays[[j, 1]], Inter[[1]], m] <= phimax,
+            AppendTo[
+            ListNewRays, {KTab[[k, 1]] ListRays[[i, 1]] + 
+              KTab[[k, 2]] ListRays[[j, 1]], Inter, i, j, KTab[[k, 1]],
+              KTab[[k, 2]]}]], {k, Length[KTab]}]]]], {i, 
+       Length[ListRays]}, {j, i + 1, Length[ListRays]}], {i, j}];
+    If[ListNewRays == {}, Break[], 
+     Print["Adding ", Length[ListNewRays], " rays, "];
+     ListRays = Flatten[{ListRays, ListNewRays}, 1];]];
+   Print[Length[ListRays], " in total."];
+   ListRays];
 
 
 End[]; (* `Private` *)
