@@ -131,10 +131,18 @@ CollBridgeland::usage = "";
 CollArcaraII::usage = "";
 CollArcaraI::usage = "";
 
+(* simple captioning mechanism *)
+GamToString::usage = "";
+GamCaption::usage = "";
+
+ListSpecFlows::usage = "ListSpecFlows[Coll, psi, m, L, xmin, xmax, tmax] lists spectral flow parameters (mF, mB) in the range -L <= m_i <= L that can be applied to the collection Coll such that the resulting quiver domain has a non-empty intersection with the region xmin < Re[T] < xmax, 0 < Im[T] < tmax."
+
 (* XY plane scattering *)
 XYRay::usage = "";
 XYParabolaY::usage = "";
 InitialPositionXY::usage = "InitialPositionXY[gam, m] gives the initial position of ray gam in the x y plane (point with 0 cost function). Only works for real m.";
+XYTost::usage = "XYTost[{x, y}, psi, m] gives the coordinates in s, t plane for a given point {x, y} in the XY coordinates. Only works for real m.";
+XYRaySegment::usage = "XYRaySegment[Ray, mu, L, styleMap, defaultStyle] draws the line corresponding to Ray of length L with style given by a depth-style map styleMap.";
 
 InitialRaysFromColl::usage = "InitialRaysFromColl[Coll, xmin, xmax, m] produces initial rays for ConstructLVDiagram by taking all translates of Coll that start between x = xmin and x = xmax. Only works for real m.";
 
@@ -143,7 +151,7 @@ InitialRaysFromColl::usage = "InitialRaysFromColl[Coll, xmin, xmax, m] produces 
 GCD1::usage = "";
 SameHalfPlaneQ::usage = "SameHalfPlaneQ[Zlist] gives True if all elements of Zlist are in a common half plane";
 
-QuiverDomain::usage = "QuiverDomain[Coll, psi, m] plots the region where the LV central charges Z of Coll have Re[e^{-I psi} Z] < 0, and the region where they are in same half-plane."; 
+QuiverDomain::usage = "QuiverDomain[Coll, psi, m] plots the region where the LV central charges Z of Coll have Re[e^{-I psi} Z] < 0."; 
 
 ChernToCh::usage = "";
 
@@ -326,8 +334,7 @@ MonodromyOnCharge[M_, gam_] :=
      ]
     ];
 
-MonodromyOnTau[M_, tau_] := (M[[4, 3]] + 8 tau M[[4, 4]])/(8 M[[3, 3]] + 
-     64 tau M[[3, 4]]);  
+MonodromyOnTau[M_, tau_] := (M[4, 3] + tau M[4, 4])/(M[3, 3] + tau M[3, 4]);
 
 
 Rays[{r_, dF_, dB_, ch2_}, t_, psi_, m_ : 0] := (
@@ -384,6 +391,30 @@ CollArcaraII = {{1, 0, 0, 0}, {0, 0, -1, 1/2}, {1, -2, -1, 3/2}, {-1, 1, 1, -(1/
 
 CollArcaraI = {{1, 0, 0, 0}, {0, 0, 1, -(1/2)}, {1, -2, -1, 3/2}, {-1, 1, 0, 0}};
 
+(* simple captioning mechanism *)
+GamToString = {
+   -Ch[p_, q_] :> "(" <> ToString[p] <> ", " <> ToString[q] <> ")[1]",
+   Ch[p_, q_] :> "(" <> ToString[p] <> ", " <> ToString[q] <> ")"
+   };
+
+GamCaption[gam_, t_, psi_, m_] := Module[{s, tt, pos, dir, normal},
+  s = Sign[gam[[1]]];
+  pos[tt_] = {Rays[gam /. repCh, tt, psi, m], tt};
+  dir = Normalize[D[pos[tt], tt] /. {tt -> t}];
+  normal = {dir[[2]], -dir[[1]]};
+  Text[gam /. GamToString, pos[t], -s*1.5*normal, -s*dir]
+  ];
+
+ListSpecFlows[Coll_, psi_, m_, L_, xmin_, xmax_, tmax_] := Module[{s, t}, 
+Select[Flatten[Table[{mF, mB}, {mF, -L, L}, {mB, -L, L}], 1], 
+ With[{z = ZLV[#, {s, t}, m] & /@ SpectralFlow[Coll, #]}, 
+    Reduce[FullSimplify@
+      ComplexExpand[
+       AllTrue[z, 
+         Re[Exp[-I psi] #] < 0 &] && (xmin < s < xmax && 
+          0 < t < tmax)], {s, t}]] =!= False &]
+];
+
 
 (* XY plane scattering *)
 
@@ -394,37 +425,50 @@ XYParabolaY[x_,mu_,m2_,psi_] := 1/4 (18 m2^2 + mu^2 - 2 mu x -
     8 x^2 + (mu^2 - 2 mu x - 8 x^2) Cos[2 psi]) Sec[psi]^2;
 
 
+XYTost[{x_, y_}, psi_, m_] := {x - (Sqrt[-(m^2/2) + m x + 4 x^2 + y] Tan[psi])/(
+    2 Sqrt[Sec[psi]^2]), Sqrt[-(m^2/2) + m x + 4 x^2 + y]/(
+   2 Sqrt[Sec[psi]^2])};
+
+XYRaySegment[{c : {r_, dF_, dB_, ch2_}, z : {x0_, y0_}, ___, depth_}, mu_, 
+   L_ : 10, styleMap_ : <||>, 
+   defaultStyle_ : Directive[Black, Thickness[.002]]] := 
+  Module[{v, sty},
+   v = {-r, dB + 2 dF};
+   sty = Lookup[styleMap, depth, defaultStyle];
+   {sty, Line[{z, z + L Normalize[v]}]}];
+
+
 (* from F0Scattering.m *)
 SameHalfPlaneQ[{}] := True;
 SameHalfPlaneQ[Zlist_List] := 
   If[AnyTrue[Zlist, # == 0 &], 
    False, -Subtract @@ MinMax[Arg[Zlist/Zlist[[1]]]] < Pi];
 
-Options[QuiverDomain] = {PlotStyle -> LightBlue};
-QuiverDomain[Coll_, psi_, m_, 
-   OptionsPattern[]] := {RegionPlot[(And @@ 
-       Table[Re[Exp[-I psi] ZLV[Coll[[i]], {s, t}, m]] < 0, {i, 
-         Length[Coll]}]) && t > 0, {s, -1.5, 1.5}, {t, 0, 1}, 
-    PlotPoints -> 100, AspectRatio -> 1, 
-    PlotStyle -> Flatten[{OptionValue[PlotStyle], Opacity[.5]}]], 
+Options[QuiverDomain] = {PlotStyle -> LightBlue, 
+   PlotRange -> {{-1.5, 1.5}, {0, 1}}, PlotPoints -> 100};
+QuiverDomain[coll_, psi_, m_, OptionsPattern[]] := 
+  Module[{sty = OptionValue[PlotStyle], pr = OptionValue[PlotRange], 
+    pp = OptionValue[PlotPoints], z = ZLV[#, {s, t}, m] & /@ coll}, 
    RegionPlot[
-    SameHalfPlaneQ[
-     Table[ZLV[Coll[[i]], {s, t}, m], {i, Length[Coll]}]], {s, -1.5, 
-     1.5}, {t, 0, 1}, PlotPoints -> 100, AspectRatio -> 1, 
-    BoundaryStyle -> Directive[Dashed], 
-    PlotStyle -> Flatten[{OptionValue[PlotStyle], Opacity[.3]}]]};
+    t > 0 && AllTrue[z, Re[Exp[-I psi] #] < 0 &], {s, pr[[1, 1]], 
+     pr[[1, 2]]}, {t, pr[[2, 1]], pr[[2, 2]]},
+    PlotPoints -> pp,
+    AspectRatio -> 1,
+    PlotStyle -> {sty, Opacity[.5]},
+    BoundaryStyle -> None
+    ]];
 
 ExtFromStrong[Coll_]:=Module[{S,Si},
    S=Table[Euler[Coll[[i]],Coll[[j]]],{i,Length[Coll]},{j,Length[Coll]}];
    Si=Inverse[Transpose[S]];
    Si . Coll
-   ]
+   ];
 
 StrongFromExt[Coll_]:=Module[{S,Si},
    S=Table[Euler[Coll[[j]],Coll[[i]]],{i,Length[Coll]},{j,Length[Coll]}];
    Si=Inverse[Transpose[S]];
    Si . Coll
-   ]
+   ];
 
 TreeFromListRays[ListRays_,k_]:=If[ListRays[[k,3]]==0,ListRays[[k,1]],{ListRays[[k,5]]TreeFromListRays[ListRays,ListRays[[k,3]]],ListRays[[k,6]]TreeFromListRays[ListRays,ListRays[[k,4]]]}];
 
