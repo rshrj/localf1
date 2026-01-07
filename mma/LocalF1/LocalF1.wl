@@ -573,7 +573,7 @@ ConstructLVDiagramOpt[phimax_, Nm_, m_, ListRays0_] :=
     
     new = Reap[
        Do[
-        If[! TrueQ @ Lookup[seen, {i, j}, False],
+        If[! KeyExistsQ[seen, {i, j}],
          seen[{i, j}] = True;
          
          kappa = DSZ[ListRays[[i, 1]], ListRays[[j, 1]]];
