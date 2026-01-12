@@ -113,6 +113,13 @@
 \def\rishi#1{{\color{magenta} #1}}
 \newcommand{\ch}{\mathrm{ch}}
 \newcommand{\LV}{\mathrm{LV}}
+\newcommand{\chO}{\mathcal{O}}
+\newcommand{\GV}{\mathrm{GV}}
+
+\definecolor{RemarkColor}{HTML}{2F6FDB}
+\newcommand{\remark}[1]{\textcolor{RemarkColor}{[#1]}}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 
 
 % Figures
@@ -1115,7 +1122,7 @@ After performing a rotation by $\frac{\psi}{2}$ and shifting the center, definin
 \subsubsection{Rays in x-y coordinates}
 
 We define coordinates
-\begin{equation}
+\begin{equation}\label{eqn:xydef}
   x = \frac{\Re(e^{-\ii \psi} \, T)}{\cos \psi}, \quad y = -\frac{\Re(e^{-\ii \psi} \, T_D)}{\cos \psi}, \quad \mu = \frac{\Re(e^{-\ii \psi} \, m)}{\cos \psi},
 \end{equation}
 which makes the rays into straight lines
@@ -1123,6 +1130,54 @@ which makes the rays into straight lines
   x (d_B+2 d_F)+r y -\ch_2+\mu (d_F-d_B) = 0
 \end{equation}
 
+\subsubsection{Determining initial rays from the domains of validity of strongly exceptional collections}
+
+We have three strongly exceptional collections. For each of them, I write the dual collection
+
+\textbf{Bridgeland-Stern-Perling Collection}
+\begin{equation}
+  \mathcal{C}_B = \qty{ \ \chO(0, 0), \ \chO(-1, 0)[1], \ \chO(0, -1)[1], \ \chO(-1, -1) \ }
+\end{equation}
+
+\textbf{Arcara-Miles I Collection}
+\begin{equation}
+  \mathcal{C}_{AI} = \qty{ \ \chO(0, 0), \ \GV(0, 1, -\tfrac12), \ \chO(-2, -1), \ \chO(-1, 0)[1] \ }
+\end{equation}
+
+\textbf{Arcara-Miles II Collection}
+\begin{equation}
+  \mathcal{C}_{AII} = \qty{ \ \chO(0, 0), \ \GV(0, -1, \tfrac12), \ \chO(-2, -1), \ \chO(-1, -1)[1] \ }
+\end{equation}
+
+The domain of validity of a particular collection $\mathcal{C} = \{ \gamma_1, \ldots, \gamma_n \}$ is given by
+\begin{equation}
+  \mathrm{dom}_\psi\mathcal{C} = \{ \Re(e^{-\ii \psi} Z_{\gamma_k}) < 0, \ \forall \gamma_k \in \mathcal{C} \}
+\end{equation}
+
+Working in the $x$-$y$ coordinates defined in \cref{eqn:xydef}, we can write the condition $\Re(e^{-\ii \psi} Z_{\gamma}) < 0$ as (assuming $0 \leq \psi < \frac{\pi}{2}$)
+\begin{equation}
+  r y + (d_B + 2 d_F) x + (d_F - d_B) \mu - \ch_2 < 0
+\end{equation}
+Thus the domain $\mathrm{dom} \mathcal{C}$ is given by a linear system of inequalities and in general is given by a polygon if it exists and is bounded \remark{Is it always bounded?}.
+
+I now want to understand the domain of validity of the Bridgeland collection tensored with an arbitrary $\chO(m_F, m_B)$. We want the range of integer $m_F$ and $m_B$ such that the domain $\mathrm{dom}_0 \qty(\mathcal{C}_B \otimes \chO(m_F, m_B))$ is non-empty. \par
+\textit{Bridgeland-Perling-Stern collection} (for $3 \mu \notin \mathbb{Z}$):
+For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
+\begin{equation}
+  \mathcal{C}_B: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
+\end{equation}
+
+\textit{Arcara-Miles I collection} (for $3 \mu \notin \mathbb{Z}$):
+For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
+\begin{equation}
+  \mathcal{C}_{AI}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 3}{3}}
+\end{equation}
+
+\textit{Arcara-Miles II collection} (for $3 \mu \notin \mathbb{Z}$):
+For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
+\begin{equation}
+  \mathcal{C}_{AII}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
+\end{equation}
 
 
 
