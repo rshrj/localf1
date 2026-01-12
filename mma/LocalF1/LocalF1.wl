@@ -138,13 +138,15 @@ GamCaption::usage = "";
 ListSpecFlows::usage = "ListSpecFlows[Coll, psi, m, L, xmin, xmax, tmax] lists spectral flow parameters (mF, mB) in the range -L <= m_i <= L that can be applied to the collection Coll such that the resulting quiver domain has a non-empty intersection with the region xmin < Re[T] < xmax, 0 < Im[T] < tmax."
 
 (* XY plane scattering *)
-XYRay::usage = "";
+XYRay::usage = "XYRay[{r, dF, dB, ch2}, {x, y}, mu] gives the ray equation in the XY coordinates.";
 XYParabolaY::usage = "";
 InitialPositionXY::usage = "InitialPositionXY[gam, m] gives the initial position of ray gam in the x y plane (point with 0 cost function). Only works for real m.";
 XYTost::usage = "XYTost[{x, y}, psi, m] gives the coordinates in s, t plane for a given point {x, y} in the XY coordinates. Only works for real m.";
 XYRaySegment::usage = "XYRaySegment[Ray, mu, L, styleMap, defaultStyle] draws the line corresponding to Ray of length L with style given by a depth-style map styleMap.";
 
 InitialRaysFromColl::usage = "InitialRaysFromColl[Coll, xmin, xmax, m] produces initial rays for ConstructLVDiagram by taking all translates of Coll that start between x = xmin and x = xmax. Only works for real m.";
+
+CollInequalities::usage="CollInequalities[coll] gives the list of inequalities Re(e^(-i \\psi) Z_gam) < 0 for all gam in coll.";
 
 (* from F0Scattering.m *)
 
@@ -436,6 +438,11 @@ XYRaySegment[{c : {r_, dF_, dB_, ch2_}, z : {x0_, y0_}, ___, depth_}, mu_,
    v = {-r, dB + 2 dF};
    sty = Lookup[styleMap, depth, defaultStyle];
    {sty, Line[{z, z + L Normalize[v]}]}];
+
+CollInequalities[Coll_, {x_, y_}, mu_] := 
+  Table[gam[[
+       1]] y + (gam[[3]] + 2 gam[[2]]) x + (gam[[2]] - gam[[3]]) mu - 
+     gam[[4]] < 0, {gam, Coll}];
 
 
 (* from F0Scattering.m *)
