@@ -143,7 +143,11 @@ XYParabolaY::usage = "";
 InitialPositionXY::usage = "InitialPositionXY[gam, m] gives the initial position of ray gam in the x y plane (point with 0 cost function). Only works for real m.";
 XYTost::usage = "XYTost[{x, y}, psi, m] gives the coordinates in s, t plane for a given point {x, y} in the XY coordinates. Only works for real m.";
 XYRaySegment::usage = "XYRaySegment[Ray, mu, L, styleMap, defaultStyle] draws the line corresponding to Ray of length L with style given by a depth-style map styleMap.";
+CollPlotData::usage = "Plot data for ConstructDomain";
+RayStyleMap::usage = "Default depth -- style map for rays.";
+ConstructDomain::usage = "ConstructDomain[PlotAssociation, mu, L, {x, y}] plots the quiver domain associated with the collection in PlotAssociation in the XY plane.";
 
+NaiveIntersection::usage = "NaiveIntersection[gam, gamp, mu] gives the intersection points of the lines corresponding to gam and gamp without reference to the initial points and the future directions.";
 InitialRaysFromColl::usage = "InitialRaysFromColl[Coll, xmin, xmax, m] produces initial rays for ConstructLVDiagram by taking all translates of Coll that start between x = xmin and x = xmax. Only works for real m.";
 
 CollInequalities::usage="CollInequalities[coll] gives the list of inequalities Re(e^(-i \\psi) Z_gam) < 0 for all gam in coll.";
@@ -167,7 +171,7 @@ KroneckerDims::usage = "KroneckerDims[m, Nn] gives the list of populated dimensi
 IntersectRaysNoTest::usage = "IntersectRays[{r, dF, dB, ch2}, {rr, ddB, ddF, cch2}, z, zz, m] returns intersection point (x,y) of two rays if the intersection point lies strictly upward from z and z', or {} otherwise, without testing non-vanishing of DSZ product";  
 CostPhi::usage = "CostPhi[{r, dF, dB, ch2}, s, mu] gives the cost function \\phi_s(\\gamma) = dB + 2 dF - r (mu + 8 s)";
 ConstructLVDiagram::usage = "ConstructLVDiagram[smin, smax, phimax, Nm, m, ListRays] constructs the LV scattering diagram for F1 with initial rays in the interval [smin,smax], cost function up to phimax, scattering products with n1 + n2 <= Nn at each intersection; m is assumed to be real; The output consists of a list of  { charge, {x,y}, parent1, parent2, n1, n2 }; If ListRays is not empty, then uses it as initial rays.";
-ConstructLVDiagramOpt::usage = "";
+ConstructLVDiagramOpt::usage = "ConstructLVDiagram[phimax, Nm, m, InitialRays]";
 
 Begin["`Private`"];
 
@@ -318,9 +322,13 @@ MLV = {{1, 0, 0, 0}, {0, 1, 0, 0}, {1, 0, 1, 0}, {4, 1, 8, 1}};
 MSF[mF_, mB_] := {{1, mF, mB, -(mB^2/2) + mB mF}, {0, 1, 0, mB}, {0, 0, 
     1, -mB + mF}, {0, 0, 0, 1}};
 
-MonodromyFromSphericalTwist[mF_, mB_] := {{1, 0, 0, 0}, {0, 1, 0, 0}, {1/2 mB (mB - 2 mF), -mB + mF,
+(* MonodromyFromSphericalTwist[mF_, mB_] := {{1, 0, 0, 0}, {0, 1, 0, 0}, {1/2 mB (mB - 2 mF), -mB + mF,
      1 + mB + 2 mF, -1}, {1/2 mB (mB^2 - 4 mF^2), -mB^2 - mB mF + 
-     2 mF^2, (mB + 2 mF)^2, 1 - mB - 2 mF}};
+     2 mF^2, (mB + 2 mF)^2, 1 - mB - 2 mF}}; *)
+MonodromyFromSphericalTwist[{rr_,ddF_,ddB_,cch2_}] := {{1, 0, 0, 0}, {0, 1, 0, 0}, {-cch2 rr, (-ddB + ddF) rr, 
+  1 + ddB rr + 
+   2 ddF rr, -rr^2}, {-cch2 (ddB + 2 ddF), (-ddB + ddF) (ddB + 
+     2 ddF), (ddB + 2 ddF)^2, 1 - (ddB + 2 ddF) rr}};
 
 M1p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {-1/2, 1, 0, 1}, {-1/2, 1, -1, 1}};
 M2p = {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 1, 3, 1}, {0, -2, -4, -1}};
@@ -444,6 +452,36 @@ CollInequalities[Coll_, {x_, y_}, mu_] :=
        1]] y + (gam[[3]] + 2 gam[[2]]) x + (gam[[2]] - gam[[3]]) mu - 
      gam[[4]] < 0, {gam, Coll}];
 
+CollPlotData = {
+   <|"coll" -> CollBridgeland, 
+    "mB" -> Function[{m, mu}, (2 m + 3 mu - 1)/3], 
+    "color" -> RGBColor[0, 0.8260000000000001, 1]|>,
+   <|"coll" -> CollArcaraI, 
+    "mB" -> Function[{m, mu}, (2 m + 3 mu - 3)/3], 
+    "color" -> RGBColor[0.46900000000000003`, 1, 0]|>,
+   <|"coll" -> CollArcaraII, 
+    "mB" -> Function[{m, mu}, (2 m + 3 mu - 1)/3], 
+    "color" -> RGBColor[1, 0, 0.192]|>
+   };
+
+RayStyleMap = <|
+   0 -> Directive[Black, Thickness[.0015]],
+   1 -> Directive[Opacity[.6, Lighter[DarkRed]], Thickness[.001]],
+   2 -> Directive[Opacity[.3, Lighter[DarkGreen]], Thickness[.0005]],
+   3 -> Directive[Opacity[.1, Lighter[Green]], Thickness[.0002]]
+   |>;
+
+ConstructDomain[asc_, mu_, L_] := 
+  Module[{ineq, x, y}, 
+   ineq = Table[
+     CollInequalities[
+      SpectralFlow[
+       asc["coll"] /. repCh, {mF, Ceiling[asc["mB"][mF, mu]]}], {x, y},
+       mu], {mF, -L, L}];
+   {EdgeForm[Opacity[.25, asc["color"]]], 
+    DiscretizeRegion[ImplicitRegion[And @@ #, {x, y}]] & /@ ineq}
+   ];
+
 
 (* from F0Scattering.m *)
 SameHalfPlaneQ[{}] := True;
@@ -496,8 +534,7 @@ ChernToCh[f_]:=f/.{{r_Integer,dF_Integer,dB_Integer,ch2_}:>If[r==0,GV[dF,dB,ch2]
 KroneckerDims[m_Integer?NonNegative, Nn_Integer?NonNegative] := KroneckerDims[m,Nn] = Module[{Ta={}},
    Do[If[m n1 n2-n1^2-n2^2+1>=0&&GCD[n1,n2]==1,AppendTo[Ta,{n1,n2}]],{n1,0,Nn},{n2,0,Nn-n1}];Drop[Ta,2]];
 
-(* TODO: can be simplified *)
-IntersectRaysNoTest[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, 
+(* IntersectRaysNoTest[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, 
    z_, zz_, mu_ : 0] :=(*returns (x,
   y) coordinate of intersection point of two rays,
   or {} if they don't intersect*)(*here do not test if DSZ<>0,
@@ -510,7 +547,18 @@ IntersectRaysNoTest[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_},
    If[CostPhi[{r, dF, dB, ch2}, zi[[1]], mu] > 
       CostPhi[{r, dF, dB, ch2}, z[[1]], mu] && 
      CostPhi[{rr, ddF, ddB, cch2}, zi[[1]], mu] > 
-      CostPhi[{rr, ddF, ddB, cch2}, zz[[1]], mu], zi, {}]];
+      CostPhi[{rr, ddF, ddB, cch2}, zz[[1]], mu], zi, {}]]; *)
+
+IntersectRaysNoTest[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, 
+   z_, zz_, mu_ : 0] :=
+  (*returns (x,y) coordinate of intersection point of two rays,
+  or {} if they don't intersect*)(*here do not test if DSZ<>0,
+  and require strictly in future of z and zz*)Module[{zi, eta, eeta},
+   zi = NaiveIntersection[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, mu];
+   eta = {-r, 2 dF + dB};
+   eeta = {-rr, 2 ddF + ddB};
+   If[eta . (zi - z) > 0 && eeta . (zi - zz) > 0, zi, {}]];
+   
 
 CostPhi[{r_,dF_,dB_,ch2_},s_,m_]:=dB + 2 dF - r (m + 8 s);
 
@@ -518,7 +566,12 @@ InitialPositionXY[{r_, dF_, dB_, ch2_}, m_] := {(dB + 2 dF - m r)/(
    8 r), -((dB^2 + 4 dB dF + 4 dF^2 - 8 ch2 r - 9 dB m r + 6 dF m r)/(
     8 r^2))};
 
-InitialRaysFromColl[Coll_, xmin_, xmax_, m_] := Module[{x, y},
+NaiveIntersection[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, mu_] := {(cch2 r + ddB mu r - ddF mu r - ch2 rr - dB mu rr + dF mu rr)/(
+ ddB r + 2 ddF r - dB rr - 2 dF rr), (
+ ch2 ddB + 2 ch2 ddF - cch2 (dB + 2 dF) + 3 dB ddF mu - 3 ddB dF mu)/(
+ ddB r + 2 ddF r - (dB + 2 dF) rr)};
+
+(* InitialRaysFromColl[Coll_, xmin_, xmax_, m_] := Module[{x, y},
    Flatten[
     Table[
      {x, y} = InitialPositionXY[gam, m];
@@ -528,7 +581,31 @@ InitialRaysFromColl[Coll_, xmin_, xmax_, m_] := Module[{x, y},
        ], {k, 
        Range[Ceiling[xmin - x], Floor[xmax - x]]}, {sign, {-1, 
         1}}], {gam, Coll}], 2]
-   ];
+   ]; *)
+
+InitialRaysFromColl[Coll_, xmin_, xmax_, m_] := 
+  Module[{x, y, first, last, rest, inter, init},
+   first = 
+    NaiveIntersection[First[Coll], SpectralFlow[Last[Coll], {-3, -2}],
+      m];
+   last = 
+    NaiveIntersection[Last[Coll], SpectralFlow[First[Coll], {3, 2}], 
+     m];
+   rest = 
+    Table[NaiveIntersection[Coll[[i]], Coll[[i + 1]], m], {i, 
+      Length[Coll] - 1}];
+   inter = Join[{first}, rest, {last}];
+   init = 
+    Simplify[
+     Table[(inter[[i]] + inter[[i + 1]])/2, {i, Length[inter] - 1}]];
+   Flatten[
+    Table[
+     {x, y} = init[[i]];
+     Table[With[{gamp = SpectralFlow[Coll[[i]], {3 k, 2 k}]},
+       {sign*gamp,
+        {k + x, -4 k^2 - k (m + 8 x) + y}, 0, 0, 0, 0, 0}], {k, 
+       Range[Ceiling[xmin - x], Floor[xmax - x]]}, {sign, {-1, 1}}
+      ], {i, Length[Coll]}], 2]];
 
 
 ConstructLVDiagram[phimax_, Nm_, m_, ListRays0_] := 
