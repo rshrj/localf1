@@ -75,6 +75,7 @@ Li2::usage = "Ordinary dilogarithm";
 
 Ch::usage = "Ch[p, q] represents the Chern vector of the sheaf O(p F + q B).";
 GV::usage = "Ch[p, q] represents the Chern vector of the sheaf O(p F + q B).";
+y::usage = "Refinement parameter y";
 
 repCh::usage = "Expands Ch[p, q] Ch[p, q][1] and GV[p, q, n]";
 
@@ -613,11 +614,10 @@ LVTreesFromListRays[ListRays_,{r_,dF_,dB_,ch2_},m_]:=Module[{Lipos,div,LiTrees},
    Lipos=Flatten[Join[Table[Position[ListRays,{r,dF,dB,ch2}/k],{k,div}]],1];
    If[Lipos=={},
    Print["No such dimension vector in the list"],
-   LiTrees=(GCD1[{r,d1,d2,ch2}]/GCD1[ListRays[[#,1]]])TreeFromListRays[ListRays,#]&/@First[Transpose[Lipos]]
+   LiTrees=(GCD1[{r,d1,d2,ch2}]/GCD1[ListRays[[#,1]]])TreeFromListRays[ListRays,#]&/@First[Transpose[Lipos]];
    ScattSort[DeleteDuplicatesBy[SortBy[LiTrees,Length[TreeConstituents[#]]&],ScattGraph[#,m]&],m]
 ]];
 
-Options[ScattIndexImprovedInternal] = {"Debug"->False};
 
 FOmbToOm[OmbList_] := Module[{n},
 If[Length[OmbList]<2, First@OmbList, 
@@ -630,6 +630,7 @@ ScattIndexImproved[TreeList_, opt: OptionsPattern[]]:=Table[
 	(* compute index for each tree in the list *)
 	Simplify[FOmbToOm[Last@ScattIndexImprovedInternal[TreeList[[i]], opt][[2]]]],{i,Length[TreeList]}];
 
+Options[ScattIndexImprovedInternal] = {"Debug"->False};
 ScattIndexImprovedInternal[Tree_, opt: OptionsPattern[]]:=Module[{S1,S2,g1,g2,gFinal, kappa,Li, tem, repOmAttb, rrr},
 (* compute {total charge, list of Kronecker indices associated to each vertex *)
 	If[!ListQ[Tree]||Length[Tree]>2,{Tree,{Join[{1}, Table[(y-y^-1)/(j(y^j-y^-j)), {j, 2, GCD1@(Tree/.repCh)}]]}},
