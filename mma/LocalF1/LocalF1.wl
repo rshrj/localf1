@@ -89,6 +89,7 @@ ToHC::usage = "TODO";
 GiesekerSlope::usage = "TODO";
 
 BogomolovDiscriminant::usage = "TODO";
+SecondChernClass::usage = "SecondChernClass[gam] computes the second chern class."
 
 ZLV::usage = "ZLV[{r, dF, dB, ch2}, T, m] is the large volume central charge for local F1 given by Z = -ch2 + dF m + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T)";
 
@@ -121,7 +122,9 @@ WallRadius::usage = "WallRadius[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, 
 
 WallCircle::usage = "WallCircle[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] gives the Circle object for the wall circle. Only works for real m.";
 
-InitialPosition::usage = "InitialPosition[{r, dF, dB, ch2}, m] calculates the initial s value of the ray when it intersects the real axis. Only works for real m.";
+DiscF1::usage = "DiscF1[gam, m] computes the ray discriminant of gam. Only works for real m.";
+
+InitialPosition::usage = "InitialPosition[{r, dF, dB, ch2}, m] calculates the initial s value of the ray when it intersects the real T axis. Only works for real m.";
 
 CollDBridgeland::usage = "";
 CollDArcaraII::usage = "";
@@ -139,7 +142,7 @@ ListSpecFlows::usage = "ListSpecFlows[Coll, psi, m, L, xmin, xmax, tmax] lists s
 
 (* XY plane scattering *)
 XYRay::usage = "XYRay[{r, dF, dB, ch2}, {x, y}, mu] gives the ray equation in the XY coordinates.";
-XYParabolaY::usage = "";
+XYParabolaY::usage = "XYParabola[]";
 InitialPositionXY::usage = "InitialPositionXY[gam, m] gives the initial position of ray gam in the x y plane (point with 0 cost function). Only works for real m.";
 XYTost::usage = "XYTost[{x, y}, psi, m] gives the coordinates in s, t plane for a given point {x, y} in the XY coordinates. Only works for real m.";
 XYRaySegment::usage = "XYRaySegment[Ray, mu, L, styleMap, defaultStyle] draws the line corresponding to Ray of length L with style given by a depth-style map styleMap.";
@@ -159,13 +162,21 @@ SameHalfPlaneQ::usage = "SameHalfPlaneQ[Zlist] gives True if all elements of Zli
 
 QuiverDomain::usage = "QuiverDomain[Coll, psi, m] plots the region where the LV central charges Z of Coll have Re[e^{-I psi} Z] < 0."; 
 
-ChernToCh::usage = "";
+ChernToCh::usage = "ChernToCh[gam] replaces {r,dF,dB,ch2} by r Ch[dF/r,dB/r] whenever the discriminant vanishes";
 
 ExtFromStrong::usage = "ExtFromStrong[Coll] computes the Chern vectors of the objects in the Ext collection dual to the given strong collection Coll"
 StrongFromExt::usage = "StrongFromExt[Coll] computes the Chern vectors of the objects in the strong collection dual to the given Ext collection Coll";
 
-TreeFromListRays::usage = "Remains to be implemented";
-LVTreesFromListRays::usage = "Remains to be implemented";
+ScattCheck::usage = "ScattCheck[Tree, m] returns {charge,{x,y}} of the root vertex if Tree is consistent, otherwise {total charge,{}}";
+ScattSort::usage = "ScattSort[LiTree, m] sorts trees in LiTree by growing radius";
+ScattGraph::usage = "ScattGraph[Tree, m] extracts the list of vertices and adjacency matrix of Tree";
+
+FOmbToOm::usage = "FOmbToOm[OmbList] computes integer index from list of rational indices, used internally by FScattIndex";
+ScattIndexImproved::usage = "ScattIndexImproved[TreeList, opt] computes the index for each tree in TreeList, taking care of non-primitive internal states";
+(* ScattIndexImprovedInternal::usage = "ScattIndexImprovedInternal[Tree, opt] computes the index for Tree, taking care of non-primitive internal states"; *)
+
+(* TreeFromListRays::usage = "TreeFormListRays[ListRays, k] "; *)
+LVTreesFromListRays::usage = "LVTreesFromListRays[ListRays, gam, m] extract the trees with given charge in the List of rays, constructed by ConstructLVDiagram";
 
 KroneckerDims::usage = "KroneckerDims[m, Nn] gives the list of populated dimension vectors {n1,n2} for Kronecker quiver with m arrows, with (n1,n2) coprime and 0<=n1,n2<=Nn"; 
 IntersectRaysNoTest::usage = "IntersectRays[{r, dF, dB, ch2}, {rr, ddB, ddF, cch2}, z, zz, m] returns intersection point (x,y) of two rays if the intersection point lies strictly upward from z and z', or {} otherwise, without testing non-vanishing of DSZ product";  
@@ -303,6 +314,7 @@ ToHC[{r_, dF_, dB_, ch2_}] := {r, dF, dB - dF, ch2};
 GiesekerSlope[{r_, dF_, dB_, ch2_}, M_]:= (dB - dB M + dF (2 + M))/r;
 
 BogomolovDiscriminant[{r_, dF_, dB_, ch2_}] := -(dB^2/(2 r^2)) + (dB dF)/r^2 - ch2/r;
+SecondChernClass[{r_, dF_, dB_, ch2_}] := -ch2 - dB^2/2 + dB dF;
 
 ZLV[{r_, dF_, dB_, ch2_}, T_, m_] := -ch2 + dF m + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T);
 ZLV[{r_, dF_, dB_, ch2_}, {s_,t_}, m_] := -ch2 + dB (-m + s + I t) + 
@@ -386,8 +398,20 @@ WallCircle[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, m_ : 0] :=
        dF m rr)/(ddB r + 2 ddF r - dB rr - 2 dF rr), 0}, 
      Sqrt[R], {0, Pi}], {}]];
 
-InitialPosition[{r_, dF_, dB_, ch2_}, m_: 0] := (dB + 2 dF - m r - Sqrt[
- dB^2 - 16 ch2 r + 2 dB (2 dF - 9 m r) + (2 dF + 3 m r)^2])/(8 r);
+DiscF1[{r_, dF_, dB_, ch2_}, m_] := 
+  16 BogomolovDiscriminant[{r, dF, dB, ch2}] + (-3 dB + 2 dF + 
+     3 m r)^2/r^2;
+
+InitialPosition[{r_, dF_, dB_, ch2_}, m_ : 0] :=
+  Module[{}, 
+   If[! IntegerQ[SecondChernClass[{r,dF,dB,ch2}]], 
+    Print["Non integer second Chern class !"]];
+   If[r == 0,
+    (ch2 + dB m - dF m)/(dB + 2 dF),
+    (dB + 2 dF - m r)/8/r - 
+     Sign[r]/8 Sqrt[Max[DiscF1[{r, dF, dB, ch2}, m], 0]]
+    ]
+   ];
 
 CollDBridgeland = {{1, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 1, 1/2}, {1, 2, 1, 3/2}};
 
@@ -520,14 +544,123 @@ TreeFromListRays[ListRays_,k_]:=If[ListRays[[k,3]]==0,ListRays[[k,1]],{ListRays[
 GCD1[{r_,dF_,dB_,ch2_}]:=Module[{d},d=GCD[r,dF,dB];
 If[EvenQ[(dB-2ch2)/d],d,If[EvenQ[d],d/2,1]]];
 
+(*Check consistency of single tree,returns {charge,{xf,\
+yf}} if tree is consistent,otherwise {charge,{}};\
+ignore whether leaves have Delta=0 or not*)
+ScattCheck[Tree_, m_] :=
+  Module[{S1, S2, z, r, dH, dC, ch2},
+   If[! ListQ[Tree] || Length[Tree] > 2,
+    (*tree consists of a single node*)
+    {r, dF, dB, ch2} = Tree /. repCh;
+    z = {(dB + 2 dF - 
+         m r)/(8 r), -((dB^2 + 4 dB dF + 4 dF^2 - 8 ch2 r - 
+           9 dB m r + 6 dF m r)/(8 r^2))};
+    (*Print["Initial pt:",z];*)
+    {Tree /. repCh, z},
+    (*otherwise,check each of the two branches*)
+    S1 = ScattCheck[Tree[[1]], m];
+    S2 = ScattCheck[Tree[[2]], m];
+    If[Length[S1[[2]]] > 0 && Length[S2[[2]]] > 0,
+     z = 
+      IntersectRays[S1[[1]] /. repCh, S2[[1]] /. repCh, S1[[2]], 
+       S2[[2]], m];
+     (*Print[{S1[[1]],S2[[1]],S1[[2]],S2[[2]],z}];*)
+     {S1[[1]] + S2[[1]], z}, {S1[[1]] + S2[[1]], {}}
+     ]
+    ]
+   ];
+
+ScattSort[LiTree_, m_ : 0] :=(*sort trees by decreasing radius*)
+  Reverse[Map[#[[2]] &, 
+    SortBy[Table[{XYTost[ScattCheck[LiTree[[i]], m][[2]], 0, m][[2]], 
+       LiTree[[i]]}, {i, Length[LiTree]}], N[First[#]] &]]];
+
+
+(*construct total charge,\
+coordinate of root and list of line segments in (s,t) coordinates,\
+{min(x),max(x)}*)
+ScattGraphInternal[Tree_, m_ : 0] := 
+  Module[{S1, S2, TreeNum, sInit, z, Li},
+   If[! ListQ[Tree] || Length[Tree] > 2,
+    (* branch 1 *)
+    TreeNum = Tree /. repCh;
+    sInit = InitialPosition[TreeNum, m];
+    {Tree, {sInit, m^2/2 - m sInit - 4 sInit^2}, {}},
+    (* branch 2 *)
+    S1 = ScattGraphInternal[Tree[[1]], m];
+    S2 = ScattGraphInternal[Tree[[2]], m];
+    z = IntersectRays[S1[[1]] /. repCh, S2[[1]] /. repCh, m];
+    If[Length[z] == 0,
+     Print["Illegal tree"],
+     Li = {S1[[3]], S2[[3]], Arrow[{S1[[2]], z}], Arrow[{S2[[2]], z}]};
+     {S1[[1]] + S2[[1]], z, Li}
+     ]
+    ]
+   ];
+
+(*extracts list of vertices in (x,y) plane and adjacency matrix*)
+ScattGraph[Tree_, m_ : 0] := Module[{T, LiArrows, LiVertex},
+   T = ScattGraphInternal[Tree, m];
+   LiArrows = Cases[Flatten[T[[3]]], x_Arrow] /. Arrow[x_] :> x;
+   LiVertex = Union[Flatten[LiArrows, 1]];
+   {LiVertex, 
+    Table[If[i != j, Sign[Count[LiArrows, {LiVertex[[i]], LiVertex[[j]]}]],
+       0], {i, Length[LiVertex]}, {j, Length[LiVertex]}]}
+   ];
+
 LVTreesFromListRays[ListRays_,{r_,dF_,dB_,ch2_},m_]:=Module[{Lipos,div,LiTrees},
    div=Divisors[GCD1[{r,dF,dB,ch2}]];
    Lipos=Flatten[Join[Table[Position[ListRays,{r,dF,dB,ch2}/k],{k,div}]],1];
    If[Lipos=={},
    Print["No such dimension vector in the list"],
    LiTrees=(GCD1[{r,d1,d2,ch2}]/GCD1[ListRays[[#,1]]])TreeFromListRays[ListRays,#]&/@First[Transpose[Lipos]]
-   (* ScattSort[DeleteDuplicatesBy[SortBy[LiTrees,Length[TreeConstituents[#]]&],ScattGraph[#,m]&],m] *)
+   ScattSort[DeleteDuplicatesBy[SortBy[LiTrees,Length[TreeConstituents[#]]&],ScattGraph[#,m]&],m]
 ]];
+
+Options[ScattIndexImprovedInternal] = {"Debug"->False};
+
+FOmbToOm[OmbList_] := Module[{n},
+If[Length[OmbList]<2, First@OmbList, 
+n = Length[OmbList];
+DivisorSum[n, (MoebiusMu[#] (y-y^-1)/(#(y^#-y^-#)) (OmbList[[n/#]]/.{y->y^#}))&]
+(*Simplify[OmbList[[-1]] -Sum[ (y-y^-1)/(P(y^P-y^-P))(FOmbToOm[OmbList[[;;-P]]]/.{y->y^P}), {P, 2, n}]]*)
+]];
+
+ScattIndexImproved[TreeList_, opt: OptionsPattern[]]:=Table[
+	(* compute index for each tree in the list *)
+	Simplify[FOmbToOm[Last@ScattIndexImprovedInternal[TreeList[[i]], opt][[2]]]],{i,Length[TreeList]}];
+
+ScattIndexImprovedInternal[Tree_, opt: OptionsPattern[]]:=Module[{S1,S2,g1,g2,gFinal, kappa,Li, tem, repOmAttb, rrr},
+(* compute {total charge, list of Kronecker indices associated to each vertex *)
+	If[!ListQ[Tree]||Length[Tree]>2,{Tree,{Join[{1}, Table[(y-y^-1)/(j(y^j-y^-j)), {j, 2, GCD1@(Tree/.repCh)}]]}},
+	If[OptionValue["Debug"], Print["Calling with args: ", Tree[[1]], "  |  ", Tree[[2]]]];
+    S1=ScattIndexImprovedInternal[Tree[[1]], opt]/.repCh;
+	S2=ScattIndexImprovedInternal[Tree[[2]], opt]/.repCh;
+If[OptionValue["Debug"], Print["S1 is: ", S1, "   S2 is: ", S2]];
+	g1=GCD1@S1[[1]];g2=GCD1@S2[[1]];
+    gFinal = GCD1@(S1[[1]]+S2[[1]]);
+	kappa=Abs[DSZ[S1[[1]],S2[[1]]]]/g1/g2;
+	Li=Join[S1[[2]],S2[[2]]];
+If[OptionValue["Debug"], Print["Li is: ", Li, "  g1 is: ", g1, "  g2 is: ", g2, "  gFinal is: ", gFinal]];
+AppendTo[Li,
+repOmAttb = Join[
+Table[CoulombHiggs`OmAttb[{P, 0}, y_]->Last[S1[[2]]][[P]], {P, 1, g1}],
+Table[CoulombHiggs`OmAttb[{0, Q}, y_]->Last[S2[[2]]][[Q]], {Q, 1, g2}]
+];
+If[OptionValue["Debug"], Print["repOmAttb is: ", repOmAttb]];
+tem = Table[
+rrr = If[And@@(IntegerQ/@{P g1/gFinal, P g2/gFinal}),CoulombHiggs`FlowTreeFormulaRat[{{0, kappa}, {-kappa, 0}}, {g2, -g1}, {P g1/gFinal, P g2/gFinal}, y], 0];
+Simplify[
+rrr
+/.repOmAttb
+/.{CoulombHiggs`OmAttb[{p_, q_}, y___]:>0/;p>1||q>1||p q !=0}
+],
+{P, 1, gFinal}
+];
+If[OptionValue["Debug"], Print["tem is: ", tem]];tem
+];
+	(*If[GCD@@(S1[[1]]+S2[[1]])!=1,Print["Beware, non-primitive state"]];*)
+	{S1[[1]]+S2[[1]],Li}]];
 
 ChernToCh[f_]:=f/.{{r_Integer,dF_Integer,dB_Integer,ch2_}:>If[r==0,GV[dF,dB,ch2],If[BogomolovDiscriminant[{r,dF,dB,ch2}]==0,If[r>0,r Ch[dF/r,dB/r],-r Ch[dF/r,dB/r][1]],{r,dF,dB,ch2}]]};	
 
@@ -558,6 +691,20 @@ IntersectRaysNoTest[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_},
    eta = {-r, 2 dF + dB};
    eeta = {-rr, 2 ddF + ddB};
    If[eta . (zi - z) > 0 && eeta . (zi - zz) > 0, zi, {}]];
+
+IntersectRays[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, 
+   mu_ : 0] := 
+  If[DSZ[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}] == 0, {}, 
+   NaiveIntersection[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, mu]];
+
+IntersectRays[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, z_, zz_,
+    mu_ : 0] :=
+  Module[{zi, eta, eeta},
+   If[DSZ[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}] == 0, Return[{}]];
+   zi = NaiveIntersection[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, mu];
+   eta = {-r, 2 dF + dB};
+   eeta = {-rr, 2 ddF + ddB};
+   If[eta . (zi - z) >= 0 && eeta . (zi - zz) >= 0, zi, {}]];
    
 
 CostPhi[{r_,dF_,dB_,ch2_},s_,m_]:=dB + 2 dF - r (m + 8 s);
