@@ -1184,7 +1184,34 @@ For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
 \end{equation}
 
 
+\subsection{Cusps in the U-plane}
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=1\textwidth]{UPlaneSingularities_m0}
+  \caption{Singularities in the $U$-plane and the branch point.}
+  \label{fig:UPlaneSingularities_m0}
+\end{figure}
+
+The discriminant of the mirror curve
+\begin{equation}
+  \mathrm{Disc}(\mathbb{F}_1) = u^8 \qty((16 \lambda ^3-27) u^4-36 \lambda  u^3-8 \lambda ^2 u^2+u+\lambda)
+\end{equation}
+has five roots, the large volume point (or point of maximal unipotent monodromy, MUM) at $u = 0$ (which is an $I_8$ fiber) and four standard conifold points which we denote $u_1, \dots, u_4$. These are $I_1$ fibers for generic $\lambda$. At $\lambda = 1$, these points are plotted in \cref{fig:UPlaneSingularities_m0}. We generally label the conifold points in this order for $\lambda = 1$ and by continuation to any other $\lambda$ avoiding the singular locus ($\lambda^3 = -27/256$).
+
+To see that that these are also the singularities of the Picard-Fuchs equations (and additional singularities), we write the third-order PF equations (for periods of the CY3) in this form
+\begin{equation}
+  \partial_u^3 \varpi(\lambda, u) \ + \ P(\lambda, u) \, \partial_u^2 \varpi(\lambda, u) \ + \ Q(\lambda, u) \, \partial_u \varpi(\lambda, u) = 0
+\end{equation}
+where $P$ and $Q$ are the following rational functions
+\begin{equation}
+  P = \frac{24 \lambda ^2+54 \left(16 \lambda ^3-27\right) u^5+4 \lambda  \left(224 \lambda ^3-783\right) u^4-2016 \lambda ^2 u^3+\left(27-320 \lambda ^3\right) u^2+50 \lambda  u}{u (8 \lambda +9 u) \left(\lambda +\left(16 \lambda ^3-27\right) u^4-36 \lambda  u^3-8 \lambda ^2 u^2+u\right)}
+\end{equation}
+\begin{equation}
+  Q = \frac{8 \lambda ^2+54 \left(16 \lambda ^3-27\right) u^5+16 \lambda  \left(64 \lambda ^3-189\right) u^4-1860 \lambda ^2 u^3+\left(9-256 \lambda ^3\right) u^2+16 \lambda  u}{u^2 (8 \lambda +9 u) \left(\lambda +\left(16 \lambda ^3-27\right) u^4-36 \lambda  u^3-8 \lambda ^2 u^2+u\right)}
+\end{equation}
+
+From this, it is clear that the only singular points of the third-order PF are $u_0 = 0,\, u_1,\, u_2,\, u_3,\, u_4,\,$ and $u_B = -8\lambda/9$. It is also clear that these are all regular singular points.
 
 \printbibliography[title={References}]
 
