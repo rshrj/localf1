@@ -40,6 +40,8 @@ MirrorCurveDelta::usage = "TODO";
 
 MirrorCurveJ::usage = "TODO";
 
+URoot::usage = "URoot[\[Lambda], k] is the kth root of the order 4 part of the discriminant.";
+
 URoots::usage = "TODO";
 
 PlotURoots::usage = "TODO";
@@ -152,6 +154,8 @@ RayStyleMap::usage = "Default depth -- style map for rays.";
 ConstructDomain::usage = "ConstructDomain[PlotAssociation, mu, L, {x, y}] plots the quiver domain associated with the collection in PlotAssociation in the XY plane.";
 
 NaiveIntersection::usage = "NaiveIntersection[gam, gamp, mu] gives the intersection points of the lines corresponding to gam and gamp without reference to the initial points and the future directions.";
+
+CollInitial::usage = "The three sets of initial charges identified for fixed m slice.";
 InitialRaysFromColl::usage = "InitialRaysFromColl[Coll, xmin, xmax, m] produces initial rays for ConstructLVDiagram by taking all translates of Coll that start between x = xmin and x = xmax. Only works for real m.";
 
 CollInequalities::usage="CollInequalities[coll] gives the list of inequalities Re(e^(-i \\psi) Z_gam) < 0 for all gam in coll.";
@@ -184,6 +188,15 @@ IntersectRaysNoTest::usage = "IntersectRays[{r, dF, dB, ch2}, {rr, ddB, ddF, cch
 CostPhi::usage = "CostPhi[{r, dF, dB, ch2}, s, mu] gives the cost function \\phi_s(\\gamma) = dB + 2 dF - r (mu + 8 s)";
 ConstructLVDiagram::usage = "ConstructLVDiagram[smin, smax, phimax, Nm, m, ListRays] constructs the LV scattering diagram for F1 with initial rays in the interval [smin,smax], cost function up to phimax, scattering products with n1 + n2 <= Nn at each intersection; m is assumed to be real; The output consists of a list of  { charge, {x,y}, parent1, parent2, n1, n2 }; If ListRays is not empty, then uses it as initial rays.";
 ConstructLVDiagramOpt::usage = "ConstructLVDiagram[phimax, Nm, m, InitialRays]";
+
+(* Period expansions in Pi-Stability slice *)
+F1Series::usage = "F1Series[\[Lambda], u, Nn, Nr] computes large volume period expansion of F1 periods, its first and second derivatives using Richardson acceleration.";
+PicardFuchsP::usage = "PicardFuchsP[\[Lambda], u] computes the coefficient of d^2 t/d u^2 in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
+PicardFuchsQ::usage = "PicardFuchsQ[\[Lambda], u] computes the coefficient of d t/d u in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
+PicardFuchs::usage = "PicardFuchs[f, \[Lambda], u]";
+PicardFuchsA::usage = "PicardFuchsA[\[Lambda], u]";
+SystemMatrix::usage = "SystemMatrix[{{t, td}, {dt, dtd}, {ddt, ddtd}}, \[Lambda], u]";
+ComputeTransition::usage = "ComputeTransition[\[Lambda], upath, Nn, Nr]";
 
 Begin["`Private`"];
 
@@ -220,6 +233,9 @@ MirrorCurveg3[m_, u_] := 27 (-1 + 12 m u^2 + 36 u^3 - 48 m^2 u^4 - 144 m u^5 - 2
 MirrorCurveDelta[m_, u_] := m + u - 8 m^2 u^2 - 36 m u^3 - 27 u^4 + 16 m^3 u^4;
 
 MirrorCurveJ[m_,u_]:=(1-8 m u^2-24 u^3+16 m^2 u^4)^3/(u^8 (m+u-8 m^2 u^2-36 m u^3-27 u^4+16 m^3 u^4));
+
+URoot[\[Lambda]_, k_] := Root[\[Lambda] + #1 - 8 \[Lambda]^2 #1^2 - 
+   36 \[Lambda] #1^3 + (-27 + 16 \[Lambda]^3) #1^4 &, k];
 
 URoots[m_] := u /. NSolve[MirrorCurveDelta[m, u] == 0, u];
 
@@ -464,9 +480,16 @@ XYTost[{x_, y_}, psi_, m_] := {x - (Sqrt[-(m^2/2) + m x + 4 x^2 + y] Tan[psi])/(
     2 Sqrt[Sec[psi]^2]), Sqrt[-(m^2/2) + m x + 4 x^2 + y]/(
    2 Sqrt[Sec[psi]^2])};
 
+RayStyleMap = <|
+   0 -> Directive[Black, Thickness[.002]],
+   1 -> Directive[Opacity[.6, Red], Thickness[.0015]],
+   2 -> Directive[Opacity[.3, Blue], Thickness[.001]],
+   3 -> Directive[Opacity[.1, Green], Thickness[.0007]]
+   |>;
+
 XYRaySegment[{c : {r_, dF_, dB_, ch2_}, z : {x0_, y0_}, ___, depth_}, mu_, 
    L_ : 10, styleMap_ : <||>, 
-   defaultStyle_ : Directive[Black, Thickness[.002]]] := 
+   defaultStyle_ : Directive[Black, Thickness[.0002]]] := 
   Module[{v, sty},
    v = {-r, dB + 2 dF};
    sty = Lookup[styleMap, depth, defaultStyle];
@@ -488,13 +511,6 @@ CollPlotData = {
     "mB" -> Function[{m, mu}, (2 m + 3 mu - 1)/3], 
     "color" -> RGBColor[1, 0, 0.192]|>
    };
-
-RayStyleMap = <|
-   0 -> Directive[Black, Thickness[.0015]],
-   1 -> Directive[Opacity[.6, Lighter[DarkRed]], Thickness[.001]],
-   2 -> Directive[Opacity[.3, Lighter[DarkGreen]], Thickness[.0005]],
-   3 -> Directive[Opacity[.1, Lighter[Green]], Thickness[.0002]]
-   |>;
 
 ConstructDomain[asc_, mu_, L_] := 
   Module[{ineq, x, y}, 
@@ -619,49 +635,62 @@ LVTreesFromListRays[ListRays_,{r_,dF_,dB_,ch2_},m_]:=Module[{Lipos,div,LiTrees},
 ]];
 
 
-FOmbToOm[OmbList_] := Module[{n},
-If[Length[OmbList]<2, First@OmbList, 
-n = Length[OmbList];
-DivisorSum[n, (MoebiusMu[#] (y-y^-1)/(#(y^#-y^-#)) (OmbList[[n/#]]/.{y->y^#}))&]
-(*Simplify[OmbList[[-1]] -Sum[ (y-y^-1)/(P(y^P-y^-P))(FOmbToOm[OmbList[[;;-P]]]/.{y->y^P}), {P, 2, n}]]*)
-]];
+FOmbToOm[OmbList_, y_] := Module[{n},
+   If[Length[OmbList] < 2,
+    First@OmbList,
+    n = Length[OmbList];
+    DivisorSum[
+     n, (MoebiusMu[#] (y - 
+           y^-1)/(# (y^# - y^-#)) (OmbList[[n/#]] /. {y -> y^#})) &]]
+   ];
 
-ScattIndexImproved[TreeList_, opt: OptionsPattern[]]:=Table[
-	(* compute index for each tree in the list *)
-	Simplify[FOmbToOm[Last@ScattIndexImprovedInternal[TreeList[[i]], opt][[2]]]],{i,Length[TreeList]}];
+(*compute index for each tree in the list*)
+ScattIndexImproved[TreeList_, y_, opt : OptionsPattern[]] := 
+  Table[Simplify[
+    FOmbToOm[
+     Last@ScattIndexImprovedInternal[TreeList[[i]], y, opt][[2]], 
+     y]], {i, Length[TreeList]}];
 
-Options[ScattIndexImprovedInternal] = {"Debug"->False};
-ScattIndexImprovedInternal[Tree_, opt: OptionsPattern[]]:=Module[{S1,S2,g1,g2,gFinal, kappa,Li, tem, repOmAttb, rrr},
-(* compute {total charge, list of Kronecker indices associated to each vertex *)
-	If[!ListQ[Tree]||Length[Tree]>2,{Tree,{Join[{1}, Table[(y-y^-1)/(j(y^j-y^-j)), {j, 2, GCD1@(Tree/.repCh)}]]}},
-	If[OptionValue["Debug"], Print["Calling with args: ", Tree[[1]], "  |  ", Tree[[2]]]];
-    S1=ScattIndexImprovedInternal[Tree[[1]], opt]/.repCh;
-	S2=ScattIndexImprovedInternal[Tree[[2]], opt]/.repCh;
-If[OptionValue["Debug"], Print["S1 is: ", S1, "   S2 is: ", S2]];
-	g1=GCD1@S1[[1]];g2=GCD1@S2[[1]];
-    gFinal = GCD1@(S1[[1]]+S2[[1]]);
-	kappa=Abs[DSZ[S1[[1]],S2[[1]]]]/g1/g2;
-	Li=Join[S1[[2]],S2[[2]]];
-If[OptionValue["Debug"], Print["Li is: ", Li, "  g1 is: ", g1, "  g2 is: ", g2, "  gFinal is: ", gFinal]];
-AppendTo[Li,
-repOmAttb = Join[
-Table[CoulombHiggs`OmAttb[{P, 0}, y_]->Last[S1[[2]]][[P]], {P, 1, g1}],
-Table[CoulombHiggs`OmAttb[{0, Q}, y_]->Last[S2[[2]]][[Q]], {Q, 1, g2}]
-];
-If[OptionValue["Debug"], Print["repOmAttb is: ", repOmAttb]];
-tem = Table[
-rrr = If[And@@(IntegerQ/@{P g1/gFinal, P g2/gFinal}),CoulombHiggs`FlowTreeFormulaRat[{{0, kappa}, {-kappa, 0}}, {g2, -g1}, {P g1/gFinal, P g2/gFinal}, y], 0];
-Simplify[
-rrr
-/.repOmAttb
-/.{CoulombHiggs`OmAttb[{p_, q_}, y___]:>0/;p>1||q>1||p q !=0}
-],
-{P, 1, gFinal}
-];
-If[OptionValue["Debug"], Print["tem is: ", tem]];tem
-];
-	(*If[GCD@@(S1[[1]]+S2[[1]])!=1,Print["Beware, non-primitive state"]];*)
-	{S1[[1]]+S2[[1]],Li}]];
+Options[ScattIndexImprovedInternal] = {"Debug" -> False};
+ScattIndexImprovedInternal[Tree_, y_, opt : OptionsPattern[]] := 
+  Module[{S1, S2, g1, g2, gFinal, kappa, Li, tem, repOmAttb, 
+    rrr},(*compute {total charge,
+   list of Kronecker indices associated to each vertex*)
+   If[! ListQ[Tree] || 
+     Length[Tree] > 
+      2, {Tree, {Join[{1}, 
+       Table[(y - y^-1)/(j (y^j - y^-j)), {j, 2, GCD1@(Tree /. repCh)}]]}},
+     If[OptionValue["Debug"], 
+     Print["Calling with args: ", Tree[[1]], "  |  ", Tree[[2]]]];
+    S1 = ScattIndexImprovedInternal[Tree[[1]], y, opt] /. repCh;
+    S2 = ScattIndexImprovedInternal[Tree[[2]], y, opt] /. repCh;
+    If[OptionValue["Debug"], Print["S1 is: ", S1, "   S2 is: ", S2]];
+    g1 = GCD1@S1[[1]]; g2 = GCD1@S2[[1]];
+    gFinal = GCD1@(S1[[1]] + S2[[1]]);
+    kappa = Abs[DSZ[S1[[1]], S2[[1]]]]/g1/g2;
+    Li = Join[S1[[2]], S2[[2]]];
+    If[OptionValue["Debug"], 
+     Print["Li is: ", Li, "  g1 is: ", g1, "  g2 is: ", g2, 
+      "  gFinal is: ", gFinal]];
+    AppendTo[Li, 
+     repOmAttb = 
+      Join[Table[
+        CoulombHiggs`OmAttb[{P, 0}, _] -> Last[S1[[2]]][[P]], {P, 1, 
+         g1}], Table[
+        CoulombHiggs`OmAttb[{0, Q}, _] -> Last[S2[[2]]][[Q]], {Q, 1, 
+         g2}]];
+     If[OptionValue["Debug"], Print["repOmAttb is: ", repOmAttb]];
+     tem = 
+      Table[rrr = 
+        If[And @@ (IntegerQ /@ {P g1/gFinal, P g2/gFinal}), 
+         CoulombHiggs`FlowTreeFormulaRat[{{0, kappa}, {-kappa, 
+            0}}, {g2, -g1}, {P g1/gFinal, P g2/gFinal}, y], 0];
+       Simplify[
+        rrr /. repOmAttb /. {CoulombHiggs`OmAttb[{p_, q_}, ___] :> 
+           0 /; p > 1 || q > 1 || p q != 0}], {P, 1, gFinal}];
+     If[OptionValue["Debug"], Print["tem is: ", tem]]; tem];
+    (*If[GCD@@(S1[[1]]+S2[[1]])!=1,Print[
+    "Beware, non-primitive state"]];*){S1[[1]] + S2[[1]], Li}]];
 
 ChernToCh[f_]:=f/.{{r_Integer,dF_Integer,dB_Integer,ch2_}:>If[r==0,GV[dF,dB,ch2],If[BogomolovDiscriminant[{r,dF,dB,ch2}]==0,If[r>0,r Ch[dF/r,dB/r],-r Ch[dF/r,dB/r][1]],{r,dF,dB,ch2}]]};	
 
@@ -730,6 +759,12 @@ NaiveIntersection[{r_, dF_, dB_, ch2_}, {rr_, ddF_, ddB_, cch2_}, mu_] := {(cch2
        Range[Ceiling[xmin - x], Floor[xmax - x]]}, {sign, {-1, 
         1}}], {gam, Coll}], 2]
    ]; *)
+
+CollInitial = {
+   {Ch[0, 0], Ch[1, 1], Ch[2, 1], Ch[2, 2]},
+   {Ch[0, 0], Ch[0, 1], Ch[1, 1], Ch[2, 2]},
+   {Ch[0, 0], Ch[1, 0], Ch[1, 1], Ch[2, 1]}
+};
 
 InitialRaysFromColl[Coll_, xmin_, xmax_, m_] := 
   Module[{x, y, first, last, rest, inter, init},
@@ -848,6 +883,113 @@ ConstructLVDiagramOpt[phimax_, Nm_, m_, ListRays0_] :=
    ListRays
   ]
  ];
+
+
+
+(* Period expansions in Pi-Stability slice *)
+
+F1Series[\[Lambda]_, u_, Nn_, Nr_] := 
+  Module[{varpi2tab, varpi3tab, varpi2dtab, varpi3dtab, varpi2ddtab, 
+    varpi3ddtab, k, l},
+   varpi2tab = Table[u^n Sum[k = n - 2 l; 
+       (k + 2 l)!/((l)! (k!)^2 (l - k)!) \[Lambda]^(l - k) /(k + 2 l),
+       {l, 0, Floor[n/2]}], {n, 1, Nn}];
+   varpi3tab = Table[u^n Sum[k = n - 2 l; 
+       \[Lambda]^(l - k) (If[
+           k > l, ((-1)^(k + l) Gamma[k - l] Gamma[1 + k + 2 l])/(
+           4 (k + 2 l) l! Gamma[1 + k]^2),
+           (( (k + 2 l)! (4 HarmonicNumber[k] + 3 HarmonicNumber[l] + 
+                 HarmonicNumber[-k + l] - 
+                 8 HarmonicNumber[k + 2 l]))/(4 (k + 
+                 2 l) (k!)^2 l! Gamma[1 - k + l]))] + (
+          2  (k + 2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)),
+       {l, 0, Floor[n/2]}], {n, 1, Nn}];
+   varpi2dtab = Table[n u^(n - 1) Sum[k = n - 2 l; 
+       (k + 2 l)!/((l)! (k!)^2 (l - k)!) \[Lambda]^(l - k) /(k + 2 l),
+       {l, 0, Floor[n/2]}], {n, 1, Nn}];
+   varpi3dtab = Table[n u^(n - 1) Sum[k = n - 2 l; 
+       \[Lambda]^(l - k) (If[
+           k > l, ((-1)^(k + l) Gamma[k - l] Gamma[1 + k + 2 l])/(
+           4 (k + 2 l) l! Gamma[1 + k]^2),
+           (( (k + 2 l)! (4 HarmonicNumber[k] + 3 HarmonicNumber[l] + 
+                 HarmonicNumber[-k + l] - 
+                 8 HarmonicNumber[k + 2 l]))/(4 (k + 
+                 2 l) (k!)^2 l! Gamma[1 - k + l]))] + (
+          2  (k + 2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)),
+       {l, 0, Floor[n/2]}], {n, 1, Nn}];
+   varpi2ddtab = Table[n (n - 1) u^(n - 2) Sum[k = n - 2 l; 
+       (k + 2 l)!/((l)! (k!)^2 (l - k)!) \[Lambda]^(l - k) /(k + 2 l),
+       {l, 0, Floor[n/2]}], {n, 2, Nn}];
+   varpi3ddtab = Table[n (n - 1) u^(n - 2) Sum[k = n - 2 l; 
+       \[Lambda]^(l - k) (If[
+           k > l, ((-1)^(k + l) Gamma[k - l] Gamma[1 + k + 2 l])/(
+           4 (k + 2 l) l! Gamma[1 + k]^2),
+           (( (k + 2 l)! (4 HarmonicNumber[k] + 3 HarmonicNumber[l] + 
+                 HarmonicNumber[-k + l] - 
+                 8 HarmonicNumber[k + 2 l]))/(4 (k + 
+                 2 l) (k!)^2 l! Gamma[1 - k + l]))] + (
+          2  (k + 2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)),
+       {l, 0, Floor[n/2]}], {n, 2, Nn}];
+   {{RichardsonResum[Accumulate[varpi2tab], Nr], 
+     RichardsonResum[Accumulate[varpi3tab], Nr]}, {RichardsonResum[
+      Accumulate[varpi2dtab], Nr], 
+     RichardsonResum[Accumulate[varpi3dtab], Nr]}, {RichardsonResum[
+      Accumulate[varpi2ddtab], Nr], 
+     RichardsonResum[Accumulate[varpi3ddtab], Nr]}}
+    ];
+
+PicardFuchsP[\[Lambda]_, u_] := (
+  50 u \[Lambda] + 24 \[Lambda]^2 - 2016 u^3 \[Lambda]^2 + 
+   u^2 (27 - 320 \[Lambda]^3) + 54 u^5 (-27 + 16 \[Lambda]^3) + 
+   4 u^4 \[Lambda] (-783 + 224 \[Lambda]^3))/(
+  u (9 u + 8 \[Lambda]) (u + \[Lambda] - 36 u^3 \[Lambda] - 
+     8 u^2 \[Lambda]^2 + u^4 (-27 + 16 \[Lambda]^3)));
+
+PicardFuchsQ[\[Lambda]_, u_] := (
+  16 u \[Lambda] + 8 \[Lambda]^2 - 1860 u^3 \[Lambda]^2 + 
+   u^2 (9 - 256 \[Lambda]^3) + 54 u^5 (-27 + 16 \[Lambda]^3) + 
+   16 u^4 \[Lambda] (-189 + 64 \[Lambda]^3))/(
+  u^2 (9 u + 8 \[Lambda]) (u + \[Lambda] - 36 u^3 \[Lambda] - 
+     8 u^2 \[Lambda]^2 + u^4 (-27 + 16 \[Lambda]^3)));
+
+PicardFuchs[f_, \[Lambda]_, u_] := 
+  D[f, {u, 3}] + D[f, {u, 2}] PicardFuchsP[\[Lambda], u] + 
+   D[f, u] PicardFuchsQ[\[Lambda], u];
+
+PicardFuchsA[\[Lambda]_, u_] = {{0, 1, 0}, {0, 0, 
+    1}, {0, -PicardFuchsQ[\[Lambda], u], -PicardFuchsP[\[Lambda], u]}};
+
+SystemMatrix[{{t_, td_}, {dt_, dtd_}, {ddt_, ddtd_}}, \[Lambda]_, 
+   u_] := Transpose@
+   Prepend[Transpose[{{-((I (t + Log[u]))/(2 \[Pi])), 
+       1/6 + (td + Log[u]^2 + Log[\[Lambda]]^2/8 - 
+         1/4 (t + Log[u]) (8 Log[u] + Log[\[Lambda]]))/\[Pi]^2}, {-((
+        I (dt + 1/u))/(2 \[Pi])), -((
+        8 t - 4 dtd u + 8 (1 + dt u) Log[u] + Log[\[Lambda]] + 
+         dt u Log[\[Lambda]])/(4 \[Pi]^2 u))}, {-((I (ddt - 1/u^2))/(
+        2 \[Pi])), (-8 + 8 t - 16 dt u + 
+        4 ddtd u^2 + (8 - 8 ddt u^2) Log[u] + Log[\[Lambda]] - 
+        ddt u^2 Log[\[Lambda]])/(4 \[Pi]^2 u^2)}}], {1, 0, 0}];
+
+Options[ComputeTransition] = {WorkingPrecision -> 60};
+ComputeTransition[\[Lambda]_, upath_, Nn_ : 512, Nr_ : 5, 
+   OptionsPattern[]] := Module[{sol, Psi, mon, SystMat, msg, tt = 0},
+   Monitor[
+    msg = "Integrating the connection...";
+    sol = NDSolve[{
+       Psi'[t] == upath'[t]*PicardFuchsA[\[Lambda], upath[t]] . Psi[t],
+       Psi[0] == IdentityMatrix[3]
+       }, Psi, {t, 0, 1}, 
+      WorkingPrecision -> OptionValue[WorkingPrecision], 
+      MaxSteps -> 10^6, StepMonitor :> (tt = t)];
+    mon = Psi[1] /. First[sol];
+    msg = "Solving for the system matrix...";
+    SystMat = 
+     SystemMatrix[F1Series[\[Lambda], upath[0], Nn, Nr], \[Lambda], 
+      upath[0]];
+    LinearSolve[SystMat, mon . SystMat], 
+    msg <> " " <> ToString[Floor[100 tt]] <> "%."]
+   ];
 
 
 End[]; (* `Private` *)
