@@ -172,6 +172,8 @@ ChernToCh::usage = "ChernToCh[gam] replaces {r,dF,dB,ch2} by r Ch[dF/r,dB/r] whe
 ExtFromStrong::usage = "ExtFromStrong[Coll] computes the Chern vectors of the objects in the Ext collection dual to the given strong collection Coll"
 StrongFromExt::usage = "StrongFromExt[Coll] computes the Chern vectors of the objects in the strong collection dual to the given Ext collection Coll";
 
+MutateCollection::usage = "MutateCollection[Coll, klist] acts on the list of Chern vectors Coll by the successive mutations in klist, which is a list of {node number,sign}, with sign=1 for right mutation, -1 for left mutation";
+
 ScattCheck::usage = "ScattCheck[Tree, m] returns {charge,{x,y}} of the root vertex if Tree is consistent, otherwise {total charge,{}}";
 ScattSort::usage = "ScattSort[LiTree, m] sorts trees in LiTree by growing radius";
 ScattGraph::usage = "ScattGraph[Tree, m] extracts the list of vertices and adjacency matrix of Tree";
@@ -555,6 +557,18 @@ StrongFromExt[Coll_]:=Module[{S,Si},
    Si=Inverse[Transpose[S]];
    Si . Coll
    ];
+
+(* Coll is a list of Chern vectors, klist a list of {node,\pm 1} *)
+MutateCollection[Coll_, klist_] := Module[{Coll0, k, eps},
+    Coll0 = 
+   If[Length[klist] > 1, MutateCollection[Coll, Drop[klist, -1]], 
+    Coll];
+    k = Last[klist][[1]]; eps = Last[klist][[2]];
+    Table[
+   If[i == k, -Coll0[[k]], 
+    Coll0[[i]] + 
+     Max[0, eps DSZ[Coll0[[i]], Coll0[[k]]]] Coll0[[k]]], {i, 
+    Length[Coll0]}]];
 
 TreeFromListRays[ListRays_,k_]:=If[ListRays[[k,3]]==0,ListRays[[k,1]],{ListRays[[k,5]]TreeFromListRays[ListRays,ListRays[[k,3]]],ListRays[[k,6]]TreeFromListRays[ListRays,ListRays[[k,4]]]}];
 
