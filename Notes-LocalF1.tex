@@ -172,7 +172,7 @@ We write the mirror curve to $\mathbb{F}_0$ as the following embedding in $\math
   w + \frac{1}{w} + \frac{1}{R^2} \qty(X + \frac{1}{X} + U) = 0.
 \end{equation}
 We can write this curve as a quartic by introducing $Y = -R^2 X \qty(w - \frac{1}{w})$,
-\begin{equation}\label{eqn:F0quartic}
+\begin{equation}\label{eq:F0quartic}
   Y^2 = f_4(X) = (X^2 + U X + 1)^2 - 4 X^2 R^2.
 \end{equation}
 The discriminant $\delta$ turns out to be (upto a numerical constant)
@@ -180,7 +180,7 @@ The discriminant $\delta$ turns out to be (upto a numerical constant)
   \delta = R^8 \, \Delta(U, R), \quad \Delta(U, R) = 16 R^8-8 R^4 \left(U^2+4\right)+\left(U^2-4\right)^2.
 \end{equation}
 The equation $\Delta(U, R) = 0$ has four solutions
-\begin{equation} \label{eqn:delt0sol}
+\begin{equation} \label{eq:delt0sol}
   U_1 = 2 - 2R^2, \quad U_2 = -2 + 2R^2, \quad U_3 = -2 - 2R^2, \quad U_4 = 2 + 2 R^2.
 \end{equation} 
 In the real $U-R$ slice, the condition is plotted in \cref{fig:Delt0}. 
@@ -191,7 +191,7 @@ In the real $U-R$ slice, the condition is plotted in \cref{fig:Delt0}.
   \label{fig:Delt0}
 \end{figure}
 
-We can turn the quartic in \cref{eqn:F0quartic} to cubic form by the following rational transformation
+We can turn the quartic in \cref{eq:F0quartic} to cubic form by the following rational transformation
 \begin{equation}
   X = \frac{a x + b}{c x + d}, \quad Y = \frac{a d - b c}{(c x + d)^2} y.
 \end{equation}
@@ -205,7 +205,7 @@ This implies,
 \end{equation}
 where $f_3$ is a cubic polynomial in $x$ whose coefficient of $x^3$ is directly proportional to $f_4'(a/c)$. It follows that if we set $a/c$ to be a simple root of $f_4$ and $a d - b c = 1$ then we obtain the desired cubic form. We can then scale and translate so as to get the cubic in the usual Weierstrass form: $y^2 = 4 x^3 - g_2 x - g_3$.
 
-Performing this procedure on the quartic in \cref{eqn:F0quartic}, one gets
+Performing this procedure on the quartic in \cref{eq:F0quartic}, one gets
 \begin{equation}
   \begin{aligned}
     g_2 &= \frac{1}{12} \left(16 R^8-8 R^4 \left(U^2+2\right)+\left(U^2-4\right)^2\right), \\
@@ -283,9 +283,9 @@ where $R=e^{\I\pi m/2}$, such that $R^4=\lambda=e^{2\pi\I m}$.
 
 \subsubsection{Rational parametrization of the nodal curve}
 
-As shown in \cref{eqn:delt0sol}, the curve in \cref{eqn:F0quartic} develops four distinct branches of nodes. These correspond to points in parameter space where the elliptic curve degenerates. Following the procedure outlined in \cite{kerr2008}, we rationally parametrize each nodal curve using a parameter $z$, such that the limits $z \to 0$ and $z \to \infty$ map to the node of the curve.
+As shown in \cref{eq:delt0sol}, the curve in \cref{eq:F0quartic} develops four distinct branches of nodes. These correspond to points in parameter space where the elliptic curve degenerates. Following the procedure outlined in \cite{kerr2008}, we rationally parametrize each nodal curve using a parameter $z$, such that the limits $z \to 0$ and $z \to \infty$ map to the node of the curve.
 
-The quartic polynomial in \cref{eqn:F0quartic} takes the following forms along the four branches, each associated with a corresponding node:
+The quartic polynomial in \cref{eq:F0quartic} takes the following forms along the four branches, each associated with a corresponding node:
 \begin{equation}
   \begin{aligned}
     U_1 &= 2 - 2R^2, &\qquad f_4(X) = (X+1)^2 \left(X^2 + \qty(2-4 R^2) X+1\right), && X_0 = -1, \\
@@ -316,7 +316,7 @@ The remaining parametrizations follow from the transformations $R^2 \to -R^2$ an
   Y_4 = \frac{-16 R^4 t-4 R^2 (t-1)^3+(t-1)^4}{\left(t^2-1\right)^2}.
 \end{aligned}
 \end{equation}
-Each pair $(X_i, Y_i)$ satisfies \cref{eqn:F0quartic} for the corresponding value of $U_i$.
+Each pair $(X_i, Y_i)$ satisfies \cref{eq:F0quartic} for the corresponding value of $U_i$.
 
 Returning to the original toric coordinates $(X, w)$, the parametrizations become
 \begin{equation}
@@ -337,7 +337,7 @@ similarly, for $U_2$. For $U_3$ and $U_4$, the node corresponds to $t = 1 \pm 2 
   z = \frac{t - (1-2\ii R)}{t - (1+2\ii R)}.
 \end{equation}
 Therefore, for each branch we get $X$ and $w$ in the $z$-parametrization:
-\begin{equation}\label{eqn:F0rationalparam}
+\begin{equation}\label{eq:F0rationalparam}
   \begin{aligned}
     X_1 &= -\frac{(z-1) (R (z-1)+z+1)}{(z+1) (R z+R+z-1)}, &\quad
     w_1 = \frac{(z+1) (R (z-1)+z+1)}{(z-1) (R z+R+z-1)}, \\
@@ -390,7 +390,7 @@ we note that
   D_2\!\left(\frac{R-1}{R+1}\right) = -D_2\!\left(\frac{R+1}{R-1}\right),
 \end{equation}
 so that
-\begin{equation}\label{eqn:realPeriod}
+\begin{equation}\label{eq:realPeriod}
   \mathcal{P}(R) = \frac{2}{\pi}
   \qty[D_2\!\left(\frac{R+1}{R-1}\right)
   - D_2\!\left(\frac{R+1}{1-R}\right)].
@@ -418,7 +418,7 @@ Repeating the analysis for $U_2$ yields identical exponents and roots, and thus 
   \end{aligned}
 \end{equation}
 Hence,
-\begin{equation}\label{eqn:imagPeriod}
+\begin{equation}\label{eq:imagPeriod}
   \begin{aligned}
     \mathcal{P}(R)
     &= \frac{1}{\pi}\qty[-D_2\!\left(\frac{R+i}{-R+i}\right)
@@ -438,7 +438,7 @@ And this time we see that \bp{But the formula should not apply}
   \mathcal{P}(R) = 0 \qquad \text{for imaginary } R.
 \end{equation}
 
-% We want to now understand how (and/or if) the formulas \cref{eqn:realPeriod,eqn:imagPeriod} reproduce the formulas for the 'quantum volumes' in \cite[eq. (A.85) and eq. (A.107)]{LeFloch:2024cwl} which we copy below for reference after identifying $\lambda = e^{2\pi\ii m}$ and from the parametrization of the mirror curve, we identify $R = \lambda^\frac{1}{4} = e^{\ii \pi m/2}$,
+% We want to now understand how (and/or if) the formulas \cref{eq:realPeriod,eq:imagPeriod} reproduce the formulas for the 'quantum volumes' in \cite[eq. (A.85) and eq. (A.107)]{LeFloch:2024cwl} which we copy below for reference after identifying $\lambda = e^{2\pi\ii m}$ and from the parametrization of the mirror curve, we identify $R = \lambda^\frac{1}{4} = e^{\ii \pi m/2}$,
 % \begin{align}
 %   \mathcal{V}(R) &= \frac{2 \ii}{\pi^2} \qty(\Li_2(-\ii R) - \Li_2(\ii R)), \\
 %   \tilde{\mathcal{V}}(R) &= \frac{2 \ii}{\pi^2} \qty(\Li_2(-R) - \Li_2(R)) = \mathcal{V}(-\ii R).
@@ -447,7 +447,7 @@ And this time we see that \bp{But the formula should not apply}
 
 \subsubsection{Conifold period for general moduli}
 In fact, apart from the imaginary part of the period, \cite[eq. (4.12)]{kerr2008} also gives a formula for the full non-vanishing period at the conifold points, even when the curve is not real:
-\begin{equation}\label{eqn:fullperiodkerrdonan}
+\begin{equation}\label{eq:fullperiodkerrdonan}
 \begin{aligned}
   \mathcal{Q} &= \frac{1}{2\pi} \sum_{j, k} d_j e_k \qty[ \Li_2\qty(\frac{\alpha_j}{\beta_k}) + \qty(\log \alpha_j - \log \beta_k) \log(1 - \frac{\alpha_j}{\beta_k}) ] \\
   &\quad -\frac{1}{2\pi} \log y(0) \qty(\log x(0) - \log x(\infty))
@@ -457,7 +457,7 @@ In fact, apart from the imaginary part of the period, \cite[eq. (4.12)]{kerr2008
 \end{equation}
 where as before, $x(z)$ and $y(z)$ are rational parametrizations of the nodal curve in the original toric coordinates and the node corresponds to $z \to 0, \infty$.
 From now on, we work with the branches $U_1$ and $U_2$ but all the results can be generalized to $U_3$ and $U_4$ by taking $R \to \ii R$.
-Evaluating \cref{eqn:fullperiodkerrdonan} for the parametrization in \cref{eqn:F0rationalparam}, we find the following after assuming $\Im R > 0$ and simplifying logs
+Evaluating \cref{eq:fullperiodkerrdonan} for the parametrization in \cref{eq:F0rationalparam}, we find the following after assuming $\Im R > 0$ and simplifying logs
 \begin{equation}
   \begin{aligned}
     \mathcal{Q} &= \frac{1}{\pi} \qty(\Li_2\left(\frac{-R-1}{R-1}\right)-\Li_2\left(\frac{R+1}{R-1}\right)-\Li_2\left(\frac{1-R}{R+1}\right)+\Li_2\left(\frac{R-1}{R+1}\right)) \\
@@ -468,8 +468,8 @@ Evaluating \cref{eqn:fullperiodkerrdonan} for the parametrization in \cref{eqn:F
 
 This expression can be simplified further thanks to various identities of the dilogarithm. We use in particular the following identities \cite{zagier:dilogarithm}
 \begin{align}
-  \Li_2\qty(\frac{1}{z}) &= -\Li_2(z) - \frac{\pi^2}{6} - \frac{1}{2}\log(-z)^2, \label{eqn:Li2Inversion}\\
-  \Li_2\qty(1-z) &= -\Li_2(z) + \frac{\pi^2}{6} - \log(z) \log(1-z). \label{eqn:Li2Reflection}
+  \Li_2\qty(\frac{1}{z}) &= -\Li_2(z) - \frac{\pi^2}{6} - \frac{1}{2}\log(-z)^2, \label{eq:Li2Inversion}\\
+  \Li_2\qty(1-z) &= -\Li_2(z) + \frac{\pi^2}{6} - \log(z) \log(1-z). \label{eq:Li2Reflection}
 \end{align}
 We also have the so-called \textit{five term relation},
 \begin{equation}
@@ -480,13 +480,13 @@ We also have the so-called \textit{five term relation},
 \end{equation}
 which only holds near the viscinity of $x, y \in (0, 1)$ due to branch cuts. However, it is easy to find a generalized version of this identify for the domain we are interested in by starting with the identity in it's twice differentiated form (where it reduces to a trivial algebraic identity) and integrating twice and fixing the integration constants.
 
-Using the inversion identity \cref{eqn:Li2Inversion}, we get
+Using the inversion identity \cref{eq:Li2Inversion}, we get
 \begin{equation}
   \begin{aligned}
   \mathcal{Q} &= -\frac{\pi}{2} -\frac{2}{\pi} \qty[\Li_2\left(\frac{1-R}{R+1}\right)- \Li_2\left(\frac{R-1}{R+1}\right) -  \log \left(\frac{1-R}{R+1}\right) \log (R)].
   \end{aligned}
 \end{equation}
-We now invoke the five term relation with $(x, y) = (R, -1)$ and correct it with the procedure explained. After applying the reflection identity to some of the arguments \cref{eqn:Li2Reflection} and noting that $\Li_2(-1) = \frac{-\pi^2}{12}$, the identity reads simply
+We now invoke the five term relation with $(x, y) = (R, -1)$ and correct it with the procedure explained. After applying the reflection identity to some of the arguments \cref{eq:Li2Reflection} and noting that $\Li_2(-1) = \frac{-\pi^2}{12}$, the identity reads simply
 \begin{equation}
   -\Li_2(-R)+\Li_2(R)+\Li_2\left(\frac{1-R}{R+1}\right)-\Li_2\left(\frac{R-1}{R+1}\right)
   = \frac{\pi ^2}{4}-\log (R) \log \left(\frac{1-R}{R+1}\right).
@@ -502,7 +502,7 @@ Applying this to $Q$, we get our final expression
 
 \subsection{Nagell's algorithm for the mirror curve}
 We start from the equation of the local mirror of $\mathbb{F}_1$ defined as the elliptic curve,
-\begin{equation}\label{eqn:F1mirror}
+\begin{equation}\label{eq:F1mirror}
   x + y + \frac{1}{x y} + \frac{m}{x} = \frac{1}{u},
 \end{equation}
 where $m$ and $u$ are a priori free complex parameters. After multiplying by $x y$, we have
@@ -613,7 +613,7 @@ we obtain the final Weierstrass form,
   V^2 = 4 U^3 - g_2 U + g_3,
 \end{equation}
 with
-\begin{align}\label{eqn:F1g23Nagell}
+\begin{align}\label{eq:F1g23Nagell}
   g_2 &= -\frac{4}{3} \qty(-16 m^2+\frac{8 m}{u^2}-\frac{1}{u^4}+\frac{24}{u}), \\
   g_3 &= -\frac{8}{27} \qty(-64 m^3+\frac{48 m^2}{u^2}-\frac{12 m}{u^4}+\frac{144 m}{u}+\frac{1}{u^6}-\frac{36}{u^3}+216).
 \end{align}
@@ -919,7 +919,7 @@ Nagell’s algorithm provides a systematic procedure to convert the mirror curve
   \qquad 
   y = \frac{36 u^2}{-12 m u^2-2 X+3}.
 \end{equation}
-In these coordinates the mirror curve \cref{eqn:F1mirror} assumes Weierstrass form,
+In these coordinates the mirror curve \cref{eq:F1mirror} assumes Weierstrass form,
 \begin{equation}
   Y^2 = 4X^3 - g_2 X - g_3,
 \end{equation}
@@ -930,7 +930,7 @@ with
   g_3 &= 27\left( 64 m^3 u^6 - 48 m^2 u^4 - 144 m u^5 + 12 m u^2 - 216 u^6 + 36 u^3 - 1 \right).
 \end{aligned}
 \end{equation}
-These expressions agree with \cref{eqn:F1g23Nagell} up to an overall normalization, which can be absorbed by rescaling $X$ and $Y$. The discriminant takes the form
+These expressions agree with \cref{eq:F1g23Nagell} up to an overall normalization, which can be absorbed by rescaling $X$ and $Y$. The discriminant takes the form
 \begin{equation}
   \Delta \propto u^8\, \delta(u,m),
   \qquad
@@ -939,15 +939,15 @@ These expressions agree with \cref{eqn:F1g23Nagell} up to an overall normalizati
 showing that for fixed $m$ the curve generically develops four nodal degenerations corresponding to the roots of $\delta(u,m)=0$. Among these solutions we single out the branch $u_{*}(m)$ of smallest absolute value; this root is the one governing, for example, the convergence of the large-radius expansion of the periods, and will therefore play a distinguished role in the analysis.
 
 To treat all nodal branches uniformly we follow the formalism of \cite{Marino:LocalF1Notes}. At the nodal locus the curve can be written as
-\begin{equation}\label{eqn:nodalcurve}
+\begin{equation}\label{eq:nodalcurve}
   Y^2 = 4 (X - X_0)^2 (X - X_1).
 \end{equation}
 Eliminating the $X^2$ term enforces $X_1 = -2 X_0$. Matching coefficients with the Weierstrass form then yields
 \begin{equation}
   X_0 = -\frac{3 g_3}{2 g_2},
 \end{equation}
-evaluated on the discriminant locus $\delta(u,m)=0$. A convenient rational parametrization of \cref{eqn:nodalcurve} is
-\begin{equation}\label{eqn:nodalcurveparamorig}
+evaluated on the discriminant locus $\delta(u,m)=0$. A convenient rational parametrization of \cref{eq:nodalcurve} is
+\begin{equation}\label{eq:nodalcurveparamorig}
   X = \frac{1}{2}\left(t^2 - 4 X_0\right),
   \qquad
   Y = \frac{t\left(t^2 - 6 X_0\right)}{\sqrt{2}}.
@@ -969,24 +969,24 @@ the denominators become $t^2 - t_1^2 = (t - t_1)(t + t_1)$. On the discriminant 
   = (t - t_1)^2 (t + 2 t_1 + 3),
 \end{equation}
 which leads to the one-parameter family
-\begin{equation}\label{eqn:tparam}
+\begin{equation}\label{eq:tparam}
   x = \frac{(t - t_1)(t + 2 t_1 + 3)}{6 u (t + t_1)},
   \qquad
   y = -\frac{36 u^2}{t^2 - t_1^2}.
 \end{equation}
 
-To apply the Kerr–Doran prescription we shift the nodes to $0$ and $\infty$. From \cref{eqn:nodalcurveparamorig} the node occurs at $t=\pm\sqrt{6X_0}$, leading to the coordinate
+To apply the Kerr–Doran prescription we shift the nodes to $0$ and $\infty$. From \cref{eq:nodalcurveparamorig} the node occurs at $t=\pm\sqrt{6X_0}$, leading to the coordinate
 \begin{equation}
   z = \frac{t - \sqrt{6 X_0}}{t + \sqrt{6 X_0}}.
 \end{equation}
-In terms of $z$, the parametrization \cref{eqn:tparam} takes the form
+In terms of $z$, the parametrization \cref{eq:tparam} takes the form
 \begin{equation}
   x = \alpha\, \frac{(z-a)(z-b)}{(z-c)(z-1)},
   \qquad
   y = \beta\, \frac{(z-1)^2}{(z-b)(z-c)},
 \end{equation}
 where
-\begin{equation}\label{eqn:nodalcurveparams}
+\begin{equation}\label{eq:nodalcurveparams}
 \begin{gathered}
   b = \frac{t_1 - \sqrt{6X_0}}{t_1 + \sqrt{6X_0}},
   \qquad
@@ -1042,7 +1042,7 @@ giving the explicit expression
   \begin{enumerate}
     \item A minor mismatch remains in the real part of the period when evaluated at $(m,u) = (1, u_*(1))$.  
     \item In contrast, the discrepancy in the imaginary part noted in \cite{Marino:LocalF1Notes} for $(m,u) = (2, u_*(2))$ is fully resolved by the above formula.
-    \item The expressions for $\alpha$ and $\beta$ in terms of $b$ given in \cref{eqn:nodalcurveparams} apply only to the branch corresponding to $m=1$ with $u=u_*(1)\approx 0.26318$.
+    \item The expressions for $\alpha$ and $\beta$ in terms of $b$ given in \cref{eq:nodalcurveparams} apply only to the branch corresponding to $m=1$ with $u=u_*(1)\approx 0.26318$.
   \end{enumerate}
 }
 
@@ -1075,7 +1075,7 @@ and the coordinates $(x, y)$ transform to
 \subsection{Large Volume Scattering}
 
 We take for the large volume central charge of an object $E$ of chern Character $\gamma = (r, \ d_F, \ d_B, \ \ch_2)$, the function
-\begin{equation}\label{eqn:LVCentralCharge}
+\begin{equation}\label{eq:LVCentralCharge}
   Z_\LV(\gamma) = -r \qty(4 T^2 + m T - \frac{m^2}{2}) + d_F (2T+m) + d_B(T-m) - \ch_2.
 \end{equation}
 
@@ -1095,7 +1095,7 @@ Given a phase $\psi \in [0, \pi)$, the ray corresponding to an object $E$ of cha
   \text{Ray equation: } \quad \mathcal{F}(\gamma, T, m, \psi) = \Re(e^{-\ii \psi} Z_\LV(\gamma)) = 0.
 \end{equation}
 and $\Im(e^{-\ii \psi} Z_\LV(\gamma)) > 0$. Of course, this ray may or may not be populated over the entire $T$ plane but the equation above is the support of the ray whenever it exists (also for the object of charge $-\gamma$).
-A direct evaluation of $\mathcal{F}$ for the central charge in \cref{eqn:LVCentralCharge} shows that the rays are rectangular hyperbolas in the plane of $T = s + \ii t$. The center of the hyperbola is at
+A direct evaluation of $\mathcal{F}$ for the central charge in \cref{eq:LVCentralCharge} shows that the rays are rectangular hyperbolas in the plane of $T = s + \ii t$. The center of the hyperbola is at
 \begin{equation}
   T_0 = \frac18 \qty[\frac{(d_B + 2 d_F)}{r} - m],
 \end{equation}
@@ -1126,7 +1126,7 @@ After performing a rotation by $\frac{\psi}{2}$ and shifting the center, definin
 \subsubsection{Rays in x-y coordinates}
 
 We define coordinates
-\begin{equation}\label{eqn:xydef}
+\begin{equation}\label{eq:xydef}
   x = \frac{\Re(e^{-\ii \psi} \, T)}{\cos \psi}, \quad y = -\frac{\Re(e^{-\ii \psi} \, T_D)}{\cos \psi}, \quad \mu = \frac{\Re(e^{-\ii \psi} \, m)}{\cos \psi},
 \end{equation}
 which makes the rays into straight lines
@@ -1158,7 +1158,7 @@ The domain of validity of a particular collection $\mathcal{C} = \{ \gamma_1, \l
   \mathrm{dom}_\psi\mathcal{C} = \{ \Re(e^{-\ii \psi} Z_{\gamma_k}) < 0, \ \forall \gamma_k \in \mathcal{C} \}
 \end{equation}
 
-Working in the $x$-$y$ coordinates defined in \cref{eqn:xydef}, we can write the condition $\Re(e^{-\ii \psi} Z_{\gamma}) < 0$ as (assuming $0 \leq \psi < \frac{\pi}{2}$)
+Working in the $x$-$y$ coordinates defined in \cref{eq:xydef}, we can write the condition $\Re(e^{-\ii \psi} Z_{\gamma}) < 0$ as (assuming $0 \leq \psi < \frac{\pi}{2}$)
 \begin{equation}
   r y + (d_B + 2 d_F) x + (d_F - d_B) \mu - \ch_2 < 0
 \end{equation}
@@ -1200,7 +1200,7 @@ The discriminant of the mirror curve
 has five roots, the large volume point (or point of maximal unipotent monodromy, MUM) at $u = 0$ (which is an $I_8$ fiber) and four standard conifold points which we denote $u_1, \dots, u_4$. These are $I_1$ fibers for generic $\lambda$. At $\lambda = 1$, these points are plotted in \cref{fig:UPlaneSingularities_m0}. We generally label the conifold points in this order for $\lambda = 1$ and by continuation to any other $\lambda$ avoiding the singular locus ($\lambda^3 = -27/256$).
 
 To see that that these are also the singularities of the Picard-Fuchs equations (and additional singularities), we write the third-order PF equations (for periods of the CY3) in this form
-\begin{equation}
+\begin{equation}\label{eq:PicardFuchs3}
   \partial_u^3 \varpi(\lambda, u) \ + \ P(\lambda, u) \, \partial_u^2 \varpi(\lambda, u) \ + \ Q(\lambda, u) \, \partial_u \varpi(\lambda, u) = 0
 \end{equation}
 where $P$ and $Q$ are the following rational functions
@@ -1211,7 +1211,74 @@ where $P$ and $Q$ are the following rational functions
   Q = \frac{8 \lambda ^2+54 \left(16 \lambda ^3-27\right) u^5+16 \lambda  \left(64 \lambda ^3-189\right) u^4-1860 \lambda ^2 u^3+\left(9-256 \lambda ^3\right) u^2+16 \lambda  u}{u^2 (8 \lambda +9 u) \left(\lambda +\left(16 \lambda ^3-27\right) u^4-36 \lambda  u^3-8 \lambda ^2 u^2+u\right)}
 \end{equation}
 
-From this, it is clear that the only singular points of the third-order PF are $u_0 = 0,\, u_1,\, u_2,\, u_3,\, u_4,\,$ and $u_B = -8\lambda/9$. It is also clear that these are all regular singular points.
+From this, it is clear that the only singular points of the third-order PF are $u_0 = 0,\, u_1,\, u_2,\, u_3,\, u_4,\,$ and $u_B = -8\lambda/9$. It is also clear that these are all regular singular points. At $u = 0$, the indicial polynomial is $r^3 = 0$, consistent with it being a MUM point. At $u = u_B = -8\lambda/9$, the indicial polynomial turns out to be $(-3 + r) (-1 + r) r$. At $u = u_i$, $i = 1, 2, 3, 4$, the indicial polynomial is $(-1 + r)^2 r$. At $u = 0$, if we pick a local Frobenius basis
+\begin{align}
+  \varpi_0 &= 1, \quad \varpi_1 = \log \lambda = 2 \pi \ii m, \\ \varpi_2 &= \log(u) + (\text{analytic}), \\ \varpi_3 &= (\log(u))^2 + \varpi_2 (-2 \log u - \frac{1}{4} \log\lambda) + \frac{(\log \lambda)^2}{8} + (\text{analytic}),
+\end{align}
+then the large volume periods $T$ and $T_D$ can be written as
+\begin{equation}
+  T = \frac{\varpi_2}{(2\pi \ii)}, \quad T_D = -4 \frac{\varpi_3}{(2\pi \ii)^2} + \frac{1}{6}.
+\end{equation}
+
+\textbf{Method for computing monodromies}
+
+To numerically compute monodromies around the singular points, I define the companion system to \cref{eq:PicardFuchs3},
+\begin{equation}
+  \partial_u Y(u) = A(u) Y(u)
+\end{equation}
+where we define the system vector $Y(u)$ and the connection matrix $A(u)$ as,
+\begin{equation}
+  Y(u) = \begin{pmatrix}
+    \varpi(u) \\ \partial_u \varpi(u) \\ \partial_u^2 \varpi(u)
+  \end{pmatrix}, \quad A(u) = \begin{pmatrix}
+      0 & 1 & 0 \\ 0 & 0 & 1 \\ 0 & -P(u) & -Q(u)
+    \end{pmatrix}.
+\end{equation}
+
+We define the fundamental matrix $\Phi(u)$ for the fundamental solutions $\varpi_1(u), \varpi_2(u), \varpi_3(u)$ as
+\begin{equation}
+  \Phi(u) = \begin{pmatrix}
+    \varpi_1 & \varpi_2 & \varpi_3 \\ \partial_u \varpi_1 & \partial_u \varpi_2 & \partial_u \varpi_3 \\ \partial_u^2 \varpi_1 & \partial_u^2 \varpi_2 & \partial_u^2 \varpi_3
+  \end{pmatrix},
+\end{equation}
+which also satisfies $\partial_u \Phi(u) = A(u) \Phi(u)$. Thus, to compute monodromies around closed paths $\gamma: [0, 1] \to \mathbb{P}^1/\{u_i\},  t \mapsto u(t)$, we can numerically solve the ODE
+\begin{equation}
+  \dot{\Psi}(t) = \dot{u}(t) \, A(u(t)) \Psi(t),
+\end{equation}
+with any initial condition e.g. ($\Psi(0) = I_3$), and then compute the change-of-basis matrix $C$ at the base-point $u_* = u(0)$ which we can take to be inside a small disc around $u_0 = 0$ where we know the period expansions well. The matrix $C$ is given by
+\begin{equation}
+  C = \begin{pmatrix}
+    1 & T(u_*) & T_D(u_*) \\ 0 & \partial_u T(u_*) & \partial_u T_D(u_*) \\ 0 & \partial_u^2 T(u_*) & \partial_u^2 T_D(u_*)
+  \end{pmatrix},
+\end{equation} 
+and the local monodromy around path $\gamma$ is given by
+\begin{equation}
+  M_\gamma = C^{-1} \Psi(1) C.
+\end{equation}
+
+\textbf{Monodromies at $\lambda = 1$}
+
+Using the procedure described above, we find the following monodromies in the $(1, m, T, T_D)$ basis where the second column is deduced by changing $m$ slightly and comparing the first column of the $3 \times 3$ monodromy on $(1, T, T_D)$ computed by numerics \par
+\textit{Around $u = 0$:}
+\begin{equation}
+  M_{LV} = \begin{pmatrix}
+    1 & 0 & 0 \\
+    1 & 1 & 0 \\
+    4 & 8 & 1
+  \end{pmatrix} \ \to \ \begin{pmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    1 & 0 & 1 & 0 \\
+    4 & 1 & 8 & 1
+  \end{pmatrix}
+\end{equation}
+
+\textit{Around $u = u_B = -8\lambda/9$:}
+\begin{equation}
+  M_B = I_3 \ \to \ I_4
+\end{equation}
+
+
 
 \printbibliography[title={References}]
 

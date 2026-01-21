@@ -1,0 +1,49 @@
+{
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "latexmk",
+      "tools": ["latexmk", "pdf-cp"]
+    },
+    {
+      "name": "pdflatex -> bibtex -> pdflatex * 2",
+      "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex", "pdf-cp"]
+    }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-lualatex",
+        "-outdir=%OUTDIR%",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ],
+      "env": {}
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": ["%DOCFILE%"],
+      "env": {}
+    },
+    {
+      "name": "pdf-cp",
+      "command": "cp",
+      "args": ["%OUTDIR%/%DOCFILE%.pdf", "%DIR%/"]
+    }
+  ]
+}
