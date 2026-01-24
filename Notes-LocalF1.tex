@@ -115,6 +115,18 @@
 \newcommand{\LV}{\mathrm{LV}}
 \newcommand{\chO}{\mathcal{O}}
 \newcommand{\GV}{\mathrm{GV}}
+\newcommand{\ur}{\mathrm{u}}
+
+% --- number systems ---
+\newcommand{\C}{\mathbb{C}}
+
+% --- projective space ---
+\newcommand{\PP}{\mathbb{P}}
+
+% --- operators ---
+\DeclareMathOperator{\Disc}{Disc} % discriminant
+% \DeclareMathOperator{\Res}{Res}   % resultant
+% \DeclareMathOperator{\gcd}{gcd}   % gcd (as an operator, not a function name)
 
 \definecolor{RemarkColor}{HTML}{2F6FDB}
 \newcommand{\remark}[1]{\textcolor{RemarkColor}{[#1]}}
@@ -1279,6 +1291,240 @@ Using the procedure described above, we find the following monodromies in the $(
 \end{equation}
 
 
+\section{Degenerations of the map $\ur \mapsto J$}
+\label{sec:degenerations-J-ur}
+
+Fix the parameter $\ell \in \C$ and consider the rational map
+\begin{equation}
+\label{eq:Jmap}
+J(\ur;\ell)
+=
+\frac{N(\ur;\ell)^3}{\ell^3\,\ur^8\,E(\ur;\ell)},
+\end{equation}
+where
+\begin{align}
+\label{eq:Nu}
+N(\ur;\ell)
+&:=1+16\ell^2 \ur^4-8\ell \ur^2(1+3\ur),
+\\
+\label{eq:Eu}
+E(\ur;\ell)
+&:=1+\ur-8\ell \ur^2-36\ell \ur^3+\ell(-27+16\ell)\ur^4.
+\end{align}
+For generic $\ell$, the map \eqref{eq:Jmap} defines a degree-$12$ cover
+\(
+\phi_\ell:\PP^1_\ur \to \PP^1_J
+\)
+(i.e.\ generically $12$ preimages for a given $J$).
+
+\subsection{Branch values via the discriminant method}
+For fixed $\ell$, branch values $J_\ast$ are characterized by the condition that the fiber
+\(
+\phi_\ell^{-1}(J_\ast)
+\)
+has multiplicities, i.e.\ that the equation $J(\ur;\ell)=J$ has a multiple root in $\ur$.
+Equivalently, define the polynomial in $\ur$
+\begin{equation}
+\label{eq:Pu}
+P(\ur;J,\ell):=N(\ur;\ell)^3 - J\,\ell^3 \ur^8 E(\ur;\ell).
+\end{equation}
+Then $J$ is a branch value of $\phi_\ell$ if and only if
+\begin{equation}
+\label{eq:disc-condition}
+\Disc_\ur\bigl(P(\ur;J,\ell)\bigr)=0.
+\end{equation}
+After factoring, one finds that (up to an overall nonzero constant)
+\begin{equation}
+\label{eq:disc-factor}
+\Disc_\ur\bigl(P(\ur;J,\ell)\bigr)
+=
+J^{8}(J-1728)^{6}\bigl(J-J_B(\ell)\bigr)\cdot \ell^{44}(256\ell+27)^3.
+\end{equation}
+Hence for generic $\ell\neq 0,-\tfrac{27}{256}$ the branch values on the $J$-sphere are
+\begin{equation}
+\label{eq:branchvalues-generic}
+J \in \{0,\;1728,\;J_B(\ell),\;\infty\},
+\qquad
+J_B(\ell)=\frac{(256\ell+27)(256\ell+243)^3}{2^{24}\,\ell^3}.
+\end{equation}
+
+\subsection{Critical points and generic ramification profile}
+Critical points in the $\ur$-sphere are the zeros of $\frac{dJ}{d\ur}$.
+Writing $\frac{dJ}{d\ur}=\frac{\mathrm{num}}{\mathrm{den}}$, the numerator factorizes as
+\begin{equation}
+\label{eq:dJdu-factor}
+\mathrm{num}\!\left(\frac{dJ}{d\ur}\right)
+=
+\ell^{3}\ur^{7}(9\ur+8)\,Q(\ur;\ell)^2\,S(\ur;\ell),
+\end{equation}
+where
+\begin{align}
+\label{eq:Q}
+Q(\ur;\ell)&:=16\ell^2\ur^4-24\ell \ur^3-8\ell \ur^2+1,
+\\
+\label{eq:S}
+S(\ur;\ell)&:=64\ell^3\ur^6-216\ell^2\ur^6-144\ell^2\ur^5-48\ell^2\ur^4+36\ell \ur^3+12\ell \ur^2-1.
+\end{align}
+For generic $\ell$, the ramification data over the branch values in
+\eqref{eq:branchvalues-generic} is:
+\begin{itemize}
+\item Over $J=\infty$: $\ur=0$ is an order-$8$ pole, hence ramification index $e=8$
+(contribution $e-1=7$). The remaining poles are the simple roots of $E(\ur;\ell)$.
+\item Over $J=0$: $N(\ur;\ell)=0$ is equivalent to $Q(\ur;\ell)=0$ (since $N$ is quartic),
+and the square $Q^2$ in \eqref{eq:dJdu-factor} implies that each root of $Q$ is
+ramified with $e=3$. Thus the fiber over $0$ has cycle type
+\[
+3+3+3+3.
+\]
+\item Over $J=1728$: the six roots of $S(\ur;\ell)$ map to $1728$ and are simple critical
+points, giving cycle type
+\[
+2+2+2+2+2+2.
+\]
+\item Over $J=J_B(\ell)$: the factor $(9\ur+8)$ shows that $\ur=-\frac{8}{9}$ is a simple
+critical point, hence contributes one transposition; the remaining ten points are
+unramified. Cycle type:
+\[
+2+1+\cdots+1 \quad (\text{ten $1$'s}).
+\]
+\end{itemize}
+
+\subsection{What it means for the map to ``degenerate''}
+There are two distinct sources of degeneration.
+
+\paragraph{(I) Special branch values for fixed $\ell$.}
+For fixed $\ell$, the fiber over $J$ ceases to consist of $12$ distinct points precisely
+when \eqref{eq:disc-condition} holds. The branch values are therefore
+\eqref{eq:branchvalues-generic}, and multiplicities are encoded in the factorization of
+the discriminant \eqref{eq:disc-factor}.
+
+\paragraph{(II) Special parameters $\ell$ where the cover changes type.}
+As $\ell$ varies, the Hurwitz data (cycle types, collisions of branch values, degree)
+can change at parameter values where:
+\begin{enumerate}
+\item \textbf{Cancellation (degree drop):} numerator and denominator share a common factor,
+i.e.\ $\gcd\bigl(N(\ur;\ell)^3,\ell^3\ur^8E(\ur;\ell)\bigr)\neq 1$.
+Equivalently, $\Res_\ur\bigl(N(\ur;\ell),u^8E(\ur;\ell)\bigr)=0$.
+\item \textbf{Critical points collide:} $\Disc_\ur(Q(\ur;\ell))=0$ or $\Disc_\ur(S(\ur;\ell))=0$.
+\item \textbf{Branch values collide:} $J_B(\ell)$ hits $\{0,1728,\infty\}$ or merges with
+the value $J(\infty)$ (see below).
+\end{enumerate}
+
+\subsection{Distinguished special values of $\ell$ (explicit list)}
+The following parameter values are singled out by the above mechanisms:
+\begin{itemize}
+\item \textbf{Ill-defined family point:} $\ell=0$ (the formula \eqref{eq:Jmap} has $\ell^3$
+in the denominator).
+\item \textbf{True cancellation / degree drop:}
+\begin{equation}
+\label{eq:ell-cancel}
+\ell=-\frac{27}{256}.
+\end{equation}
+At this value numerator and denominator share a nontrivial common factor in $\ur$, so after
+cancellation the degree drops below $12$.
+\item \textbf{Collision in the $J=0$ fiber (ramification increases):}
+\begin{equation}
+\label{eq:ell-Qdisc}
+\ell=-\frac{243}{256}.
+\end{equation}
+Here $Q(\ur;\ell)$ acquires a repeated root at $\ur=-\frac{8}{9}$, changing the cycle type
+over $J=0$.
+\item \textbf{Collision in the $J=1728$ fiber and branch-value collision $J_B(\ell)=1728$:}
+\begin{equation}
+\label{eq:ell-Sdisc}
+\ell=\frac{243}{256}\pm\frac{81\sqrt{3}}{128},
+\end{equation}
+equivalently the roots of
+\(
+65536\ell^2-124416\ell-19683=0.
+\)
+These are characterized by $\Disc_\ur(S(\ur;\ell))=0$ and simultaneously $J_B(\ell)=1728$.
+\end{itemize}
+
+\subsection{Behavior at $u=\infty$ and additional special values}
+The value of the map at infinity is obtained from the leading terms:
+\begin{equation}
+\label{eq:J-infty}
+J(\infty;\ell)=\lim_{u\to\infty}J(u;\ell)=\frac{4096\,\ell^2}{16\ell-27},
+\qquad (\ell\neq 27/16).
+\end{equation}
+This exhibits further distinguished parameters:
+\begin{itemize}
+\item $\ell=\frac{27}{16}$: the leading term of $E(\ur;\ell)$ vanishes, so $J(\infty;\ell)=\infty$
+(i.e.\ a pole effectively moves to $\ur=\infty$).
+\item $\ell=\frac{27}{8}$: one has $J(\infty;\ell)=1728$; in addition $\ur=\infty$ becomes
+ramified (the local expansion starts at order $(1/\ur)^2$), producing extra branching over
+$J=1728$.
+\end{itemize}
+
+% \subsection{Systematic checklist (``algorithm'')}
+% To ensure no special cases are missed, proceed as follows.
+% \begin{enumerate}
+% \item \textbf{Compute and factor the discriminant} $\Disc_u(P(u;J,\ell))$ as a polynomial in $J$:
+% its roots are the branch values; their multiplicities encode how many sheets collide.
+% \item \textbf{Compute and factor} $\mathrm{num}\!\left(\frac{dJ}{du}\right)$:
+% the critical factors (here $\ur$, $9u+8$, $Q$, $S$) determine preimages and ramification indices.
+% \item \textbf{Find special parameters} where the Hurwitz data changes:
+% \[
+% \Res_u(N,u^8E)=0,\quad
+% \Disc_u(Q)=0,\quad
+% \Disc_u(S)=0,
+% \]
+% and solve collision equations among branch values, e.g.
+% \[
+% J_B(\ell)\in\{0,1728,\infty\},\qquad
+% J_B(\ell)=J(\infty;\ell),\qquad
+% J(\infty;\ell)\in\{0,1728,\infty\}.
+% \]
+% \end{enumerate}
+% These loci stratify the $\ell$-line into chambers on which the covering $\phi_\ell$ has
+% constant degree and constant ramification profile.
+
+
+\subsection{Periods near $\ur = -\frac{8}{9}$}
+
+The third order Picard-Fuchs equation for the periods of local $\mathbb{F}_1$ can be written as $\mathcal{D}_3 \varpi(\ell, \ur) = 0$, with
+\begin{equation}
+  \mathcal{D}_3 = \partial_\ur^3 + P(\ell, \ur) \partial_\ur^2 + Q(\ell, \ur) \partial_\ur,
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+    P(\ell, \ur) &= \frac{54 \ell (16 \ell-27) \ur^5+4 \ell (224 \ell-783) \ur^4-2016 \ell \ur^3+(27-320 \ell) \ur^2+50 \ur+24}{\delta(\ell, \ur)}, \\
+    Q(\ell, \ur) &= \frac{54 \ell (16 \ell-27) \ur^5+16 \ell (64 \ell-189) \ur^4-1860 \ell \ur^3+(9-256 \ell) \ur^2+16 \ur+8}{\ur \, \delta(\ell, \ur)}, \\
+    \delta(\ell, \ur) &= \ur (9 \ur+8) \left(\ell (16 \ell-27) \ur^4-36 \ell \ur^3-8 \ell \ur^2+\ur+1\right)
+  \end{aligned}
+\end{equation}
+
+The point $\ur = -\tfrac89$ is a regular singular point with local exponents $(0, 1, 3)$ for generic values of $\ell$ and $(0, \tfrac56, \tfrac76)$ at $\ell = -\frac{27}{256}$. The solutions can be written in terms of $\ur = -8/9 + z$ in the canonical Frobenius basis as follows
+\begin{equation}
+  \begin{aligned}
+    \varpi_0 &= 1, \\
+    \varpi_1 &= z+\frac{9 (512 \ell+27) z^2}{4096 \ell+432}-\frac{729 \left(67108864 \ell^3-4423680 \ell^2-559872 \ell-45927\right) z^4}{1024 (256 \ell+27)^3}+\mathcal{O}(z^5), \\
+    \varpi_2 &= z^3+\frac{27 (1024 \ell-99) z^4}{8192 \ell+864}+\frac{243 \left(1310720 \ell^2-211968 \ell+36207\right) z^5}{640 (256 \ell+27)^2}\\
+    &\qquad +\frac{729 \left(671088640 \ell^3-130940928 \ell^2+36951552 \ell-6187023\right) z^6}{2048 (256 \ell+27)^3} +\mathcal{O}(z^7)
+  \end{aligned}
+\end{equation}
+
+The periods are $\ell$-dependent combinations of $\varpi_i$,
+\begin{equation}
+  \varpi(\ell, \ur) = \alpha_0(\ell) \varpi_0 + \alpha_1(\ell) \varpi_1 + \alpha_2(\ell) \varpi_2
+\end{equation}
+
+We can fix the $\ell$ dependence by using the original Picard-Fuchs equations which read $\mathcal{D}_i \varpi(\ell, \ur) = 0$
+\begin{equation}
+  \begin{gathered}
+    \mathcal{D}_1 = -\ur^4 \partial_\ur^2-2 \ur^3 \partial_\ur-\ur \partial_\ur \partial_\ell+3 \partial_\ell+3 \ell \partial_\ell^2, \\
+    \mathcal{D}_2 = (\ur+1) \ur \left(\ur \partial_\ur^2+ \partial_\ur\right) +\ell \left(4 \partial_\ell-\ur (3 \ur+4) \partial_\ell \partial_\ur +4 \ell \partial_\ell^2\right).
+  \end{gathered}
+\end{equation}
+The result is a set of ordinary differential equations for the coefficients $\alpha_i(\ell)$,
+\begin{equation}
+  \begin{gathered}
+    \ell (256 \ell+27)^2 \alpha_1''(\ell)+(512 \ell+27) (256 \ell+27) \alpha_1'(\ell)+(16384 \ell+1920) \alpha_1(\ell) = 0, \\
+    81 \ell \alpha_0''(\ell)+81 \alpha_0'(\ell)+24 \alpha_1'(\ell)+\frac{512 \alpha_1(\ell)}{256 \ell+27}=0, \\
+    \alpha_2(\ell) = \frac{81 \left(\left(65536 \ell^2-3456 \ell+243\right) \alpha_1(\ell)-\left(27648 \ell^2+2916 \ell\right) \alpha_1'(\ell)\right)}{64 (256 \ell+27)^2}
+  \end{gathered}
+\end{equation}
 
 \printbibliography[title={References}]
 
