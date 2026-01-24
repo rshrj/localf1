@@ -40,7 +40,7 @@ MirrorCurveDelta::usage = "TODO";
 
 MirrorCurveJ::usage = "TODO";
 
-URoot::usage = "URoot[\[Lambda], k] is the kth root of the order 4 part of the discriminant.";
+URoot::usage = "URoot[la, k] is the kth root of the order 4 part of the discriminant.";
 
 URoots::usage = "TODO";
 
@@ -192,13 +192,24 @@ ConstructLVDiagram::usage = "ConstructLVDiagram[smin, smax, phimax, Nm, m, ListR
 ConstructLVDiagramOpt::usage = "ConstructLVDiagram[phimax, Nm, m, InitialRays]";
 
 (* Period expansions in Pi-Stability slice *)
-F1Series::usage = "F1Series[\[Lambda], u, Nn, Nr] computes large volume period expansion of F1 periods, its first and second derivatives using Richardson acceleration.";
-PicardFuchsP::usage = "PicardFuchsP[\[Lambda], u] computes the coefficient of d^2 t/d u^2 in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
-PicardFuchsQ::usage = "PicardFuchsQ[\[Lambda], u] computes the coefficient of d t/d u in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
-PicardFuchs::usage = "PicardFuchs[f, \[Lambda], u]";
-PicardFuchsA::usage = "PicardFuchsA[\[Lambda], u]";
-SystemMatrix::usage = "SystemMatrix[{{t, td}, {dt, dtd}, {ddt, ddtd}}, \[Lambda], u]";
-ComputeTransition::usage = "ComputeTransition[\[Lambda], upath, Nn, Nr]";
+F1Series::usage = "F1Series[la, u, Nn, Nr] computes large volume period expansion of F1 periods, its first and second derivatives using Richardson acceleration.";
+PicardFuchsP::usage = "PicardFuchsP[la, u] computes the coefficient of d^2 t/d u^2 in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
+PicardFuchsQ::usage = "PicardFuchsQ[la, u] computes the coefficient of d t/d u in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
+PicardFuchs::usage = "PicardFuchs[f, la, u]";
+PicardFuchsA::usage = "PicardFuchsA[la, u]";
+SystemMatrix::usage = "SystemMatrix[{{t, td}, {dt, dtd}, {ddt, ddtd}}, la, u]";
+ComputeTransition::usage = "ComputeTransition[la, upath, Nn, Nr]";
+
+G10FundamentalDomain::usage = "G10FundamentalDomain plots the funamental domain of the noncongruence subgroup Gamma(10;0,3,0,1;8).";
+G10RepeatDomain::usage = "G10RepeatDomain[{kmin, kmax}] repeats G10FundamentalDomain from x = 8*kmin to 8*kmax.";
+
+MirrorCurveJ2::usage = "MirrorCurveJ2[el, ur]";
+PicardFuchsP2::usage = "PicardFuchsP2[el, ur]";
+PicardFuchsQ2::usage = "PicardFuchsQ2[el, ur]";
+PicardFuchs2::usage = "PicardFuchs2[f, el, ur]";
+PicardFuchsA2::usage = "PicardFuchsA2[el, ur]";
+F1Series2::usage = "F1Series2[el, ur, Nn, Nr]";
+SystemMatrix2::usage = "SystemMatrix2[dat, el, ur]";
 
 Begin["`Private`"];
 
@@ -236,8 +247,8 @@ MirrorCurveDelta[m_, u_] := m + u - 8 m^2 u^2 - 36 m u^3 - 27 u^4 + 16 m^3 u^4;
 
 MirrorCurveJ[m_,u_]:=(1-8 m u^2-24 u^3+16 m^2 u^4)^3/(u^8 (m+u-8 m^2 u^2-36 m u^3-27 u^4+16 m^3 u^4));
 
-URoot[\[Lambda]_, k_] := Root[\[Lambda] + #1 - 8 \[Lambda]^2 #1^2 - 
-   36 \[Lambda] #1^3 + (-27 + 16 \[Lambda]^3) #1^4 &, k];
+URoot[la_, k_] := Root[la + #1 - 8 la^2 #1^2 - 
+   36 la #1^3 + (-27 + 16 la^3) #1^4 &, k];
 
 URoots[m_] := u /. NSolve[MirrorCurveDelta[m, u] == 0, u];
 
@@ -902,14 +913,14 @@ ConstructLVDiagramOpt[phimax_, Nm_, m_, ListRays0_] :=
 
 (* Period expansions in Pi-Stability slice *)
 
-F1Series[\[Lambda]_, u_, Nn_, Nr_] := 
+F1Series[la_, u_, Nn_, Nr_] := 
   Module[{varpi2tab, varpi3tab, varpi2dtab, varpi3dtab, varpi2ddtab, 
     varpi3ddtab, k, l},
    varpi2tab = Table[u^n Sum[k = n - 2 l; 
-       (k + 2 l)!/((l)! (k!)^2 (l - k)!) \[Lambda]^(l - k) /(k + 2 l),
+       (k + 2 l)!/((l)! (k!)^2 (l - k)!) la^(l - k) /(k + 2 l),
        {l, 0, Floor[n/2]}], {n, 1, Nn}];
    varpi3tab = Table[u^n Sum[k = n - 2 l; 
-       \[Lambda]^(l - k) (If[
+       la^(l - k) (If[
            k > l, ((-1)^(k + l) Gamma[k - l] Gamma[1 + k + 2 l])/(
            4 (k + 2 l) l! Gamma[1 + k]^2),
            (( (k + 2 l)! (4 HarmonicNumber[k] + 3 HarmonicNumber[l] + 
@@ -919,10 +930,10 @@ F1Series[\[Lambda]_, u_, Nn_, Nr_] :=
           2  (k + 2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)),
        {l, 0, Floor[n/2]}], {n, 1, Nn}];
    varpi2dtab = Table[n u^(n - 1) Sum[k = n - 2 l; 
-       (k + 2 l)!/((l)! (k!)^2 (l - k)!) \[Lambda]^(l - k) /(k + 2 l),
+       (k + 2 l)!/((l)! (k!)^2 (l - k)!) la^(l - k) /(k + 2 l),
        {l, 0, Floor[n/2]}], {n, 1, Nn}];
    varpi3dtab = Table[n u^(n - 1) Sum[k = n - 2 l; 
-       \[Lambda]^(l - k) (If[
+       la^(l - k) (If[
            k > l, ((-1)^(k + l) Gamma[k - l] Gamma[1 + k + 2 l])/(
            4 (k + 2 l) l! Gamma[1 + k]^2),
            (( (k + 2 l)! (4 HarmonicNumber[k] + 3 HarmonicNumber[l] + 
@@ -932,10 +943,10 @@ F1Series[\[Lambda]_, u_, Nn_, Nr_] :=
           2  (k + 2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)),
        {l, 0, Floor[n/2]}], {n, 1, Nn}];
    varpi2ddtab = Table[n (n - 1) u^(n - 2) Sum[k = n - 2 l; 
-       (k + 2 l)!/((l)! (k!)^2 (l - k)!) \[Lambda]^(l - k) /(k + 2 l),
+       (k + 2 l)!/((l)! (k!)^2 (l - k)!) la^(l - k) /(k + 2 l),
        {l, 0, Floor[n/2]}], {n, 2, Nn}];
    varpi3ddtab = Table[n (n - 1) u^(n - 2) Sum[k = n - 2 l; 
-       \[Lambda]^(l - k) (If[
+       la^(l - k) (If[
            k > l, ((-1)^(k + l) Gamma[k - l] Gamma[1 + k + 2 l])/(
            4 (k + 2 l) l! Gamma[1 + k]^2),
            (( (k + 2 l)! (4 HarmonicNumber[k] + 3 HarmonicNumber[l] + 
@@ -952,46 +963,46 @@ F1Series[\[Lambda]_, u_, Nn_, Nr_] :=
      RichardsonResum[Accumulate[varpi3ddtab], Nr]}}
     ];
 
-PicardFuchsP[\[Lambda]_, u_] := (
-  50 u \[Lambda] + 24 \[Lambda]^2 - 2016 u^3 \[Lambda]^2 + 
-   u^2 (27 - 320 \[Lambda]^3) + 54 u^5 (-27 + 16 \[Lambda]^3) + 
-   4 u^4 \[Lambda] (-783 + 224 \[Lambda]^3))/(
-  u (9 u + 8 \[Lambda]) (u + \[Lambda] - 36 u^3 \[Lambda] - 
-     8 u^2 \[Lambda]^2 + u^4 (-27 + 16 \[Lambda]^3)));
+PicardFuchsP[la_, u_] := (
+  50 u la + 24 la^2 - 2016 u^3 la^2 + 
+   u^2 (27 - 320 la^3) + 54 u^5 (-27 + 16 la^3) + 
+   4 u^4 la (-783 + 224 la^3))/(
+  u (9 u + 8 la) (u + la - 36 u^3 la - 
+     8 u^2 la^2 + u^4 (-27 + 16 la^3)));
 
-PicardFuchsQ[\[Lambda]_, u_] := (
-  16 u \[Lambda] + 8 \[Lambda]^2 - 1860 u^3 \[Lambda]^2 + 
-   u^2 (9 - 256 \[Lambda]^3) + 54 u^5 (-27 + 16 \[Lambda]^3) + 
-   16 u^4 \[Lambda] (-189 + 64 \[Lambda]^3))/(
-  u^2 (9 u + 8 \[Lambda]) (u + \[Lambda] - 36 u^3 \[Lambda] - 
-     8 u^2 \[Lambda]^2 + u^4 (-27 + 16 \[Lambda]^3)));
+PicardFuchsQ[la_, u_] := (
+  16 u la + 8 la^2 - 1860 u^3 la^2 + 
+   u^2 (9 - 256 la^3) + 54 u^5 (-27 + 16 la^3) + 
+   16 u^4 la (-189 + 64 la^3))/(
+  u^2 (9 u + 8 la) (u + la - 36 u^3 la - 
+     8 u^2 la^2 + u^4 (-27 + 16 la^3)));
 
-PicardFuchs[f_, \[Lambda]_, u_] := 
-  D[f, {u, 3}] + D[f, {u, 2}] PicardFuchsP[\[Lambda], u] + 
-   D[f, u] PicardFuchsQ[\[Lambda], u];
+PicardFuchs[f_, la_, u_] := 
+  D[f, {u, 3}] + D[f, {u, 2}] PicardFuchsP[la, u] + 
+   D[f, u] PicardFuchsQ[la, u];
 
-PicardFuchsA[\[Lambda]_, u_] = {{0, 1, 0}, {0, 0, 
-    1}, {0, -PicardFuchsQ[\[Lambda], u], -PicardFuchsP[\[Lambda], u]}};
+PicardFuchsA[la_, u_] = {{0, 1, 0}, {0, 0, 
+    1}, {0, -PicardFuchsQ[la, u], -PicardFuchsP[la, u]}};
 
-SystemMatrix[{{t_, td_}, {dt_, dtd_}, {ddt_, ddtd_}}, \[Lambda]_, 
+SystemMatrix[{{t_, td_}, {dt_, dtd_}, {ddt_, ddtd_}}, la_, 
    u_] := Transpose@
    Prepend[Transpose[{{-((I (t + Log[u]))/(2 \[Pi])), 
-       1/6 + (td + Log[u]^2 + Log[\[Lambda]]^2/8 - 
-         1/4 (t + Log[u]) (8 Log[u] + Log[\[Lambda]]))/\[Pi]^2}, {-((
+       1/6 + (td + Log[u]^2 + Log[la]^2/8 - 
+         1/4 (t + Log[u]) (8 Log[u] + Log[la]))/\[Pi]^2}, {-((
         I (dt + 1/u))/(2 \[Pi])), -((
-        8 t - 4 dtd u + 8 (1 + dt u) Log[u] + Log[\[Lambda]] + 
-         dt u Log[\[Lambda]])/(4 \[Pi]^2 u))}, {-((I (ddt - 1/u^2))/(
+        8 t - 4 dtd u + 8 (1 + dt u) Log[u] + Log[la] + 
+         dt u Log[la])/(4 \[Pi]^2 u))}, {-((I (ddt - 1/u^2))/(
         2 \[Pi])), (-8 + 8 t - 16 dt u + 
-        4 ddtd u^2 + (8 - 8 ddt u^2) Log[u] + Log[\[Lambda]] - 
-        ddt u^2 Log[\[Lambda]])/(4 \[Pi]^2 u^2)}}], {1, 0, 0}];
+        4 ddtd u^2 + (8 - 8 ddt u^2) Log[u] + Log[la] - 
+        ddt u^2 Log[la])/(4 \[Pi]^2 u^2)}}], {1, 0, 0}];
 
 Options[ComputeTransition] = {WorkingPrecision -> 60};
-ComputeTransition[\[Lambda]_, upath_, Nn_ : 512, Nr_ : 5, 
+ComputeTransition[la_, upath_, Nn_ : 512, Nr_ : 5, 
    OptionsPattern[]] := Module[{sol, Psi, mon, SystMat, msg, tt = 0},
    Monitor[
     msg = "Integrating the connection...";
     sol = NDSolve[{
-       Psi'[t] == upath'[t]*PicardFuchsA[\[Lambda], upath[t]] . Psi[t],
+       Psi'[t] == upath'[t]*PicardFuchsA[la, upath[t]] . Psi[t],
        Psi[0] == IdentityMatrix[3]
        }, Psi, {t, 0, 1}, 
       WorkingPrecision -> OptionValue[WorkingPrecision], 
@@ -999,11 +1010,105 @@ ComputeTransition[\[Lambda]_, upath_, Nn_ : 512, Nr_ : 5,
     mon = Psi[1] /. First[sol];
     msg = "Solving for the system matrix...";
     SystMat = 
-     SystemMatrix[F1Series[\[Lambda], upath[0], Nn, Nr], \[Lambda], 
+     SystemMatrix[F1Series[la, upath[0], Nn, Nr], la, 
       upath[0]];
     LinearSolve[SystMat, mon . SystMat], 
     msg <> " " <> ToString[Floor[100 tt]] <> "%."]
    ];
+
+G10FundamentalDomain = Graphics[{Table[{Circle[{n, 0}, 1, {Pi/3, 2 Pi/3}], 
+     Line[{{n, 1}, {n, 2}}], Thin, 
+     Line[{{n + 1/2, Sqrt[3]/2}, {n + 1/2, 2}}]}, {n, 1, 
+     7}], {Circle[{2 + 1/2, 0}, 1/2, {0, Pi/2}], 
+    Circle[{5 + 1/2, 0}, 1/2, {0, Pi/2}], 
+    Line[{{2 + 1/2, 1/2}, {2 + 1/2, Sqrt[3]/2}}], Line[{{3, 0}, {3, 1}}], 
+    Line[{{5 + 1/2, 1/2}, {5 + 1/2, Sqrt[3]/2}}], Line[{{6, 0}, {6, 1}}],
+     Thin, Circle[{2, 0}, 1, {0, Pi/3}], 
+    Circle[{5, 0}, 1, {0, Pi/3}]}, {Circle[{0, 0}, 1, {Pi/3, Pi/2}], 
+    Line[{{0, 0}, {0, 2}}], Circle[{8, 0}, 1, {Pi/2, 2 Pi/3}], 
+    Line[{{8, 0}, {8, 2}}], Thin, Line[{{1/2, Sqrt[3]/2}, {1/2, 2}}]}}];
+
+G10RepeatDomain[{kmin_, kmax_}] := 
+  Table[G10FundamentalDomain /. {l_Circle :> Translate[l, {8*k, 0}], 
+     l_Line :> Translate[l, {8*k, 0}]}, {k, kmin, kmax}];
+
+
+MirrorCurveJ2[el_, ur_] := (1 + 16 el^2 ur^4 - 
+  8 el ur^2 (1 + 3 ur))^3/(el^3 ur^8 (1 + ur - 8 el ur^2 - 
+   36 el ur^3 + el (-27 + 16 el) ur^4));
+PicardFuchsP2[el_, ur_] := (24 + 50 ur + (27 - 320 el) ur^2 - 2016 el ur^3 + 
+ 4 el (-783 + 224 el) ur^4 + 
+ 54 el (-27 + 16 el) ur^5)/(ur (8 + 9 ur) (1 + ur - 8 el ur^2 - 
+   36 el ur^3 + el (-27 + 16 el) ur^4));
+PicardFuchsQ2[el_, ur_] := (8 + 16 ur + (9 - 256 el) ur^2 - 1860 el ur^3 + 
+ 16 el (-189 + 64 el) ur^4 + 
+ 54 el (-27 + 16 el) ur^5)/(ur^2 (8 + 9 ur) (1 + ur - 8 el ur^2 - 
+   36 el ur^3 + el (-27 + 16 el) ur^4));
+PicardFuchs2[f_, el_, ur_] := D[f, {ur, 3}] + PicardFuchsP2[el, ur] * D[f, {ur, 2}] + PicardFuchsQ2[el, ur] * D[f, {ur, 1}];
+PicardFuchsA2[el_, ur_] := {{0, 1, 0}, {0, 0, 1}, {0, -PicardFuchsQ2[el, ur], -PicardFuchsP2[el, ur]}};
+
+F1Series2[el_, ur_, Nn_ : 512, Nr_ : 10] := 
+  Module[{varpi2tab, varpi3tab, varpi2dtab, varpi3dtab, varpi2ddtab, 
+    varpi3ddtab, k, l}, varpi2tab = Table[ur^n  Sum[k = n - 2 l;
+       n!/((l)! (k!)^2 (l - k)!) el^l/n, {l, 0, Floor[n/2]}], {n, 1, 
+      Nn}];
+   varpi3tab = Table[ur^n  Sum[k = n - 2 l;
+       el^
+         l (If[k > 
+            l, ((-1)^(k + l) Gamma[k - l] Gamma[
+               1 + k + 2 l])/(4 (k + 2 l) l! Gamma[
+                1 + k]^2), (((k + 2 l)! (4 HarmonicNumber[k] + 
+                 3 HarmonicNumber[l] + HarmonicNumber[-k + l] - 
+                 8 HarmonicNumber[k + 2 l]))/(4 (k + 
+                 2 l) (k!)^2 l! Gamma[1 - k + l]))] + (2 (k + 
+                2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)), {l, 0, 
+        Floor[n/2]}], {n, 1, Nn}];
+   varpi2dtab = Table[n ur^(n - 1) Sum[k = n - 2 l;
+       n!/((l)! (k!)^2 (l - k)!) el^l/n, {l, 0, Floor[n/2]}], {n, 1, 
+      Nn}];
+   varpi3dtab = Table[n ur^(n - 1) Sum[k = n - 2 l;
+       el^
+         l (If[k > 
+            l, ((-1)^(k + l) Gamma[k - l] Gamma[
+               1 + k + 2 l])/(4 (k + 2 l) l! Gamma[
+                1 + k]^2), (((k + 2 l)! (4 HarmonicNumber[k] + 
+                 3 HarmonicNumber[l] + HarmonicNumber[-k + l] - 
+                 8 HarmonicNumber[k + 2 l]))/(4 (k + 
+                 2 l) (k!)^2 l! Gamma[1 - k + l]))] + (2 (k + 
+                2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)), {l, 0, 
+        Floor[n/2]}], {n, 1, Nn}];
+   varpi2ddtab = Table[n (n - 1) ur^(n - 2) Sum[k = n - 2 l;
+       n!/((l)! (k!)^2 (l - k)!) el^l/n, {l, 0, Floor[n/2]}], {n, 2, 
+      Nn}];
+   varpi3ddtab = Table[n (n - 1) ur^(n - 2) Sum[k = n - 2 l;
+       el^
+         l (If[k > 
+            l, ((-1)^(k + l) Gamma[k - l] Gamma[
+               1 + k + 2 l])/(4 (k + 2 l) l! Gamma[
+                1 + k]^2), (((k + 2 l)! (4 HarmonicNumber[k] + 
+                 3 HarmonicNumber[l] + HarmonicNumber[-k + l] - 
+                 8 HarmonicNumber[k + 2 l]))/(4 (k + 
+                 2 l) (k!)^2 l! Gamma[1 - k + l]))] + (2 (k + 
+                2 l)!)/((k + 2 l)^2 (k!)^2 l! (-k + l)!)), {l, 0, 
+        Floor[n/2]}], {n, 2, Nn}];
+   {{RichardsonResum[Accumulate[varpi2tab], Nr], 
+     RichardsonResum[Accumulate[varpi3tab], Nr]}, {RichardsonResum[
+      Accumulate[varpi2dtab], Nr], 
+     RichardsonResum[Accumulate[varpi3dtab], Nr]}, {RichardsonResum[
+      Accumulate[varpi2ddtab], Nr], 
+     RichardsonResum[Accumulate[varpi3ddtab], Nr]}}];
+
+SystemMatrix2[{{v1_, v2_}, {v1p_, v2p_}, {v1pp_, v2pp_}}, el_, 
+   ur_] := {{1, (Log[ur] + 1/3 Log[el] + v1)/(2 Pi I), (
+    4 (\[Pi]^2 + 6 v2) - 
+     3 (Log[el]^2 + 6 Log[el] (v1 + Log[ur]) + 
+        8 Log[ur] (2 v1 + Log[ur])))/(
+    24 \[Pi]^2)}, {0, -((I (1/ur + v1p))/(2 \[Pi])), -((
+     8 v1 - 4 ur v2p + 3 Log[el] + 8 Log[ur] + 
+      ur v1p (3 Log[el] + 8 Log[ur]))/(4 \[Pi]^2 ur))}, {0, -((
+     I (-(1/ur^2) + v1pp))/(2 \[Pi])), (-8 + 8 v1 - 16 ur v1p + 
+     4 ur^2 v2pp + 3 Log[el] - 3 ur^2 v1pp Log[el] + 8 Log[ur] - 
+     8 ur^2 v1pp Log[ur])/(4 \[Pi]^2 ur^2)}};
 
 
 End[]; (* `Private` *)
