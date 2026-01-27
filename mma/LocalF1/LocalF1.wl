@@ -25,192 +25,363 @@ BeginPackage["LocalF1`"];
 
 (* Usage messages for exported functions *)
 
-RichardsonResum::usage = "RichardsonResum[PartSum, n] gives the nth order Richardson transform of partial sums PartSum.";
+RichardsonResum::usage =
+"RichardsonResum[partSums, n] returns the n-th order Richardson transform of the list of partial sums partSums. \
+Typical use: RichardsonResum[Accumulate[data], n].";
 
-MirrorCurve::usage = "MirrorCurve[x, y, m, u] is the affine mirror-curve equation of local F1 \
-in the variables x, y and parameters m, u.";
+MirrorCurve::usage =
+"MirrorCurve[x, y, m, u] gives the affine mirror-curve equation of local F1 in variables x, y and parameters m, u \
+(i.e. an expression whose vanishing defines the curve).";
 
-MirrorCurvef3::usage = "MirrorCurvef3[X, m, u] gives the cubic right hand side of the curve in Weierstrass form Y^2 = f3[X] = 4X^3 - g_2 X - g_3.";
+MirrorCurvef3::usage =
+"MirrorCurvef3[X, m, u] gives the cubic f3(X) on the right-hand side of the Weierstrass form \
+Y^2 = f3(X) = 4 X^3 - g2 X - g3 for the local F1 mirror curve.";
 
-MirrorCurveg2::usage = "MirrorCurveg2[m, u] is the Weierstrass (Eisenstein) g_2 invariant of the local F1 mirror curve.";
+MirrorCurveg2::usage =
+"MirrorCurveg2[m, u] gives the Weierstrass invariant g2 (weight-4 Eisenstein invariant) of the local F1 mirror curve.";
 
-MirrorCurveg3::usage = "MirrorCurveg3[m, u] is the Weierstrass (Eisenstein) g_3 invariant of the local F1 mirror curve.";
+MirrorCurveg3::usage =
+"MirrorCurveg3[m, u] gives the Weierstrass invariant g3 (weight-6 Eisenstein invariant) of the local F1 mirror curve.";
 
-MirrorCurveDelta::usage = "MirrorCurveDelta[m, u] is the order 4 factor in the discriminant of the mirror curve.";
+MirrorCurveDelta::usage =
+"MirrorCurveDelta[m, u] gives the order-4 factor in the discriminant of the local F1 mirror curve (as a polynomial in u). \
+Its roots locate the discriminant locus in the (m,u)-slice.";
 
-MirrorCurveJ::usage = "MirrorCurveJ[m, u] is the j-invariant of the mirror curve.";
+MirrorCurveJ::usage =
+"MirrorCurveJ[m, u] gives the j-invariant of the local F1 mirror curve as a rational function of (m,u).";
 
-URoot::usage = "URoot[la, k] is the kth root of the order 4 part of the discriminant.";
+URoot::usage =
+"URoot[la, k] gives the k-th Root object u solving MirrorCurveDelta[la, u] == 0.";
 
-URoots::usage = "TODO";
+URoots::usage =
+"URoots[m] returns the list of numerical roots u of MirrorCurveDelta[m, u] == 0.";
 
-PlotURoots::usage = "TODO";
+PlotURoots::usage =
+"PlotURoots[m] plots the roots URoots[m] in the complex u-plane and labels them by their absolute values.";
 
-NodalCurveParam::usage = "TODO";
+NodalCurveParam::usage =
+"NodalCurveParam[X, Y, t, X0] returns replacement rules {X->..., Y->...} giving a nodal (rational) parametrization \
+of the Weierstrass curve in terms of parameter t and node location X0.";
 
-NodalCurveX0::usage = "TODO";
+NodalCurveX0::usage =
+"NodalCurveX0[m, u] gives the X0-parameter used in the nodal parametrization at the discriminant locus.";
 
-NodalCurveX0tot1::usage = "TODO";
+NodalCurveX0tot1::usage =
+"NodalCurveX0tot1 is a replacement rule {X0 -> ...} expressing X0 in terms of t1.";
 
-WeierstrassChangeOfVariables::usage = "TODO";
+WeierstrassChangeOfVariables::usage =
+"WeierstrassChangeOfVariables[{x,y}->{X,Y}, m, u] gives replacement rules for {x,y} in terms of {X,Y} \
+implementing the change of variables to Weierstrass coordinates.";
 
-WeierstrassChangeOfVariablesInverse::usage = "TODO";
+WeierstrassChangeOfVariablesInverse::usage =
+"WeierstrassChangeOfVariablesInverse[{X,Y}->{x,y}, m, u] gives replacement rules for {X,Y} in terms of {x,y} \
+implementing the inverse change of variables from Weierstrass coordinates.";
 
-LiEval::usage = "Replacement rule that numerically evaluates expressions like Li2[x], BW[x] etc";
+LiEval::usage =
+"LiEval is a list of replacement rules that numerically evaluates special functions such as Li2[z] and BW[z] \
+(e.g. expr /. LiEval).";
 
-RationalData::usage = "RationalData[expr, var] gives the roots and exponents of rational expression expr in var.";
+RationalData::usage =
+"RationalData[expr, var] returns {exponents, roots} for the linear factors in var appearing in the rational expression expr. \
+Exponents are positive for numerator factors and negative for denominator factors.";
 
-NodalCurvebFromt1::usage = "TODO";
+NodalCurvebFromt1::usage =
+"NodalCurvebFromt1[t1] gives the parameter b as a function of t1.";
 
-NodalCurvebFrommu::usage = "TODO";
+NodalCurvebFrommu::usage =
+"NodalCurvebFrommu[m, u] gives the parameter b as a function of (m,u).";
 
-KerrDoranP::usage = "TODO";
+KerrDoranP::usage =
+"KerrDoranP[b] evaluates the Kerr--Doran quantity P(b) built from Bloch--Wigner dilogarithms.";
 
-KerrDoranQ::usage = "TODO";
+KerrDoranQ::usage =
+"KerrDoranQ[b] evaluates the Kerr--Doran quantity Q(b) built from logarithms and dilogarithms.";
 
-BW::usage = "BW[z] Bloch Wigner Dilog";
+BW::usage =
+"BW[z] is the Bloch--Wigner dilogarithm of z.";
 
-Li2::usage = "Ordinary dilogarithm";
+Li2::usage =
+"Li2[z] is the classical (Spence) dilogarithm Li_2(z).";
 
 
 (* Large volume stuff *)
 
-Ch::usage = "Ch[p, q] represents the Chern vector of the sheaf O(p F + q B).";
-GV::usage = "Ch[p, q] represents the Chern vector of the sheaf O(p F + q B).";
-y::usage = "Refinement parameter y";
+Ch::usage =
+"Ch[p, q] represents the Chern vector of the sheaf O(p F + q B) (as a symbolic object used by repCh and related routines).";
 
-repCh::usage = "Expands Ch[p, q] Ch[p, q][1] and GV[p, q, n]";
+GV::usage =
+"GV[p, q, n] represents the Chern vector of a rank-zero object with (dF,dB,ch2) = (p,q,n) (as a symbolic object used by repCh).";
 
-Euler::usage = "TODO";
+y::usage =
+"y is the refinement parameter used in refined indices (e.g. in Om / Coulomb-branch formulas).";
 
-DSZ::usage = "TODO";
+repCh::usage =
+"repCh is a list of replacement rules expanding symbolic charges such as Ch[p,q], Ch[p,q][1], and GV[p,q,n] into vectors {r,dF,dB,ch2}.";
 
-ToFB::usage = "TODO";
+Euler::usage =
+"Euler[gam, gamp] gives the Euler pairing \\[Chi](gam, gamp) for charges gam and gamp written as {r,dF,dB,ch2}.";
 
-ToHC::usage = "TODO";
+DSZ::usage =
+"DSZ[gam, gamp] gives the Dirac--Schwinger--Zwanziger pairing <gam, gamp> for charges gam and gamp written as {r,dF,dB,ch2}.";
 
-GiesekerSlope::usage = "GiesekerSlope[{r, dF, dB, ch2}, M]";
-GiesekerDim::usage = "GiesekerDim[{r, dF, dB, ch2}]";
+ToFB::usage =
+"ToFB[gam] converts charges from (H,C) coordinates to (F,B) coordinates.";
 
-BogomolovDiscriminant::usage = "TODO";
-SecondChernClass::usage = "SecondChernClass[gam] computes the second chern class."
+ToHC::usage =
+"ToHC[gam] converts charges from (F,B) coordinates to (H,C) coordinates.";
 
-ZLV::usage = "ZLV[{r, dF, dB, ch2}, T, m] is the large volume central charge for local F1 given by Z = -ch2 + dF m + (m^2 r)/2 + 2 dF T - m r T - 4 r T^2 + dB (-m + T)";
+GiesekerSlope::usage =
+"GiesekerSlope[{r, dF, dB, ch2}, M] returns the Gieseker slope \\[Mu]_M for the given charge at polarization parameter M.";
 
-SpectralFlow::usage = "TODO";
+GiesekerDim::usage =
+"GiesekerDim[{r, dF, dB, ch2}] returns the expected dimension (virtual dimension) associated to the given charge.";
 
-Sigma::usage = "Sigma such that ZLV = gam.Sigma.Pi\[Transpose]";
+BogomolovDiscriminant::usage =
+"BogomolovDiscriminant[{r, dF, dB, ch2}] gives the Bogomolov discriminant \\[Delta] of the charge.";
 
-MLV::usage = "LV monodromy";
+SecondChernClass::usage =
+"SecondChernClass[gam] computes the second Chern class c2 from the charge vector gam = {r,dF,dB,ch2}.";
 
-MSF::usage = "MSF[mF, mB] -> Spectral flow monodromy by object Ch[mF, mB]";
+ZLV::usage =
+"ZLV[gam, T, m] gives the large-volume central charge for local F1, with gam = {r,dF,dB,ch2}, T complex and m a parameter. \
+ZLV[gam, {s,t}, m] uses T = s + I t.";
 
-MonodromyFromSphericalTwist::usage = "MonodromyFromSphericalTwist[mF, mB] -> Spherical twist monodromy by spherical object Ch[mF, mB]";
+SpectralFlow::usage =
+"SpectralFlow[gam, {mF, mB}] applies the spectral-flow transform by integers (mF,mB) to the charge gam. \
+SpectralFlow[charges, {mF,mB}] maps over a list of charges.";
 
-M1p::usage = "F1Global.pdf eq. (5.59): Conifold monodromy at special lambda";
+Sigma::usage =
+"Sigma is the matrix relating the charge basis to the period basis used in monodromy actions (so that ZLV can be written via Sigma and periods).";
 
-M2p::usage = "F1Global.pdf eq. (5.59): Conifold monodromy at special lambda";
+MLV::usage =
+"MLV is the large-volume monodromy matrix.";
 
-MonodromyOnCharge::usage = "MonodromyOnCharge[M, {r, dF, dB, ch2}] -> Action of M on charge gam = Sigma.Inverse[M].Inverse[Sigma]";
+MSF::usage =
+"MSF[mF, mB] gives the monodromy matrix implementing spectral flow by Ch[mF, mB].";
 
-MonodromyOnTau::usage = "MonodromyOnCharge[M, tau] is the action on tau";
+MonodromyFromSphericalTwist::usage =
+"MonodromyFromSphericalTwist[gam] returns the monodromy matrix of the spherical twist by a spherical object of charge gam.";
+
+M1p::usage =
+"M1p is the conifold monodromy matrix at the special \\[Lambda] point (F1Global.pdf, eq. (5.59)).";
+
+M2p::usage =
+"M2p is the conifold monodromy matrix at the special \\[Lambda] point (F1Global.pdf, eq. (5.59)).";
+
+MonodromyOnCharge::usage =
+"MonodromyOnCharge[M, gam] applies the monodromy matrix (or a list of matrices) M to a charge vector gam using Sigma.";
+
+MonodromyOnTau::usage =
+"MonodromyOnTau[M, tau] gives the fractional-linear action of monodromy matrix M on \\[Tau].";
 
 
 (* Large volume scattering *)
 
-Rays::usage = "Rays[{r, dF, dB, ch2}, t, psi, m] computes s = Re(T) for the ray Re(e^{-i psi} Z) = 0 at a given value of t = Im(T)";
+Rays::usage =
+"Rays[gam, t, psi, m] computes s = Re[T] for the ray defined by Re(Exp[-I psi] ZLV[gam, T, m]) == 0 at fixed t = Im[T].";
 
-Wall::usage = "Wall[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] computes the equation of the wall of marginal stability between the two objects. Only works for real m.";
+Wall::usage =
+"Wall[gam, gamp, {s,t}, m] gives the wall equation of marginal stability between charges gam and gamp in the (s,t)-plane. \
+Only works for real m.";
 
-WallRadius::usage = "WallRadius[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] computes the radius of the wall circle. Only works for real m.";
+WallRadius::usage =
+"WallRadius[gam, gamp, m] returns the squared radius of the wall circle in the (s,t)-plane. Only works for real m.";
 
-WallCircle::usage = "WallCircle[{r, dF, dB, ch2}, {rr, ddF, ddB, cch2}, {s, t}, m] gives the Circle object for the wall circle. Only works for real m.";
+WallCircle::usage =
+"WallCircle[gam, gamp, m] returns a Circle[...] object for the wall in the (s,t)-plane (upper semicircle when present). \
+Only works for real m.";
 
-DiscF1::usage = "DiscF1[gam, m] computes the ray discriminant of gam. Only works for real m.";
+DiscF1::usage =
+"DiscF1[gam, m] computes the ray discriminant of gam used to determine whether the corresponding ray intersects the real axis. \
+Only works for real m.";
 
-InitialPosition::usage = "InitialPosition[{r, dF, dB, ch2}, m] calculates the initial s value of the ray when it intersects the real T axis. Only works for real m.";
+InitialPosition::usage =
+"InitialPosition[gam, m] gives the initial s-position where the ray of charge gam meets the real T-axis (t=0). \
+Only works for real m.";
 
-CollDBridgeland::usage = "";
-CollDArcaraII::usage = "";
-CollDArcaraI::usage = "";
+CollDBridgeland::usage =
+"CollDBridgeland is a list of Chern vectors for the dual (Ext) collection associated with the Bridgeland--Stern--Perling collection.";
 
-CollBridgeland::usage = "";
-CollArcaraII::usage = "";
-CollArcaraI::usage = "";
+CollDArcaraII::usage =
+"CollDArcaraII is a list of Chern vectors for the dual (Ext) collection associated with the Arcara--Miles II collection.";
 
-(* simple captioning mechanism *)
-GamToString::usage = "";
-GamCaption::usage = "";
+CollDArcaraI::usage =
+"CollDArcaraI is a list of Chern vectors for the dual (Ext) collection associated with the Arcara--Miles I collection.";
 
-ListSpecFlows::usage = "ListSpecFlows[Coll, psi, m, L, xmin, xmax, tmax] lists spectral flow parameters (mF, mB) in the range -L <= m_i <= L that can be applied to the collection Coll such that the resulting quiver domain has a non-empty intersection with the region xmin < Re[T] < xmax, 0 < Im[T] < tmax."
+CollBridgeland::usage =
+"CollBridgeland is a list of Chern vectors for the Bridgeland--Stern--Perling strong exceptional collection.";
+
+CollArcaraII::usage =
+"CollArcaraII is a list of Chern vectors for the Arcara--Miles II strong exceptional collection.";
+
+CollArcaraI::usage =
+"CollArcaraI is a list of Chern vectors for the Arcara--Miles I strong exceptional collection.";
+
+GamToString::usage =
+"GamToString is a list of replacement rules mapping charges (e.g. Ch[p,q]) to compact strings used for plot labels.";
+
+GamCaption::usage =
+"GamCaption[gam, t, psi, m] produces a Text[...] label for charge gam placed near the ray at parameter value t.";
+
+ListSpecFlows::usage =
+"ListSpecFlows[coll, psi, m, L, xmin, xmax, tmax] lists spectral-flow parameters {mF,mB} with -L <= mF,mB <= L \
+such that the translated collection has a non-empty quiver domain intersecting xmin < Re[T] < xmax and 0 < Im[T] < tmax.";
+
 
 (* XY plane scattering *)
-XYRay::usage = "XYRay[{r, dF, dB, ch2}, {x, y}, mu] gives the ray equation in the XY coordinates.";
-XYParabolaY::usage = "XYParabola[]";
-InitialPositionXY::usage = "InitialPositionXY[gam, m] gives the initial position of ray gam in the x y plane (point with 0 cost function). Only works for real m.";
-XYTost::usage = "XYTost[{x, y}, psi, m] gives the coordinates in s, t plane for a given point {x, y} in the XY coordinates. Only works for real m.";
-XYRaySegment::usage = "XYRaySegment[Ray, mu, L, styleMap, defaultStyle] draws the line corresponding to Ray of length L with style given by a depth-style map styleMap.";
-CollPlotData::usage = "Plot data for ConstructDomain";
-RayStyleMap::usage = "Default depth -- style map for rays.";
-ConstructDomain::usage = "ConstructDomain[PlotAssociation, mu, L, {x, y}] plots the quiver domain associated with the collection in PlotAssociation in the XY plane.";
 
-NaiveIntersection::usage = "NaiveIntersection[gam, gamp, mu] gives the intersection points of the lines corresponding to gam and gamp without reference to the initial points and the future directions.";
+XYRay::usage =
+"XYRay[gam, {x,y}, mu] gives the ray equation in XY-coordinates for the charge gam.";
 
-CollInitial::usage = "The three sets of initial charges identified for fixed m slice.";
-InitialRaysFromColl::usage = "InitialRaysFromColl[Coll, xmin, xmax, m] produces initial rays for ConstructLVDiagram by taking all translates of Coll that start between x = xmin and x = xmax. Only works for real m.";
+XYParabolaY::usage =
+"XYParabolaY[x, mu, m2, psi] gives the parabola y(x) used in the XY-to-(s,t) mapping at parameters (mu,m2,psi).";
 
-CollInequalities::usage="CollInequalities[coll] gives the list of inequalities Re(e^(-i \\psi) Z_gam) < 0 for all gam in coll.";
+InitialPositionXY::usage =
+"InitialPositionXY[gam, m] gives the initial point {x,y} of the ray for charge gam in the XY-plane. Only works for real m.";
+
+XYTost::usage =
+"XYTost[{x,y}, psi, m] converts a point in XY-coordinates to {s,t} coordinates. Only works for real m.";
+
+XYRaySegment::usage =
+"XYRaySegment[rayData, mu, L, styleMap, defaultStyle] draws the line segment for a ray of length L with styling determined by styleMap.";
+
+CollPlotData::usage =
+"CollPlotData is a list of associations encoding collections and plotting data used by ConstructDomain.";
+
+RayStyleMap::usage =
+"RayStyleMap is the default depth-to-style map used for ray plotting.";
+
+ConstructDomain::usage =
+"ConstructDomain[plotAssociation, mu, L] constructs the quiver domain region(s) in the XY-plane for the collection specified by plotAssociation.";
+
+NaiveIntersection::usage =
+"NaiveIntersection[gam, gamp, mu] returns the intersection point {x,y} of the two XY-ray lines associated with gam and gamp (no future-direction checks).";
+
+CollInitial::usage =
+"CollInitial is a list of three initial charge collections identified for a fixed m-slice.";
+
+InitialRaysFromColl::usage =
+"InitialRaysFromColl[coll, xmin, xmax, m] generates initial rays for ConstructLVDiagram by translating coll so rays start between x=xmin and x=xmax. \
+Only works for real m.";
+
+CollInequalities::usage =
+"CollInequalities[coll, {x,y}, mu] returns the list of inequalities defining the quiver domain in XY-coordinates for all gam in coll.";
+
 
 (* from F0Scattering.m *)
 
-GCD1::usage = "";
-SameHalfPlaneQ::usage = "SameHalfPlaneQ[Zlist] gives True if all elements of Zlist are in a common half plane";
+GCD1::usage =
+"GCD1[gam] returns the modified gcd used in the scattering algorithm for the charge gam.";
 
-QuiverDomain::usage = "QuiverDomain[Coll, psi, m] plots the region where the LV central charges Z of Coll have Re[e^{-I psi} Z] < 0."; 
+SameHalfPlaneQ::usage =
+"SameHalfPlaneQ[zlist] returns True iff all complex numbers in zlist lie in a common open half-plane.";
 
-ChernToCh::usage = "ChernToCh[gam] replaces {r,dF,dB,ch2} by r Ch[dF/r,dB/r] whenever the discriminant vanishes";
+QuiverDomain::usage =
+"QuiverDomain[coll, psi, m] plots the region in the (s,t)-plane where all central charges ZLV for coll satisfy Re(Exp[-I psi] Z) < 0.";
 
-ExtFromStrong::usage = "ExtFromStrong[Coll] computes the Chern vectors of the objects in the Ext collection dual to the given strong collection Coll"
-StrongFromExt::usage = "StrongFromExt[Coll] computes the Chern vectors of the objects in the strong collection dual to the given Ext collection Coll";
+ChernToCh::usage =
+"ChernToCh[expr] rewrites charge vectors {r,dF,dB,ch2} into symbolic Ch[...] or GV[...] when applicable (e.g. at vanishing discriminant).";
 
-MutateCollection::usage = "MutateCollection[Coll, klist] acts on the list of Chern vectors Coll by the successive mutations in klist, which is a list of {node number,sign}, with sign=1 for right mutation, -1 for left mutation";
+ExtFromStrong::usage =
+"ExtFromStrong[coll] computes the Chern vectors of the Ext (dual) collection associated to the strong collection coll.";
 
-ScattCheck::usage = "ScattCheck[Tree, m] returns {charge,{x,y}} of the root vertex if Tree is consistent, otherwise {total charge,{}}";
-ScattSort::usage = "ScattSort[LiTree, m] sorts trees in LiTree by growing radius";
-ScattGraph::usage = "ScattGraph[Tree, m] extracts the list of vertices and adjacency matrix of Tree";
+StrongFromExt::usage =
+"StrongFromExt[coll] computes the Chern vectors of the strong collection dual to the Ext collection coll.";
 
-FOmbToOm::usage = "FOmbToOm[OmbList] computes integer index from list of rational indices, used internally by FScattIndex";
-ScattIndexImproved::usage = "ScattIndexImproved[TreeList, opt] computes the index for each tree in TreeList, taking care of non-primitive internal states";
-(* ScattIndexImprovedInternal::usage = "ScattIndexImprovedInternal[Tree, opt] computes the index for Tree, taking care of non-primitive internal states"; *)
+MutateCollection::usage =
+"MutateCollection[coll, klist] applies successive mutations to the collection coll. \
+klist is a list of {node, sign}, with sign = +1 for right mutation and sign = -1 for left mutation.";
 
-(* TreeFromListRays::usage = "TreeFormListRays[ListRays, k] "; *)
-LVTreesFromListRays::usage = "LVTreesFromListRays[ListRays, gam, m] extract the trees with given charge in the List of rays, constructed by ConstructLVDiagram";
+ScattCheck::usage =
+"ScattCheck[tree, m] checks consistency of a scattering tree. \
+Returns {totalCharge, {x,y}} if consistent, otherwise {totalCharge, {}}.";
 
-KroneckerDims::usage = "KroneckerDims[m, Nn] gives the list of populated dimension vectors {n1,n2} for Kronecker quiver with m arrows, with (n1,n2) coprime and 0<=n1,n2<=Nn"; 
-IntersectRaysNoTest::usage = "IntersectRays[{r, dF, dB, ch2}, {rr, ddB, ddF, cch2}, z, zz, m] returns intersection point (x,y) of two rays if the intersection point lies strictly upward from z and z', or {} otherwise, without testing non-vanishing of DSZ product";  
-CostPhi::usage = "CostPhi[{r, dF, dB, ch2}, s, mu] gives the cost function \\phi_s(\\gamma) = dB + 2 dF - r (mu + 8 s)";
-ConstructLVDiagram::usage = "ConstructLVDiagram[smin, smax, phimax, Nm, m, ListRays] constructs the LV scattering diagram for F1 with initial rays in the interval [smin,smax], cost function up to phimax, scattering products with n1 + n2 <= Nn at each intersection; m is assumed to be real; The output consists of a list of  { charge, {x,y}, parent1, parent2, n1, n2 }; If ListRays is not empty, then uses it as initial rays.";
-ConstructLVDiagramOpt::usage = "ConstructLVDiagram[phimax, Nm, m, InitialRays]";
+ScattSort::usage =
+"ScattSort[treeList, m] sorts scattering trees by decreasing radius (using the root position).";
+
+ScattGraph::usage =
+"ScattGraph[tree, m] returns {vertices, adjacencyMatrix} for the scattering tree.";
+
+FOmbToOm::usage =
+"FOmbToOm[ombList, y] converts a list of rational indices (primitive data) into an integer/refined index via the Möbius inversion step.";
+
+ScattIndexImproved::usage =
+"ScattIndexImproved[treeList, y, opt] computes the refined index for each tree in treeList, taking care of non-primitive internal states.";
+
+LVTreesFromListRays::usage =
+"LVTreesFromListRays[listRays, gam, m] extracts scattering trees of total charge gam from listRays (as produced by ConstructLVDiagram).";
+
+KroneckerDims::usage =
+"KroneckerDims[m, Nn] lists populated coprime dimension vectors {n1,n2} for the m-Kronecker quiver with 0 <= n1,n2 <= Nn.";
+
+IntersectRaysNoTest::usage =
+"IntersectRaysNoTest[gam, gamp, z, zp, mu] returns the intersection point {x,y} of two rays if it lies strictly in the future of z and z', \
+or {} otherwise, without testing vanishing of the DSZ pairing.";
+
+CostPhi::usage =
+"CostPhi[gam, s, mu] gives the cost function \\[Phi]_s(\\[Gamma]) = dB + 2 dF - r (mu + 8 s) for gam = {r,dF,dB,ch2}.";
+
+ConstructLVDiagram::usage =
+"ConstructLVDiagram[phimax, Nm, m, listRays] constructs the large-volume scattering diagram for local F1. \
+Rays are iteratively added by intersecting existing rays and applying Kronecker quiver products with n1+n2 <= Nm and cost <= phimax. \
+Assumes m is real. Output is a list of {charge, {x,y}, parent1, parent2, n1, n2, ...}.";
+
+ConstructLVDiagramOpt::usage =
+"ConstructLVDiagramOpt[phimax, Nm, m, listRays] is an optimized version of ConstructLVDiagram with the same output conventions.";
+
 
 (* Period expansions in Pi-Stability slice *)
-F1Series::usage = "F1Series[la, u, Nn, Nr] computes large volume period expansion of F1 periods, its first and second derivatives using Richardson acceleration.";
-PicardFuchsP::usage = "PicardFuchsP[la, u] computes the coefficient of d^2 t/d u^2 in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
-PicardFuchsQ::usage = "PicardFuchsQ[la, u] computes the coefficient of d t/d u in the normalized 3rd order Picard Fuchs equations for the CY3 periods.";
-PicardFuchs::usage = "PicardFuchs[f, la, u]";
-PicardFuchsA::usage = "PicardFuchsA[la, u]";
-SystemMatrix::usage = "SystemMatrix[{{t, td}, {dt, dtd}, {ddt, ddtd}}, la, u]";
-ComputeTransition::usage = "ComputeTransition[la, upath, Nn, Nr]";
 
-G10FundamentalDomain::usage = "G10FundamentalDomain plots the funamental domain of the noncongruence subgroup Gamma(10;0,3,0,1;8).";
-G10RepeatDomain::usage = "G10RepeatDomain[{kmin, kmax}] repeats G10FundamentalDomain from x = 8*kmin to 8*kmax.";
+F1Series::usage =
+"F1Series[la, u, Nn, Nr] computes large-volume series expansions of the F1 periods and their first and second derivatives, \
+with Richardson acceleration of order Nr.";
 
-MirrorCurveJ2::usage = "MirrorCurveJ2[el, ur]";
-PicardFuchsP2::usage = "PicardFuchsP2[el, ur]";
-PicardFuchsQ2::usage = "PicardFuchsQ2[el, ur]";
-PicardFuchs2::usage = "PicardFuchs2[f, el, ur]";
-PicardFuchsA2::usage = "PicardFuchsA2[el, ur]";
-F1Series2::usage = "F1Series2[el, ur, Nn, Nr]";
-SystemMatrix2::usage = "SystemMatrix2[dat, el, ur]";
+PicardFuchsP::usage =
+"PicardFuchsP[la, u] gives the coefficient P(la,u) of f'' in the normalized third-order Picard--Fuchs equation f''' + P f'' + Q f' == 0.";
+
+PicardFuchsQ::usage =
+"PicardFuchsQ[la, u] gives the coefficient Q(la,u) of f' in the normalized third-order Picard--Fuchs equation f''' + P f'' + Q f' == 0.";
+
+PicardFuchs::usage =
+"PicardFuchs[f, la, u] evaluates the normalized third-order Picard--Fuchs operator on f as f''' + P f'' + Q f'.";
+
+PicardFuchsA::usage =
+"PicardFuchsA[la, u] returns the 3x3 companion matrix A(la,u) for the first-order system Psi' = A Psi equivalent to the Picard--Fuchs equation.";
+
+SystemMatrix::usage =
+"SystemMatrix[dat, la, u] constructs the system matrix used to convert between period bases, given dat = {{t,td},{dt,dtd},{ddt,ddtd}}.";
+
+ComputeTransition::usage =
+"ComputeTransition[la, upath, Nn, Nr] numerically integrates the Picard--Fuchs connection along the path upath[t] (t in [0,1]) \
+and returns the transition/monodromy matrix in the chosen basis.";
+
+G10FundamentalDomain::usage =
+"G10FundamentalDomain is a Graphics object plotting the fundamental domain of the noncongruence subgroup Gamma(10;0,3,0,1;8).";
+
+G10RepeatDomain::usage =
+"G10RepeatDomain[{kmin, kmax}] repeats G10FundamentalDomain translated by x -> x + 8 k for kmin <= k <= kmax.";
+
+MirrorCurveJ2::usage =
+"MirrorCurveJ2[el, ur] gives the j-invariant j(el,ur) for the alternative parameterization used in the degree-12 map.";
+
+PicardFuchsP2::usage =
+"PicardFuchsP2[el, ur] gives the coefficient P(el,ur) of f'' in the normalized third-order Picard--Fuchs equation in variables (el,ur).";
+
+PicardFuchsQ2::usage =
+"PicardFuchsQ2[el, ur] gives the coefficient Q(el,ur) of f' in the normalized third-order Picard--Fuchs equation in variables (el,ur).";
+
+PicardFuchs2::usage =
+"PicardFuchs2[f, el, ur] evaluates the normalized third-order Picard--Fuchs operator in variables (el,ur) on f.";
+
+PicardFuchsA2::usage =
+"PicardFuchsA2[el, ur] returns the 3x3 companion matrix A(el,ur) for the first-order system equivalent to the Picard--Fuchs equation.";
+
+F1Series2::usage =
+"F1Series2[el, ur, Nn, Nr] computes large-volume series expansions in variables (el,ur), including first and second derivatives, \
+with Richardson acceleration of order Nr.";
+
+SystemMatrix2::usage =
+"SystemMatrix2[dat, el, ur] constructs the system matrix used to convert between period bases for the (el,ur) parameterization.";
 
 Begin["`Private`"];
 
@@ -229,8 +400,6 @@ RichardsonResum[PartSum_, n_] :=
   With[{d = Length[PartSum] - n - 1}, 
    Sum[PartSum[[Length[PartSum] + k - n]] (d + k)^
       n (-1)^(k + n)/k!/(n - k)!, {k, 0, n}]];
-
-
 
 
 MirrorCurve[x_,y_,m_,u_] := x + y + 1/x/y + m/x - 1/u;
