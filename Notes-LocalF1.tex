@@ -1146,54 +1146,119 @@ which makes the rays into straight lines
   x (d_B+2 d_F)+r y -\ch_2+\mu (d_F-d_B) = 0
 \end{equation}
 
-\subsubsection{Determining initial rays from the domains of validity of strongly exceptional collections}
+% \subsubsection{Determining initial rays from the domains of validity of strongly exceptional collections}
 
-We have three strongly exceptional collections. For each of them, I write the dual collection
+% We have three strongly exceptional collections. For each of them, I write the dual collection
 
-\textbf{Bridgeland-Stern-Perling Collection}
+% \textbf{Bridgeland-Stern-Perling Collection}
+% \begin{equation}
+%   \mathcal{C}_B = \qty{ \ \chO(0, 0), \ \chO(-1, 0)[1], \ \chO(0, -1)[1], \ \chO(-1, -1) \ }
+% \end{equation}
+
+% \textbf{Arcara-Miles I Collection}
+% \begin{equation}
+%   \mathcal{C}_{AI} = \qty{ \ \chO(0, 0), \ \GV(0, 1, -\tfrac12), \ \chO(-2, -1), \ \chO(-1, 0)[1] \ }
+% \end{equation}
+
+% \textbf{Arcara-Miles II Collection}
+% \begin{equation}
+%   \mathcal{C}_{AII} = \qty{ \ \chO(0, 0), \ \GV(0, -1, \tfrac12), \ \chO(-2, -1), \ \chO(-1, -1)[1] \ }
+% \end{equation}
+
+% The domain of validity of a particular collection $\mathcal{C} = \{ \gamma_1, \ldots, \gamma_n \}$ is given by
+% \begin{equation}
+%   \mathrm{dom}_\psi\mathcal{C} = \{ \Re(e^{-\ii \psi} Z_{\gamma_k}) < 0, \ \forall \gamma_k \in \mathcal{C} \}
+% \end{equation}
+
+% Working in the $x$-$y$ coordinates defined in \cref{eq:xydef}, we can write the condition $\Re(e^{-\ii \psi} Z_{\gamma}) < 0$ as (assuming $0 \leq \psi < \frac{\pi}{2}$)
+% \begin{equation}
+%   r y + (d_B + 2 d_F) x + (d_F - d_B) \mu - \ch_2 < 0
+% \end{equation}
+% Thus the domain $\mathrm{dom} \mathcal{C}$ is given by a linear system of inequalities and in general is given by a polygon if it exists and is bounded \remark{Is it always bounded?}.
+
+% I now want to understand the domain of validity of the Bridgeland collection tensored with an arbitrary $\chO(m_F, m_B)$. We want the range of integer $m_F$ and $m_B$ such that the domain $\mathrm{dom}_0 \qty(\mathcal{C}_B \otimes \chO(m_F, m_B))$ is non-empty. \par
+% \textit{Bridgeland-Perling-Stern collection} (for $3 \mu \notin \mathbb{Z}$):
+% For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
+% \begin{equation}
+%   \mathcal{C}_B: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
+% \end{equation}
+
+% \textit{Arcara-Miles I collection} (for $3 \mu \notin \mathbb{Z}$):
+% For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
+% \begin{equation}
+%   \mathcal{C}_{AI}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 3}{3}}
+% \end{equation}
+
+% \textit{Arcara-Miles II collection} (for $3 \mu \notin \mathbb{Z}$):
+% For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
+% \begin{equation}
+%   \mathcal{C}_{AII}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
+% \end{equation}
+
+\subsubsection{Determining initial rays from domains of validity of strongly exceptional collections}
+
+We consider three strongly exceptional collections and, for each, record the corresponding \emph{dual} collection:
+\medskip
+
+\noindent\textbf{Bridgeland--Stern--Perling collection}
 \begin{equation}
-  \mathcal{C}_B = \qty{ \ \chO(0, 0), \ \chO(-1, 0)[1], \ \chO(0, -1)[1], \ \chO(-1, -1) \ }
+  \mathcal{C}_B
+  = \qty{\ \chO(0,0),\ \chO(-1,0)[1],\ \chO(0,-1)[1],\ \chO(-1,-1)\ }
 \end{equation}
 
-\textbf{Arcara-Miles I Collection}
+\noindent\textbf{Arcara--Miles I collection}
 \begin{equation}
-  \mathcal{C}_{AI} = \qty{ \ \chO(0, 0), \ \GV(0, 1, -\tfrac12), \ \chO(-2, -1), \ \chO(-1, 0)[1] \ }
+  \mathcal{C}_{AI}
+  = \qty{\ \chO(0,0),\ \GV(0,1,-\tfrac12),\ \chO(-2,-1),\ \chO(-1,0)[1]\ }
 \end{equation}
 
-\textbf{Arcara-Miles II Collection}
+\noindent\textbf{Arcara--Miles II collection}
 \begin{equation}
-  \mathcal{C}_{AII} = \qty{ \ \chO(0, 0), \ \GV(0, -1, \tfrac12), \ \chO(-2, -1), \ \chO(-1, -1)[1] \ }
+  \mathcal{C}_{AII}
+  = \qty{\ \chO(0,0),\ \GV(0,-1,\tfrac12),\ \chO(-2,-1),\ \chO(-1,-1)[1]\ }
 \end{equation}
 
-The domain of validity of a particular collection $\mathcal{C} = \{ \gamma_1, \ldots, \gamma_n \}$ is given by
+Given a collection $\mathcal{C}=\{\gamma_1,\ldots,\gamma_n\}$, its domain of validity at phase $\psi$ is
 \begin{equation}
-  \mathrm{dom}_\psi\mathcal{C} = \{ \Re(e^{-\ii \psi} Z_{\gamma_k}) < 0, \ \forall \gamma_k \in \mathcal{C} \}
+  \mathrm{dom}_\psi \mathcal{C}
+  := \qty{ \Re\!\big(e^{-\ii\psi} Z_{\gamma_k}\big) < 0,\ \forall\,\gamma_k\in\mathcal{C} }.
 \end{equation}
+In the $x$--$y$ coordinates of \cref{eq:xydef}, and assuming $0\le \psi < \frac{\pi}{2}$, the condition
+$\Re(e^{-\ii\psi}Z_\gamma)<0$ takes the form
+\begin{equation}
+  r\,y + (d_B+2d_F)\,x + (d_F-d_B)\,\mu - \ch_2 < 0.
+\end{equation}
+Hence $\mathrm{dom}_\psi \mathcal{C}$ is cut out by a finite system of linear inequalities; when non-empty and bounded it is a polygon. \remark{Is it always bounded?}
 
-Working in the $x$-$y$ coordinates defined in \cref{eq:xydef}, we can write the condition $\Re(e^{-\ii \psi} Z_{\gamma}) < 0$ as (assuming $0 \leq \psi < \frac{\pi}{2}$)
-\begin{equation}
-  r y + (d_B + 2 d_F) x + (d_F - d_B) \mu - \ch_2 < 0
-\end{equation}
-Thus the domain $\mathrm{dom} \mathcal{C}$ is given by a linear system of inequalities and in general is given by a polygon if it exists and is bounded \remark{Is it always bounded?}.
+\medskip
+We now study the domains of validity of the above collections after tensoring by a line bundle $\chO(m_F,m_B)$.
+Equivalently, we seek the integer pairs $(m_F,m_B)\in\mathbb{Z}^2$ for which
+\(
+\mathrm{dom}_0\!\big(\mathcal{C}\otimes \chO(m_F,m_B)\big)\neq\varnothing.
+\)
 
-I now want to understand the domain of validity of the Bridgeland collection tensored with an arbitrary $\chO(m_F, m_B)$. We want the range of integer $m_F$ and $m_B$ such that the domain $\mathrm{dom}_0 \qty(\mathcal{C}_B \otimes \chO(m_F, m_B))$ is non-empty. \par
-\textit{Bridgeland-Perling-Stern collection} (for $3 \mu \notin \mathbb{Z}$):
-For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
-\begin{equation}
-  \mathcal{C}_B: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
-\end{equation}
+\paragraph{Case $3\mu\notin\mathbb{Z}$.}
+For each fixed $m_F\in\mathbb{Z}$, there is \emph{exactly one} integer $m_B$ for which the domain is non-empty:
+\begin{align}
+  \mathcal{C}_B: \qquad  & m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}},\\
+  \mathcal{C}_{AI}: \qquad & m_B = \ceil*{\frac{2m_F + 3\mu - 3}{3}},\\
+  \mathcal{C}_{AII}: \qquad & m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}.
+\end{align}
 
-\textit{Arcara-Miles I collection} (for $3 \mu \notin \mathbb{Z}$):
-For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
-\begin{equation}
-  \mathcal{C}_{AI}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 3}{3}}
-\end{equation}
+\paragraph{Case $3\mu\in\mathbb{Z}$.}
+In this case, there is \emph{no} spectral flow in $(m_F,m_B)$ whenever the argument of the corresponding ceiling
+is already an integer (i.e.\ whenever the ceiling acts trivially). Concretely, for the above formulas this means:
+\begin{itemize}
+  \item for $\mathcal{C}_B$ and $\mathcal{C}_{AII}$, no spectral flow occurs whenever
+  \(
+    \frac{2m_F+3\mu-1}{3}\in\mathbb{Z};
+  \)
+  \item for $\mathcal{C}_{AI}$, no spectral flow occurs whenever
+  \(
+    \frac{2m_F+3\mu-3}{3}\in\mathbb{Z}.
+  \)
+\end{itemize}
 
-\textit{Arcara-Miles II collection} (for $3 \mu \notin \mathbb{Z}$):
-For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
-\begin{equation}
-  \mathcal{C}_{AII}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
-\end{equation}
 
 
 \subsection{Cusps in the U-plane}
@@ -1209,7 +1274,7 @@ The discriminant of the mirror curve
 \begin{equation}
   \mathrm{Disc}(\mathbb{F}_1) = u^8 \qty((16 \lambda ^3-27) u^4-36 \lambda  u^3-8 \lambda ^2 u^2+u+\lambda)
 \end{equation}
-has five roots, the large volume point (or point of maximal unipotent monodromy, MUM) at $u = 0$ (which is an $I_8$ fiber) and four standard conifold points which we denote $u_1, \dots, u_4$. These are $I_1$ fibers for generic $\lambda$. At $\lambda = 1$, these points are plotted in \cref{fig:UPlaneSingularities_m0}. We generally label the conifold points in this order for $\lambda = 1$ and by continuation to any other $\lambda$ avoiding the singular locus ($\lambda^3 = -27/256$).
+has five roots, the large volume point (or point of maximal unipotent monodromy, MUM) at $u = 0$ (which is an $I_8$ fiber) and four standard conifold points which we denote $u_1, \dots, u_4$. These are $I_1$ fibers for generic $\lambda$. At $\lambda = 1$, these points are plotted in \cref{fig:UPlaneSingularities_m0}. We generally label the conifold points in this order for $\lambda = 1$ and by continuation to any other $\lambda$ avoiding the singular locus ($\lambda^3 = -27/256$). 
 
 To see that that these are also the singularities of the Picard-Fuchs equations (and additional singularities), we write the third-order PF equations (for periods of the CY3) in this form
 \begin{equation}\label{eq:PicardFuchs3}
