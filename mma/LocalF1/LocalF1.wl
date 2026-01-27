@@ -89,7 +89,8 @@ ToFB::usage = "TODO";
 
 ToHC::usage = "TODO";
 
-GiesekerSlope::usage = "TODO";
+GiesekerSlope::usage = "GiesekerSlope[{r, dF, dB, ch2}, M]";
+GiesekerDim::usage = "GiesekerDim[{r, dF, dB, ch2}]";
 
 BogomolovDiscriminant::usage = "TODO";
 SecondChernClass::usage = "SecondChernClass[gam] computes the second chern class."
@@ -343,6 +344,8 @@ ToHC[{r_, dF_, dB_, ch2_}] := {r, dF, dB - dF, ch2};
 
 GiesekerSlope[{r_, dF_, dB_, ch2_}, M_]:= (dB - dB M + dF (2 + M))/r;
 
+GiesekerDim[{r_, df_, db_, ch2_}] := 1 - db^2 + 2 db df - 2 ch2 r - r^2;
+
 BogomolovDiscriminant[{r_, dF_, dB_, ch2_}] := -(dB^2/(2 r^2)) + (dB dF)/r^2 - ch2/r;
 SecondChernClass[{r_, dF_, dB_, ch2_}] := -ch2 - dB^2/2 + dB dF;
 
@@ -386,7 +389,7 @@ MonodromyOnCharge[M_, gam_] :=
      ]
     ];
 
-MonodromyOnTau[M_, tau_] := (M[4, 3] + tau M[4, 4])/(M[3, 3] + tau M[3, 4]);
+MonodromyOnTau[M_, tau_] := (M[[4, 3]] + tau M[[4, 4]])/(M[[3, 3]] + tau M[[3, 4]]);
 
 
 Rays[{r_, dF_, dB_, ch2_}, t_, psi_, m_ : 0] := (
