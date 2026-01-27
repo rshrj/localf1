@@ -25,20 +25,20 @@ BeginPackage["LocalF1`"];
 
 (* Usage messages for exported functions *)
 
-RichardsonResum::usage = "TODO";
+RichardsonResum::usage = "RichardsonResum[PartSum, n] gives the nth order Richardson transform of partial sums PartSum.";
 
 MirrorCurve::usage = "MirrorCurve[x, y, m, u] is the affine mirror-curve equation of local F1 \
 in the variables x, y and parameters m, u.";
 
-MirrorCurvef3::usage = "TODO";
+MirrorCurvef3::usage = "MirrorCurvef3[X, m, u] gives the cubic right hand side of the curve in Weierstrass form Y^2 = f3[X] = 4X^3 - g_2 X - g_3.";
 
-MirrorCurveg2::usage = "TODO";
+MirrorCurveg2::usage = "MirrorCurveg2[m, u] is the Weierstrass (Eisenstein) g_2 invariant of the local F1 mirror curve.";
 
-MirrorCurveg3::usage = "TODO";
+MirrorCurveg3::usage = "MirrorCurveg3[m, u] is the Weierstrass (Eisenstein) g_3 invariant of the local F1 mirror curve.";
 
-MirrorCurveDelta::usage = "TODO";
+MirrorCurveDelta::usage = "MirrorCurveDelta[m, u] is the order 4 factor in the discriminant of the mirror curve.";
 
-MirrorCurveJ::usage = "TODO";
+MirrorCurveJ::usage = "MirrorCurveJ[m, u] is the j-invariant of the mirror curve.";
 
 URoot::usage = "URoot[la, k] is the kth root of the order 4 part of the discriminant.";
 
@@ -559,6 +559,15 @@ QuiverDomain[coll_, psi_, m_, OptionsPattern[]] :=
     PlotStyle -> {sty, Opacity[.5]},
     BoundaryStyle -> None
     ]];
+
+ReZLV[{r_, df_, db_, ch2_}, {s_, t_}, m_] := -ch2 - db m + df m + (
+   m^2 r)/2 + (db + 2 df - m r) s - 4 r s^2 + 4 r t^2;
+QConditions[Coll_, m_, {s_, t_}] := 
+  And @@ (ReZLV[#, {s, t}, m] < 0 & /@ Coll);
+ClearAll[QDomain];
+Options[QDomain] = Options[RegionPlot];
+QDomain[Coll_, m_, opt___ : OptionsPattern[]] := 
+  RegionPlot[QConditions[Coll, m, {s, t}], {s, -1, 2}, {t, 0, 1}, opt];
 
 ExtFromStrong[Coll_]:=Module[{S,Si},
    S=Table[Euler[Coll[[i]],Coll[[j]]],{i,Length[Coll]},{j,Length[Coll]}];
