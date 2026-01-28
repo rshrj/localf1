@@ -284,6 +284,10 @@ SameHalfPlaneQ::usage =
 QuiverDomain::usage =
 "QuiverDomain[coll, psi, m] plots the region in the (s,t)-plane where all central charges ZLV for coll satisfy Re(Exp[-I psi] Z) < 0.";
 
+ReZLV::usage = "ReZLV[{r, df, db, ch2}, {s, t}, m] in the real part of ZLV[{r, df, db, ch2}, {s, t}, m].";
+QConditions::usage = "QConditions[Coll, m, {s, t}] define the domain in (s, t) plane where the collection Coll is valid.";
+QDomain::usage = "QDomain[Coll, m] creates a region plot in (s, t) plane where the collection Coll is valid. It can take any option that RegionPlot takes.";
+
 ChernToCh::usage =
 "ChernToCh[expr] rewrites charge vectors {r,dF,dB,ch2} into symbolic Ch[...] or GV[...] when applicable (e.g. at vanishing discriminant).";
 
