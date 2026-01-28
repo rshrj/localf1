@@ -936,14 +936,14 @@ In these coordinates the mirror curve \cref{eq:F1mirror} assumes Weierstrass for
   Y^2 = 4X^3 - g_2 X - g_3,
 \end{equation}
 with
-\begin{equation}
+\begin{equation}\label{eq:g2g3mirrorcurve}
 \begin{aligned}
   g_2 &= 27\left( 16 m^2 u^4 - 8 m u^2 - 24 u^3 + 1 \right), \\
   g_3 &= 27\left( 64 m^3 u^6 - 48 m^2 u^4 - 144 m u^5 + 12 m u^2 - 216 u^6 + 36 u^3 - 1 \right).
 \end{aligned}
 \end{equation}
 These expressions agree with \cref{eq:F1g23Nagell} up to an overall normalization, which can be absorbed by rescaling $X$ and $Y$. The discriminant takes the form
-\begin{equation}
+\begin{equation}\label{eq:deltamirrorcurve}
   \Delta \propto u^8\, \delta(u,m),
   \qquad
   \delta(u,m) = 16 m^3 u^4 - 8 m^2 u^2 - 36 m u^3 + m - 27 u^4 + u,
@@ -1057,6 +1057,90 @@ giving the explicit expression
     \item The expressions for $\alpha$ and $\beta$ in terms of $b$ given in \cref{eq:nodalcurveparams} apply only to the branch corresponding to $m=1$ with $u=u_*(1)\approx 0.26318$.
   \end{enumerate}
 }
+
+
+\subsubsection{Analysis in the $(\ur, \ell)$ coordinates}
+
+The mirror curve can be written as follows
+\begin{equation}\label{eq:mirrorcurveurel}
+  \frac{\ell (y+1)}{x y}-\frac{1}{\ur}+x+y = 0,
+\end{equation}
+
+The following birational change of coordinates
+\begin{equation}
+  x = \frac{b Y-\frac{a}{2}}{c+X}+\frac{1}{2 \ur}, \quad y = \frac{a}{c+X},
+\end{equation}
+with
+\begin{equation}
+  a = -36 \ell \ur^2, \quad b = \frac{1}{12 \ur}, \quad c = 12 \ell \ur^2-3,
+\end{equation}
+can be used to convert \cref{eq:mirrorcurveurel} to short Weierstrass form
+\begin{equation}
+  Y^2 = 4X^3 - g_2(\ell, \ur) X - g_3(\ell, \ur),
+\end{equation}
+with
+\begin{equation}
+  \begin{aligned}
+    g_2 &= 108 \left(16 \ell^2 \ur^4-8 \ell (3 \ur+1) \ur^2+1\right), \\
+    g_3 &= -216 \left(-64 \ell^3 \ur^6+24 \ell^2 \left(9 \ur^2+6 \ur+2\right) \ur^4-12 \ell (3 \ur+1) \ur^2+1\right).
+  \end{aligned}
+\end{equation}
+As a result, we find
+\begin{align}
+  \Delta(\ell, \ur) &= g_2^3-27 g_3^2 = \# \ell^3 \ur^8 \, \delta(\ell, \ur), \\
+  \delta(\ell, \ur) &= \ell (16 \ell-27) \ur^4-36 \ell \ur^3-8 \ell \ur^2+\ur+1, \\
+  J(\ell, \ur) &= 1728 \frac{g_2^3}{\Delta} = \frac{\left(16 \ell^2 \ur^4-8 \ell (3 \ur+1) \ur^2+1\right)^3}{\ell^3 \ur^8 \left(\ell (16 \ell-27) \ur^4-36 \ell \ur^3-8 \ell \ur^2+\ur+1\right)}
+\end{align}
+which matches \cref{eq:g2g3mirrorcurve} and \cref{eq:deltamirrorcurve} upto scaling.
+
+Using the same prescription as before, we can pararmetrize the nodal curve (on the discriminant locus) as
+\begin{equation}\label{eq:nodalcurveelur}
+  x = \frac{36 \ell \ur^2 (3 \ur+1)+t^3+3 t^2-3 t X_0-6 X_0-9}{6 \ur \left(12 \ell \ur^2+t^2-2 X_0-3\right)}, \quad y = -\frac{36 \ell \ur^2}{12 \ell \ur^2+t^2-2 X_0-3}
+\end{equation}
+with
+\begin{equation}
+  X_0 = -\frac{3}{2}\frac{g_3}{g_2} = \frac{3 \left(-64 \ell^3 \ur^6+24 \ell^2 \left(9 \ur^2+6 \ur+2\right) \ur^4-12 \ell (3 \ur+1) \ur^2+1\right)}{16 \ell^2 \ur^4-8 \ell (3 \ur+1) \ur^2+1}
+\end{equation}
+We define $t_1 = \sqrt{-12 \ell \ur^2+2 X_0+3}$. On the locus $\delta(\ell, \ur) =0$, it is possible to write
+\begin{equation}\label{eq:elurt1}
+  \ell = \frac{27 (t_1+1)^3 (t_1+3)}{16 t_1^4}, \quad \ur = \frac{2 t_1^2}{9 (t_1+1)}, \quad \text{on} \quad \delta(\ell, \ur) = 0
+\end{equation}
+Thus, we can write the nodal curve \cref{eq:nodalcurveelur} as
+\begin{equation}
+  x = \frac{(t-t_1) (t+2 t_1+3)}{6 \ur (t+t_1)}, \quad y = -\frac{36 \ell \ur^2}{t^2-t_1^2}
+\end{equation}
+In terms of $t_1$, $X_0$ takes the simple form
+\begin{equation}
+  X_0 = t_1 (t_1+2)
+\end{equation}
+
+In order to apply the Kerr-Doran prescription, we change to a parametrization $z$ such that the node corresponds to $z = 0$ and $z = \infty$,
+\begin{equation}
+  z = \frac{t-\sqrt{3 X_0}}{t+\sqrt{3 X_0}}.
+\end{equation}
+The result is as follows
+\begin{equation}
+  x = A \frac{(z-\tfrac{1}{b^2})(z-b)}{(z-1)(z-\tfrac{1}{b})}, \quad y = B \frac{(z-1)}{(z-b)(z-\tfrac{1}{b})},
+\end{equation}
+with
+\begin{equation}
+  A = -\frac{b \left(b^2+b+1\right)}{(b+1)^4}, \quad B = -\frac{b^2+b+1}{(b+1)^2}
+\end{equation}
+where we define
+\begin{equation}
+  b = z(t_1) = \frac{t_1-\sqrt{3 X_0}}{t_1+\sqrt{3 X_0}}, \quad t_1 = -\frac{3 (b+1)^2}{b^2+4 b+1}
+\end{equation}
+
+Note that there is a symmetry $b \to \frac{1}{b}$ due to the square root in the definition of $z(t_1)$. We can thus restrict to $\abs{b} > 1$. In terms of $b$, \cref{eq:elurt1} takes the form
+\begin{equation}
+  \ell = -\frac{b \left(b^2+b+1\right)^3}{(b+1)^8}, \quad \ur = -\frac{(b+1)^4}{\left(b^2+b+1\right) \left(b^2+4 b+1\right)}, \quad \text{on} \quad \delta(\ell, \ur) = 0.
+\end{equation}
+For a fixed value of $\ell$, the first equation gives eight roots in total which are invariant under $b \to \tfrac{1}{b}$. Thus, only four of them satisfy the condition $\abs{b} > 1$ and correspond to the four $I_1$ fibers for generic values of $\ell$. Note that the Argeres-Douglas point $\ell = -\tfrac{27}{256}$, $\ur = -\tfrac89$ corresponds precisely to $b = 1$. Whereas, the local $\mathbb{P}^2$ limit seems to be $b \to e^{\tfrac{2\pi \ii}{3}}$.
+
+Applying the Kerr-Doran formula, we obtain
+\begin{equation}
+  Q(b) = 
+\end{equation}
 
 
 \subsection{Large Volume Central Charge}
