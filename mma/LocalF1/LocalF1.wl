@@ -522,6 +522,27 @@ KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
       2 (Li2[b] + Log[1 - b] Log[b]) - (Log[1/b] - Log[b]) Log[
         1 - b^2]));
 
+(* Boris *)
+(* For Re[b]>0 *)
+KerrDoranQ1[b_] :=
+  1/(2 Pi) (PolyLog[2, b^3] - 4 PolyLog[2, b^2] + 5 PolyLog[2, b]) +
+   1/(4 Pi) Log[
+     b]*(6 Log[b^2 + b + 1] + Log[b] - 16  Log[b + 1] - 0 4 I Pi);
+
+(* For Re[b]<0, Im[b]>0 *)
+KerrDoranQ2[b_] :=
+  1/(12 \[Pi]) (-4 I \[Pi] (Log[b] - 8 Log[1 + b] +
+        3 Log[1 + b + b^2]) +
+     3 Log[b] (Log[b] - 16 Log[1 + b] + 6 Log[1 + b + b^2]) +
+     6 (5 PolyLog[2, b] - 4 PolyLog[2, b^2] + PolyLog[2, b^3]));
+
+(* For Re[b]<0, Im[b]<0 *)
+KerrDoranQ3[b_] :=
+ 1/(12 \[Pi]) (4 I \[Pi] (Log[b] - 8 Log[1 + b] +
+       3 Log[1 + b + b^2]) +
+    3 Log[b] (Log[b] - 16 Log[1 + b] + 6 Log[1 + b + b^2]) +
+    6 (5 PolyLog[2, b] - 4 PolyLog[2, b^2] + PolyLog[2, b^3]));
+
 (* add KerrDoran direct from m, u *)
 
 KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_, 
