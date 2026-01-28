@@ -97,6 +97,11 @@ KerrDoranP::usage =
 KerrDoranQ::usage =
 "KerrDoranQ[b] evaluates the Kerr--Doran quantity Q(b) built from logarithms and dilogarithms.";
 
+KerrDoranFormula::usage =
+"KerrDoranFormula[avec, bvec, dvec, evec, A, B] evaluates the Kerr--Doran dilogarithmic combination built from \
+the lists avec, bvec (complex parameters) with weights dvec, evec and scalars A, B. \
+It returns a linear combination of Li2[avec[[j]]/bvec[[k]]] plus logarithmic correction terms, with diagonal terms (avec[[j]]==bvec[[k]]) omitted.";
+
 BW::usage =
 "BW[z] is the Bloch--Wigner dilogarithm of z.";
 
@@ -361,8 +366,25 @@ G10FundamentalDomain::usage =
 G10RepeatDomain::usage =
 "G10RepeatDomain[{kmin, kmax}] repeats G10FundamentalDomain translated by x -> x + 8 k for kmin <= k <= kmax.";
 
+MirrorCurve2::usage =
+"MirrorCurve2[x, y, el, ur] gives the affine mirror-curve equation in variables x, y and parameters el, ur \
+(i.e. an expression whose vanishing defines the curve). \
+It corresponds to the alternative (el,ur) parameterization used elsewhere in the package.";
+
+MirrorCurveg22::usage =
+"MirrorCurveg22[el, ur] gives the Weierstrass invariant g2 (weight-4 Eisenstein invariant) of the mirror curve \
+in the (el,ur) parameterization.";
+
+MirrorCurveg32::usage =
+"MirrorCurveg32[el, ur] gives the Weierstrass invariant g3 (weight-6 Eisenstein invariant) of the mirror curve \
+in the (el,ur) parameterization.";
+
 MirrorCurveJ2::usage =
 "MirrorCurveJ2[el, ur] gives the j-invariant j(el,ur) for the alternative parameterization used in the degree-12 map.";
+
+MirrorCurveDelta2::usage =
+"MirrorCurveDelta2[el, ur] gives the order-4 factor in the discriminant of the local F1 mirror curve in variables (el,ur). \
+Its roots locate the discriminant locus in the (el,ur)-slice.";
 
 PicardFuchsP2::usage =
 "PicardFuchsP2[el, ur] gives the coefficient P(el,ur) of f'' in the normalized third-order Picard--Fuchs equation in variables (el,ur).";
@@ -497,6 +519,16 @@ KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
         1 - b^2]));
 
 (* add KerrDoran direct from m, u *)
+
+KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_, 
+   B_] := -Sum[
+     If[avec[[j]] === bvec[[k]], 0, 
+      dvec[[j]]*evec[[k]] (Li2[
+          avec[[j]]/bvec[[k]]] + (Log[avec[[j]]] - 
+            Log[bvec[[k]]]) Log[1 - avec[[j]]/bvec[[k]]])], {j, 
+      Length[dvec]}, {k, Length[evec]}] - 
+   Log[B] Sum[dvec[[j]] Log[avec[[j]]], {j, Length[dvec]}] + 
+   Log[A] Sum[evec[[k]] Log[bvec[[k]]], {k, Length[evec]}];
 
 
 repCh = {Ch[mF_, mB_][1] :> -{1, mF, mB, -(mB^2/2) + mB mF}, 
@@ -1213,10 +1245,14 @@ G10RepeatDomain[{kmin_, kmax_}] :=
   Table[G10FundamentalDomain /. {l_Circle :> Translate[l, {8*k, 0}], 
      l_Line :> Translate[l, {8*k, 0}]}, {k, kmin, kmax}];
 
-
+MirrorCurve2[x_, y_, el_, ur_] := -(1/ur) + x + y + (el (1 + y))/(x y);
+MirrorCurveg22[el_, ur_] := 108 (1 + 16 el^2 ur^4 - 8 el ur^2 (1 + 3 ur));
+MirrorCurveg32[el_, ur_] := -216 (1 - 64 el^3 ur^6 - 12 el ur^2 (1 + 3 ur) + 
+   24 el^2 ur^4 (2 + 6 ur + 9 ur^2));
 MirrorCurveJ2[el_, ur_] := (1 + 16 el^2 ur^4 - 
   8 el ur^2 (1 + 3 ur))^3/(el^3 ur^8 (1 + ur - 8 el ur^2 - 
    36 el ur^3 + el (-27 + 16 el) ur^4));
+MirrorCurveDelta2[el_, ur_] := 1 + ur - 8 el ur^2 - 36 el ur^3 + el (-27 + 16 el) ur^4;
 PicardFuchsP2[el_, ur_] := (24 + 50 ur + (27 - 320 el) ur^2 - 2016 el ur^3 + 
  4 el (-783 + 224 el) ur^4 + 
  54 el (-27 + 16 el) ur^5)/(ur (8 + 9 ur) (1 + ur - 8 el ur^2 - 
