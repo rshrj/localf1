@@ -97,6 +97,15 @@ KerrDoranP::usage =
 KerrDoranQ::usage =
 "KerrDoranQ[b] evaluates the Kerr--Doran quantity Q(b) built from logarithms and dilogarithms.";
 
+KerrDoranQ1::usage =
+"KerrDoranQ1[b] TODO";
+
+KerrDoranQ2::usage =
+"KerrDoranQ2[b] TODO";
+
+KerrDoranQ3::usage =
+"KerrDoranQ3[b] TODO";
+
 KerrDoranFormula::usage =
 "KerrDoranFormula[avec, bvec, dvec, evec, A, B] evaluates the Kerr--Doran dilogarithmic combination built from \
 the lists avec, bvec (complex parameters) with weights dvec, evec and scalars A, B. \
