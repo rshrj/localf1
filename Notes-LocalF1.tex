@@ -123,6 +123,17 @@
 % --- projective space ---
 \newcommand{\PP}{\mathbb{P}}
 
+% Macros used in the text above
+
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
+\newcommand{\om}{\omega}
+
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\Branch}{\operatorname{Branch}}
+
 % --- operators ---
 \DeclareMathOperator{\Disc}{Disc} % discriminant
 % \DeclareMathOperator{\Res}{Res}   % resultant
@@ -1132,7 +1143,7 @@ where we define
 \end{equation}
 
 Note that there is a symmetry $b \to \frac{1}{b}$ due to the square root in the definition of $z(t_1)$. We can thus restrict to $\abs{b} > 1$. In terms of $b$, \cref{eq:elurt1} takes the form
-\begin{equation}
+\begin{equation}\label{eq:elur-in-terms-of-b}
   \ell = -\frac{b \left(b^2+b+1\right)^3}{(b+1)^8}, \quad \ur = -\frac{(b+1)^4}{\left(b^2+b+1\right) \left(b^2+4 b+1\right)}, \quad \text{on} \quad \delta(\ell, \ur) = 0.
 \end{equation}
 For a fixed value of $\ell$, the first equation gives eight roots in total which are invariant under $b \to \tfrac{1}{b}$. Thus, only four of them satisfy the condition $\abs{b} > 1$ and correspond to the four $I_1$ fibers for generic values of $\ell$. Note that the Argeres-Douglas point $\ell = -\tfrac{27}{256}$, $\ur = -\tfrac89$ corresponds precisely to $b = 1$. Whereas, the local $\mathbb{P}^2$ limit seems to be $b \to e^{\tfrac{2\pi \ii}{3}}$.
@@ -1141,6 +1152,158 @@ Applying the Kerr-Doran formula, we obtain
 \begin{equation}
   Q(b) = 
 \end{equation}
+
+
+\subsubsection{Differential equations satisfied by Kerr--Doran $Q$}
+
+Starting from the Picard--Fuchs system in the $(\ell,\ur)$ coordinates given in \cref{eq:PicardFuchsD1D2}, we change variables to the Kerr--Doran parameter $b$ using \cref{eq:elur-in-terms-of-b}. We also introduce a small displacement variable $\delta\ur$ transverse to the discriminant locus, so that
+\[
+  \ell=\ell(b),\qquad \ur=\ur(b)+\delta\ur.
+\]
+Rewriting the Picard--Fuchs operators in the coordinates $(b,\delta\ur)$ and expanding near the discriminant to leading order in $\delta\ur$, we expand a local period in the form
+\[
+  G(b,\delta\ur)=G_0(b)+G_1(b)\,\delta\ur+\mathcal{O}(\delta\ur^2).
+\]
+At leading order, the transformed Picard--Fuchs equations involve $G_1(b)$ and $G_1'(b)$. However, by taking an appropriate linear combination of the two equations, these auxiliary terms can be eliminated, yielding a single second-order ODE for the cusp period $G_0(b)$:
+\begin{equation}\label{eq:KD-G0-ode}
+  G_0''(b)+\frac{b^4-4 b^3-8 b^2-6 b-1}{b\,(b^4+b^3-b-1)}\,G_0'(b)=0.
+\end{equation}
+
+
+\subsubsection{Domain, range, and branching structure of the map $\ell(b)$}
+
+Consider the rational map of Riemann spheres
+\begin{equation}
+  \ell:\PP^1_b \longrightarrow \PP^1_\ell,
+  \qquad
+  \ell(b) \;=\; -\frac{b\,(1+b+b^2)^3}{(1+b)^8}\,.
+\end{equation}
+Since $\ell$ is a non-constant holomorphic map $\PP^1\to\PP^1$, it is surjective onto $\PP^1_\ell$; the interesting features are its divisor, critical points, and branch values.
+
+\paragraph{Divisor data: zeros and poles.}
+The only pole occurs at $b=-1$, with order $8$:
+\begin{equation}
+  \ell(b) \sim -\frac{(-1)\,(1-1+1)^3}{(b+1)^8}
+  \quad\text{as } b\to -1,
+  \qquad\Rightarrow\qquad
+  \ord_{b=-1}(\ell)=-8,\ \ \ell(-1)=\infty.
+\end{equation}
+The numerator vanishes at $b=0$ (simple) and at the primitive cube roots of unity $b=\om,\om^2$ (each with multiplicity $3$). In addition, as $b\to\infty$,
+\begin{equation}
+  \ell(b)= -\frac{b(b^2)^3}{b^8}\,\bigl(1+O(1/b)\bigr)
+  = -\frac{1}{b}\,\bigl(1+O(1/b)\bigr),
+\end{equation}
+so $\ell(\infty)=0$ and the zero at $\infty$ is simple. Thus
+\begin{equation}
+  \ell^{-1}(0)=\{0,\infty,\om,\om^2\}
+  \quad\text{with multiplicities}\quad
+  1,\,1,\,3,\,3,
+\end{equation}
+and the total multiplicity equals $8$, anticipating $\deg(\ell)=8$.
+
+\paragraph{Degree.}
+The map has a unique pole of order $8$ at $b=-1$, hence
+\begin{equation}
+  \deg(\ell)=8.
+\end{equation}
+Equivalently, for generic $\ell_0\in\CC\subset\PP^1_\ell$, the equation $\ell(b)=\ell_0$ has $8$ solutions in $\PP^1_b$ counted with multiplicity.
+
+\paragraph{Involution symmetry and factorization.}
+A key simplification is the involutive symmetry
+\begin{equation}
+  \ell\!\left(\frac{1}{b}\right)=\ell(b),
+\end{equation}
+so $\ell$ factors through the $\ZZ_2$-quotient $\PP^1_b/\langle b\mapsto 1/b\rangle\cong\PP^1_u$ via the standard invariant coordinate
+\begin{equation}
+  u \;:=\; b+\frac{1}{b}.
+\end{equation}
+Using the identities $b^2+b+1=b(u+1)$ and $(b+1)^8=b^4(u+2)^4$, one obtains the compact expression
+\begin{equation}\label{eq:l-of-u}
+  \ell(b)= -\frac{(u+1)^3}{(u+2)^4},
+  \qquad u=b+\frac{1}{b}.
+\end{equation}
+Hence the map decomposes as
+\begin{equation}
+  \PP^1_b \xrightarrow{\ \deg 2\ } \PP^1_u \xrightarrow{\ \deg 4\ } \PP^1_\ell,
+\end{equation}
+and the total degree is $2\cdot 4=8$.
+
+\paragraph{Critical points and ramification.}
+Differentiating, one finds
+\begin{equation}\label{eq:derivative}
+  \frac{d\ell}{db}
+  = \frac{(b-1)^3\,(b^2+b+1)^2}{(b+1)^9}.
+\end{equation}
+Thus the critical points in $\PP^1_b$ are
+\begin{equation}
+  b=1,\qquad b=\om,\om^2,\qquad b=-1,
+\end{equation}
+where $b=-1$ is the pole (and hence a branch point in the sense of the map to $\PP^1_\ell$).
+From the local behavior implied by~\eqref{eq:derivative} (or directly by series expansion), the ramification indices are:
+\begin{align}
+  &e_{-1}=8, &&\ell(-1)=\infty\quad\text{(totally ramified)},\\
+  &e_{1}=4,  &&\ell(1)= -\frac{27}{256},\\
+  &e_{\om}=e_{\om^2}=3, &&\ell(\om)=\ell(\om^2)=0.
+\end{align}
+In particular, $\ell$ has exactly three branch values in $\PP^1_\ell$:
+\begin{equation}
+  \Branch(\ell)=\left\{\,0,\ -\frac{27}{256},\ \infty\,\right\}.
+\end{equation}
+Rescaling $\lambda:=-(256/27)\,\ell$ gives a Belyi normalization with branch locus $\{0,1,\infty\}$.
+
+\paragraph{Fibers over the branch values.}
+The full fiber structure (with multiplicities) over the three branch values is:
+\begin{align}
+  \ell^{-1}(\infty) &= \{-1\}\quad\text{with multiplicity }8,\\[3pt]
+  \ell^{-1}(0) &= \{0,\infty,\om,\om^2\}\quad\text{with multiplicities }1,1,3,3,\\[3pt]
+  \ell^{-1}\!\left(-\frac{27}{256}\right)
+  &= \{1\}\ \cup\ \{\text{four further points}\},
+\end{align}
+where $b=1$ appears with multiplicity $4$ (ramification index $4$), and the remaining four simple preimages are the roots of the reciprocal quartic
+\begin{equation}\label{eq:quartic-preimages}
+  27 b^4 + 68 b^3 + 98 b^2 + 68 b + 27 = 0.
+\end{equation}
+
+\paragraph{Riemann--Hurwitz check.}
+For a degree-$8$ map $\PP^1\to\PP^1$, Riemann--Hurwitz gives
+\begin{equation}
+  \sum_{p\in\PP^1_b}\bigl(e_p-1\bigr) = 2\deg(\ell)-2 = 14.
+\end{equation}
+Using the above ramification indices,
+\begin{equation}
+  (8-1)+(4-1)+(3-1)+(3-1)=7+3+2+2=14,
+\end{equation}
+so the branching data is consistent.
+
+\paragraph{Real locus: range on $\PP^1(\RR)$.}
+Restricting to $b\in\RR\cup\{\infty\}$, the invariant coordinate satisfies $u=b+1/b\in(-\infty,-2]\cup[2,\infty)$ (for $b\neq 0$), and~\eqref{eq:l-of-u} shows $\ell(b)\in\RR$. More precisely:
+\begin{itemize}
+  \item For $u\in[2,\infty)$ (equivalently $b>0$), $\ell$ increases from
+  \(\ell(1)=-27/256\) to \(\ell(\infty)=0\), hence
+  \[
+    \ell\bigl(\RR_{>0}\cup\{\infty\}\bigr)=[-27/256,\,0].
+  \]
+  \item For $u\in(-\infty,-2)$ (equivalently $b<0$, $b\neq -1$), $\ell$ decreases from
+  \(+\infty\) to \(0^+\), with the pole at $b=-1$, hence
+  \[
+    \ell\bigl(\RR_{<0}\bigr)=(0,\infty),\qquad \ell(-1)=\infty.
+  \]
+\end{itemize}
+In particular, no real $b$ maps to $\ell<-27/256$; crossing the real threshold $\ell=-27/256$ requires complex $b$.
+
+\paragraph{Summary.}
+The map $\ell(b)$ is a degree-$8$ rational function on $\PP^1_b$, invariant under $b\mapsto 1/b$, factoring through $u=b+1/b$ as
+\[
+  \ell = -\frac{(u+1)^3}{(u+2)^4}.
+\]
+Its branch locus in $\PP^1_\ell$ is precisely $\{0,-27/256,\infty\}$ with ramification profile
+\[
+  \infty:\ 8;\qquad
+  -\frac{27}{256}:\ 4,1,1,1,1;\qquad
+  0:\ 3,3,1,1,
+\]
+and this data satisfies Riemann--Hurwitz.
+
 
 
 \subsection{Large Volume Central Charge}
@@ -1660,7 +1823,7 @@ The periods are $\ell$-dependent combinations of $\varpi_i$,
 \end{equation}
 
 We can fix the $\ell$ dependence by using the original Picard-Fuchs equations which read $\mathcal{D}_i \varpi(\ell, \ur) = 0$
-\begin{equation}
+\begin{equation}\label{eq:PicardFuchsD1D2}
   \begin{gathered}
     \mathcal{D}_1 = -\ur^4 \partial_\ur^2-2 \ur^3 \partial_\ur-\ur \partial_\ur \partial_\ell+3 \partial_\ell+3 \ell \partial_\ell^2, \\
     \mathcal{D}_2 = (\ur+1) \ur \left(\ur \partial_\ur^2+ \partial_\ur\right) +\ell \left(4 \partial_\ell-\ur (3 \ur+4) \partial_\ell \partial_\ur +4 \ell \partial_\ell^2\right).
