@@ -98,18 +98,20 @@ KerrDoranQ::usage =
 "KerrDoranQ[b] evaluates the Kerr--Doran quantity Q(b) built from logarithms and dilogarithms.";
 
 KerrDoranQ1::usage =
-"KerrDoranQ1[b] TODO";
+"KerrDoranQ1[b] For Re[b]>0 TODO";
 
 KerrDoranQ2::usage =
-"KerrDoranQ2[b] TODO";
+"KerrDoranQ2[b] For Re[b]<0, Im[b]>0 TODO";
 
 KerrDoranQ3::usage =
-"KerrDoranQ3[b] TODO";
+"KerrDoranQ3[b] For Re[b]<0, Im[b]<0 TODO";
 
 KerrDoranFormula::usage =
 "KerrDoranFormula[avec, bvec, dvec, evec, A, B] evaluates the Kerr--Doran dilogarithmic combination built from \
 the lists avec, bvec (complex parameters) with weights dvec, evec and scalars A, B. \
 It returns a linear combination of Li2[avec[[j]]/bvec[[k]]] plus logarithmic correction terms, with diagonal terms (avec[[j]]==bvec[[k]]) omitted.";
+
+KerrDoranFormulaExact::usage = "KerrDoranFormulaExact[avec, bvec, dvec, evec, A, B] TODO";
 
 BW::usage =
 "BW[z] is the Bloch--Wigner dilogarithm of z.";
@@ -272,7 +274,7 @@ NaiveIntersection::usage =
 "NaiveIntersection[gam, gamp, mu] returns the intersection point {x,y} of the two XY-ray lines associated with gam and gamp (no future-direction checks).";
 
 CollInitial::usage =
-"CollInitial is a list of three initial charge collections identified for a fixed m-slice.";
+"CollInitial is a list of three initial charge collections identified for a fixed m-slice. CollInitial[[1]] for -1/3 < m < 0, CollInitial[[2]] for 0 < m < 1/3, CollInitial[[3]] for 1/3 < m < 2/3.";
 
 InitialRaysFromColl::usage =
 "InitialRaysFromColl[coll, xmin, xmax, m] generates initial rays for ConstructLVDiagram by translating coll so rays start between x=xmin and x=xmax. \
@@ -373,6 +375,10 @@ ComputeTransition::usage =
 "ComputeTransition[la, upath, Nn, Nr] numerically integrates the Picard--Fuchs connection along the path upath[t] (t in [0,1]) \
 and returns the transition/monodromy matrix in the chosen basis.";
 
+TTDFromSystemMatrix::usage = "TTDFromSystemMatrix[SystemMatrix] TODO";
+
+TauFromSystemMatrix::usage = "TauFromSystemMatrix[SystemMatrix] TODO";
+
 G10FundamentalDomain::usage =
 "G10FundamentalDomain is a Graphics object plotting the fundamental domain of the noncongruence subgroup Gamma(10;0,3,0,1;8).";
 
@@ -417,6 +423,8 @@ with Richardson acceleration of order Nr.";
 
 SystemMatrix2::usage =
 "SystemMatrix2[dat, el, ur] constructs the system matrix used to convert between period bases for the (el,ur) parameterization.";
+
+F1PeriodsLV::usage = "F1PeriodsLV[el, ur] or F1PeriodsLV[el, ur, Nn, Nr] TODO";
 
 Begin["`Private`"];
 
@@ -557,6 +565,16 @@ KerrDoranQ3[b_] :=
 KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_, 
    B_] := -Sum[
      If[avec[[j]] === bvec[[k]], 0, 
+      dvec[[j]]*evec[[k]] (Li2[
+          avec[[j]]/bvec[[k]]] + (Log[avec[[j]]] - 
+            Log[bvec[[k]]]) Log[1 - avec[[j]]/bvec[[k]]])], {j, 
+      Length[dvec]}, {k, Length[evec]}] - 
+   Log[B] Sum[dvec[[j]] Log[avec[[j]]], {j, Length[dvec]}] + 
+   Log[A] Sum[evec[[k]] Log[bvec[[k]]], {k, Length[evec]}];
+
+KerrDoranFormulaExact[avec_, bvec_, dvec_, evec_, A_, 
+   B_] := -Sum[
+     If[avec[[j]] == bvec[[k]], 0, 
       dvec[[j]]*evec[[k]] (Li2[
           avec[[j]]/bvec[[k]]] + (Log[avec[[j]]] - 
             Log[bvec[[k]]]) Log[1 - avec[[j]]/bvec[[k]]])], {j, 
@@ -1263,6 +1281,10 @@ ComputeTransition[la_, upath_, Nn_ : 512, Nr_ : 5,
     msg <> " " <> ToString[Floor[100 tt]] <> "%."]
    ];
 
+TTDFromSystemMatrix[SystMat_] := SystMat[[1, {2, 3}]];
+
+TauFromSystemMatrix[SystMat_] := SystMat[[2, 3]]/SystMat[[2, 2]];
+
 G10FundamentalDomain = Graphics[{Table[{Circle[{n, 0}, 1, {Pi/3, 2 Pi/3}], 
      Line[{{n, 1}, {n, 2}}], Thin, 
      Line[{{n + 1/2, Sqrt[3]/2}, {n + 1/2, 2}}]}, {n, 1, 
@@ -1360,6 +1382,9 @@ SystemMatrix2[{{v1_, v2_}, {v1p_, v2p_}, {v1pp_, v2pp_}}, el_,
      I (-(1/ur^2) + v1pp))/(2 \[Pi])), (-8 + 8 v1 - 16 ur v1p + 
      4 ur^2 v2pp + 3 Log[el] - 3 ur^2 v1pp Log[el] + 8 Log[ur] - 
      8 ur^2 v1pp Log[ur])/(4 \[Pi]^2 ur^2)}};
+
+F1PeriodsLV[el_, ur_, Nn_ : 512, Nr_ : 10] := 
+  SystemMatrix2[F1Series2[el, ur, Nn, Nr], el, ur];
 
 
 End[]; (* `Private` *)
