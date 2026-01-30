@@ -113,6 +113,14 @@ It returns a linear combination of Li2[avec[[j]]/bvec[[k]]] plus logarithmic cor
 
 KerrDoranFormulaExact::usage = "KerrDoranFormulaExact[avec, bvec, dvec, evec, A, B] TODO";
 
+KerrDoranElFromb::usage =
+"KerrDoranElFromb[b] gives the parameter el as a rational function of the Kerr--Doran parameter b.";
+
+KerrDoranUrFromb::usage =
+"KerrDoranUrFromb[b] gives the parameter ur as a rational function of the Kerr--Doran parameter b.";
+
+KerrDoranElUrFromb::usage = "KerrDoranElUrFromb[b] returns {el, ur} as rational functions of the Kerr--Doran parameter b.";
+
 BW::usage =
 "BW[z] is the Bloch--Wigner dilogarithm of z.";
 
@@ -274,7 +282,7 @@ NaiveIntersection::usage =
 "NaiveIntersection[gam, gamp, mu] returns the intersection point {x,y} of the two XY-ray lines associated with gam and gamp (no future-direction checks).";
 
 CollInitial::usage =
-"CollInitial is a list of three initial charge collections identified for a fixed m-slice. CollInitial[[1]] for -1/3 < m < 0, CollInitial[[2]] for 0 < m < 1/3, CollInitial[[3]] for 1/3 < m < 2/3.";
+"CollInitial is a list of three initial charge collections identified for a fixed m-slice. CollInitial[[1]] for 0 < m < 1/3, CollInitial[[2]] for 1/3 < m < 2/3, CollInitial[[3]] for -1/3 < m < 0.";
 
 InitialRaysFromColl::usage =
 "InitialRaysFromColl[coll, xmin, xmax, m] generates initial rays for ConstructLVDiagram by translating coll so rays start between x=xmin and x=xmax. \
@@ -416,6 +424,14 @@ PicardFuchs2::usage =
 
 PicardFuchsA2::usage =
 "PicardFuchsA2[el, ur] returns the 3x3 companion matrix A(el,ur) for the first-order system equivalent to the Picard--Fuchs equation.";
+
+PicardFuchsD1::usage =
+"PicardFuchsD1[f, el, ur] applies the first original Picard--Fuchs differential operator for local F1 to the function f(el,ur). \
+This is a PDE operator in (el,ur), not the reduced third-order ODE in ur.";
+
+PicardFuchsD2::usage =
+"PicardFuchsD2[f, el, ur] applies the second original Picard--Fuchs differential operator for local F1 to the function f(el,ur). \
+This is a PDE operator in (el,ur), not the reduced third-order ODE in ur.";
 
 F1Series2::usage =
 "F1Series2[el, ur, Nn, Nr] computes large-volume series expansions in variables (el,ur), including first and second derivatives, \
@@ -582,6 +598,11 @@ KerrDoranFormulaExact[avec_, bvec_, dvec_, evec_, A_,
    Log[B] Sum[dvec[[j]] Log[avec[[j]]], {j, Length[dvec]}] + 
    Log[A] Sum[evec[[k]] Log[bvec[[k]]], {k, Length[evec]}];
 
+KerrDoranElFromb[b_] := -((b (1 + b + b^2)^3)/(1 + b)^8);
+
+KerrDoranUrFromb[b_] := -((1 + b)^4/((1 + b + b^2) (1 + 4 b + b^2)));
+
+KerrDoranElUrFromb[b_] := {KerrDoranElFromb[b], KerrDoranUrFromb[b]};
 
 repCh = {Ch[mF_, mB_][1] :> -{1, mF, mB, -(mB^2/2) + mB mF}, 
    Ch[mF_, mB_] :> {1, mF, mB, -(mB^2/2) + mB mF}, 
@@ -1319,6 +1340,13 @@ PicardFuchsQ2[el_, ur_] := (8 + 16 ur + (9 - 256 el) ur^2 - 1860 el ur^3 +
    36 el ur^3 + el (-27 + 16 el) ur^4));
 PicardFuchs2[f_, el_, ur_] := D[f, {ur, 3}] + PicardFuchsP2[el, ur] * D[f, {ur, 2}] + PicardFuchsQ2[el, ur] * D[f, {ur, 1}];
 PicardFuchsA2[el_, ur_] := {{0, 1, 0}, {0, 0, 1}, {0, -PicardFuchsQ2[el, ur], -PicardFuchsP2[el, ur]}};
+
+PicardFuchsD1[f_, el_, ur_] := (-2 ur^3 D[f, ur] - ur^4 D[f, {ur, 2}] + 3 D[f, el] - 
+  ur D[f, el, ur] + 3 el D[f, {el, 2}]);
+
+PicardFuchsD2[f_, el_, ur_] := 
+ ur (1 + ur) D[f, ur] + ur^2 (1 + ur) D[f, {ur, 2}] + 
+  el (4 D[f, el] - ur (4 + 3 ur) D[f, ur, el] + 4 el D[f, {el, 2}]);
 
 F1Series2[el_, ur_, Nn_ : 512, Nr_ : 10] := 
   Module[{varpi2tab, varpi3tab, varpi2dtab, varpi3dtab, varpi2ddtab, 
