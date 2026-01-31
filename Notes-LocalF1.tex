@@ -120,6 +120,7 @@
 \newcommand{\ch}{\mathrm{ch}}
 \newcommand{\LV}{\mathrm{LV}}
 \newcommand{\chO}{\mathcal{O}}
+\newcommand{\cO}{\mathcal{O}}
 \newcommand{\GV}{\mathrm{GV}}
 \newcommand{\ur}{\mathrm{u}}
 
@@ -158,7 +159,41 @@
 \usepackage{subcaption}
 
 % Tables
+% Tables
 \usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+\usepackage{makecell}
+
+% helpful column types
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X} % wide wrapping column
+
+\newcommand{\sh}[1]{[#1]} % shift, so \sh{1} prints [1]
+
+% a helper for charges
+\newcommand{\charge}[4]{\ensuremath{[#1,#2,#3,#4]}}
+
+% Consistent tree formatting
+\newcommand{\trees}[1]{\makecell[l]{#1}}
+\newcommand{\treebreak}{\\[2pt]}
+
+\newcommand{\tree}[1]{\ensuremath{\{#1\}}}
+\newcommand{\mtreex}[1]{%
+  \ensuremath{\begin{aligned}#1\end{aligned}}%
+}
+\newcommand{\mtreeline}{\\[-3pt]}
+
+\usepackage{pifont}
+\newcommand{\circnum}[1]{\ding{\numexpr191+#1\relax}}
+% label for a tree item
+\newcommand{\ctree}[1]{\circnum{#1}\,}
+
+\newcommand{\rowsep}{\specialrule{0.1pt}{0.25ex}{0.25ex}}
+
+\newcommand{\indtab}[1]{\ensuremath{#1}}
+
 
 \title{Notes on Local \texorpdfstring{$\mathbb{F}_0$}{F0} and \texorpdfstring{$\mathbb{F}_1$}{F1}}
 \author{Rishi Raj}
@@ -1511,6 +1546,171 @@ is already an integer (i.e.\ whenever the ceiling acts trivially). Concretely, f
     \frac{2m_F+3\mu-3}{3}\in\mathbb{Z}.
   \)
 \end{itemize}
+
+
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
+\setlength{\emergencystretch}{2em}
+
+% Columns:
+%  FB charge | HC charge | trees (flex) | index (fixed width)
+\begin{tabularx}{\textwidth}{@{}
+  >{\centering\arraybackslash}p{0.14\textwidth}
+  >{\centering\arraybackslash}p{0.14\textwidth}
+  Y
+  >{\RaggedRight\arraybackslash}p{0.22\textwidth}
+@{}}
+\toprule
+\textbf{Charge (FB)} &
+\textbf{Charge (HC)} &
+\textbf{Contributing tree(s)} &
+\makecell{\textbf{Index $\Omega_H(y)$}\\[-1pt]\scriptsize(nonneg.\ part)} \\
+\midrule
+
+\charge{0}{0}{1}{\tfrac12} &
+\charge{0}{0}{1}{\tfrac12} &
+\tree{\cO(1,0)\sh{1},\,\cO(1,1)} &
+\indtab{1}
+\\ \rowsep
+
+\charge{0}{1}{0}{0} &
+\charge{0}{1}{-1}{0} &
+\tree{\cO(0,0)\sh{1},\,\cO(1,0)} &
+\indtab{-y}
+\\ \rowsep
+
+\charge{0}{1}{1}{\tfrac12} &
+\charge{0}{1}{0}{\tfrac12} &
+\tree{\cO(0,0)\sh{1},\,\cO(1,1)} &
+\indtab{y^{2}+1}
+\\ \rowsep
+
+\charge{0}{2}{1}{\tfrac12} &
+\charge{0}{2}{-1}{\tfrac12} &
+\tree{\cO(1,1),\,\{2\,\cO(0,0)\sh{1},\,\cO(1,0)\}} &
+\indtab{y^{4}+y^{2}+1}
+\\ \rowsep
+
+\charge{0}{2}{2}{0} &
+\charge{0}{2}{0}{0} &
+\tree{\cO(1,1),\,\cO(-1,-1)\sh{1}} &
+\indtab{-y^{5}-y^{3}-y}
+\\ \rowsep
+
+\charge{0}{3}{2}{0} &
+\charge{0}{3}{-1}{0} &
+\tree{\cO(-1,-1)\sh{1},\,\{\cO(1,1),\,\{\cO(0,0)\sh{1},\,\cO(1,0)\}\}} &
+\indtab{-y^{9}-3y^{7}-4y^{5}-4y^{3}-4y}
+\\ \rowsep
+
+\charge{0}{3}{3}{\tfrac12} &
+\charge{0}{3}{0}{\tfrac12} &
+\tree{\cO(-1,-1)\sh{1},\,\{\cO(0,0)\sh{1},\,2\,\cO(1,1)\}} &
+\indtab{y^{10}+2y^{8}+3y^{6}+3y^{4}+3y^{2}+3}
+\\ \rowsep
+
+\charge{0}{4}{2}{0} &
+\charge{0}{4}{-2}{0} &
+\trees{%
+\ctree{1}\tree{\cO(-2,-1)\sh{1},\,\cO(2,1)} \treebreak
+% \tree{\cO(-1,-1)\sh{1},\,\{\cO(1,1),\,\{2\,\cO(0,0)\sh{1},\,2\,\cO(1,0)\}\}}
+\ctree{2}\mtreex{%
+    &\!\left\{ \cO(-1,-1)\sh{1}, \right. \mtreeline
+    &\quad \left. \{\cO(1,1),\,\{2\,\cO(0,0)\sh{1},\,2\,\cO(1,0)\}\} \right\}
+}
+} &
+\indtab{-y^{13}-3y^{11}-8y^{9}-10y^{7}-11y^{5}-11y^{3}-11y}
+\\ \rowsep
+
+\charge{1}{2}{2}{2} &
+\charge{1}{2}{0}{2} &
+\tree{\cO(2,1),\,\{\cO(1,0)\sh{1},\,\cO(1,1)\}} &
+\indtab{1}
+\\ \rowsep
+
+\charge{1}{0}{1}{-\tfrac12} &
+\charge{1}{0}{1}{-\tfrac12} &
+\tree{\cO(0,0),\,\{\cO(-2,-2)\sh{1},\,\cO(-2,-1)\}} &
+\indtab{1}
+\\ \rowsep
+
+\charge{1}{1}{2}{0} &
+\charge{1}{1}{1}{0} &
+\tree{\cO(1,1),\,\{\cO(-2,-2)\sh{1},\,\cO(-2,-1)\}} &
+\indtab{1}
+\\ \rowsep
+
+\charge{1}{2}{3}{\tfrac32} &
+\charge{1}{2}{1}{\tfrac32} &
+\mtreex{%
+  &\!\left\{ \{\cO(-2,-2)\sh{1},\,\cO(-2,-1)\}, \right. \mtreeline
+  &\quad \left. \{\cO(2,1),\,\{\cO(1,0)\sh{1},\,\cO(1,1)\}\} \right\}%
+} &
+\indtab{1}
+\\ \rowsep
+
+\charge{-1}{0}{1}{\tfrac12} &
+\charge{-1}{0}{1}{\tfrac12} &
+\tree{\cO(0,0)\sh{1},\,\{\cO(1,0)\sh{1},\,\cO(1,1)\}} &
+\indtab{1}
+\\ \rowsep
+
+\charge{-1}{-2}{-1}{-\tfrac32} &
+\charge{-1}{-2}{1}{-\tfrac32} &
+\tree{\cO(2,1)\sh{1}} &
+\indtab{1}
+\\ \rowsep
+
+\charge{1}{0}{0}{-1} &
+\charge{1}{0}{0}{-1} &
+\trees{%
+\ctree{1}\tree{\cO(-2,-2)\sh{1},\,2\,\cO(-1,-1)} \treebreak
+\ctree{2}\mtreex{%
+  &\!\left\{ \{\cO(-2,-2)\sh{1},\,\cO(-2,-1)\}, \right. \mtreeline
+  &\quad \left. \{\cO(-2,-1)\sh{1},\,2\,\cO(-1,-1)\} \right\}
+}
+} &
+\indtab{y^{2}+2}
+\\ \rowsep
+
+\charge{1}{0}{0}{-2} &
+\charge{1}{0}{0}{-2} &
+\trees{%
+\ctree{1}\tree{\cO(-1,-1),\,\{\cO(-3,-2)\sh{1},\,\cO(-2,-1)\}} \treebreak
+\ctree{2}\mtreex{%
+  &\!\left\{ \{\cO(-5,-4)\sh{1},\,\cO(-5,-3)\}, \right. \mtreeline
+  &\quad \left. \{\cO(-2,-1)\sh{1},\,2\,\cO(-1,-1)\} \right\}
+} \treebreak
+\ctree{3}\mtreex{%
+  &\!\left\{ \{\cO(-3,-2)\sh{1},\,\cO(-2,-2)\}, \right. \mtreeline
+  &\quad \left. \{\cO(-1,-1),\,\{\cO(-2,-2)\sh{1},\,\cO(-2,-1)\}\} \right\}
+}
+} &
+\indtab{y^{4}+3y^{2}+6}
+\\ \rowsep
+
+\charge{2}{1}{1}{-\tfrac12} &
+\charge{2}{1}{0}{-\tfrac12} &
+\tree{3\,\cO(0,0),\,\cO(-1,-1)\sh{1}} &
+\indtab{1}
+\\ \rowsep
+
+\charge{2}{1}{0}{-1} &
+\charge{2}{1}{-1}{-1} &
+\tree{2\,\cO(0,0),\,\{\cO(-2,-1)\sh{1},\,\cO(-1,-1)\}} &
+\indtab{-y}
+\\
+
+\bottomrule \\
+\end{tabularx}
+
+\caption{Charges, contributing trees, and the nonnegative-power part of the refined index $\Omega_H(y)$ (the full Laurent polynomial is symmetric under $y\leftrightarrow y^{-1}$) for $m = -\tfrac{1}{10}$.}
+\label{tab:trees-indices}
+\end{table}
+
 
 
 
