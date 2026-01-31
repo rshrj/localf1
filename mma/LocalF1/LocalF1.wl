@@ -744,15 +744,13 @@ DiscF1[{r_, dF_, dB_, ch2_}, m_] :=
      3 m r)^2/r^2;
 
 InitialPosition[{r_, dF_, dB_, ch2_}, m_ : 0] :=
-  Module[{}, 
    If[! IntegerQ[SecondChernClass[{r,dF,dB,ch2}]], 
     Print["Non integer second Chern class !"]];
    If[r == 0,
     (ch2 + dB m - dF m)/(dB + 2 dF),
     (dB + 2 dF - m r)/8/r - 
      Sign[r]/8 Sqrt[Max[DiscF1[{r, dF, dB, ch2}, m], 0]]
-    ]
-   ];
+    ];
 
 CollDBridgeland = {{1, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 1, 1/2}, {1, 2, 1, 3/2}};
 
