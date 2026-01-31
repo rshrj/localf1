@@ -319,7 +319,7 @@ QuiverDomain::usage =
 
 ReZLV::usage = "ReZLV[{r, df, db, ch2}, {s, t}, m] in the real part of ZLV[{r, df, db, ch2}, {s, t}, m].";
 QConditions::usage = "QConditions[Coll, m, {s, t}] define the domain in (s, t) plane where the collection Coll is valid.";
-QDomain::usage = "QDomain[Coll, m] creates a region plot in (s, t) plane where the collection Coll is valid. It can take any option that RegionPlot takes.";
+QDomain::usage = "QDomain[Coll, m, tooltip_label] creates a region plot in (s, t) plane where the collection Coll is valid. It generates a tooltip with the argument 'tooltip_label' activated by hovering on the region. It takes any option that RegionPlot takes.";
 
 ChernToCh::usage =
 "ChernToCh[expr] rewrites charge vectors {r,dF,dB,ch2} into symbolic Ch[...] or GV[...] when applicable (e.g. at vanishing discriminant).";
