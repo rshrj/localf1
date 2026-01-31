@@ -73,9 +73,15 @@
 % Headers and Footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\fancyhead[L]{Title or Section}
+\fancyhead[L]{\nouppercase{\rightmark}}
 \fancyhead[R]{Page \thepage}
 \fancyfoot[C]{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\subsectionmark}[1]{\markright{#1}}
+
+% make sure there's enough space for the header (avoids fancyhdr warnings/collisions)
+\setlength{\headheight}{14.5pt}
 
 % References
 \usepackage[
@@ -1603,8 +1609,8 @@ Using the procedure described above, we find the following monodromies in the $(
 \end{equation}
 
 
-\section{Degenerations of the map $\ur \mapsto J$}
-\label{sec:degenerations-J-ur}
+\subsection{Degenerations of the map $\ur \mapsto J$}
+\label{subsec:degenerations-J-ur}
 
 Fix the parameter $\ell \in \C$ and consider the rational map
 \begin{equation}
@@ -1629,7 +1635,7 @@ For generic $\ell$, the map \eqref{eq:Jmap} defines a degree-$12$ cover
 \)
 (i.e.\ generically $12$ preimages for a given $J$).
 
-\subsection{Branch values via the discriminant method}
+\subsubsection{Branch values via the discriminant method}
 For fixed $\ell$, branch values $J_\ast$ are characterized by the condition that the fiber
 \(
 \phi_\ell^{-1}(J_\ast)
@@ -1660,7 +1666,7 @@ J \in \{0,\;1728,\;J_B(\ell),\;\infty\},
 J_B(\ell)=\frac{(256\ell+27)(256\ell+243)^3}{2^{24}\,\ell^3}.
 \end{equation}
 
-\subsection{Critical points and generic ramification profile}
+\subsubsection{Critical points and generic ramification profile}
 Critical points in the $\ur$-sphere are the zeros of $\frac{dJ}{d\ur}$.
 Writing $\frac{dJ}{d\ur}=\frac{\mathrm{num}}{\mathrm{den}}$, the numerator factorizes as
 \begin{equation}
@@ -1701,7 +1707,7 @@ unramified. Cycle type:
 \]
 \end{itemize}
 
-\subsection{What it means for the map to ``degenerate''}
+\subsubsection{What it means for the map to ``degenerate''}
 There are two distinct sources of degeneration.
 
 \paragraph{(I) Special branch values for fixed $\ell$.}
@@ -1722,7 +1728,7 @@ Equivalently, $\Res_\ur\bigl(N(\ur;\ell),u^8E(\ur;\ell)\bigr)=0$.
 the value $J(\infty)$ (see below).
 \end{enumerate}
 
-\subsection{Distinguished special values of $\ell$ (explicit list)}
+\subsubsection{Distinguished special values of $\ell$ (explicit list)}
 The following parameter values are singled out by the above mechanisms:
 \begin{itemize}
 \item \textbf{Ill-defined family point:} $\ell=0$ (the formula \eqref{eq:Jmap} has $\ell^3$
@@ -1753,7 +1759,7 @@ equivalently the roots of
 These are characterized by $\Disc_\ur(S(\ur;\ell))=0$ and simultaneously $J_B(\ell)=1728$.
 \end{itemize}
 
-\subsection{Behavior at $u=\infty$ and additional special values}
+\subsubsection{Behavior at $u=\infty$ and additional special values}
 The value of the map at infinity is obtained from the leading terms:
 \begin{equation}
 \label{eq:J-infty}
@@ -1769,7 +1775,7 @@ ramified (the local expansion starts at order $(1/\ur)^2$), producing extra bran
 $J=1728$.
 \end{itemize}
 
-% \subsection{Systematic checklist (``algorithm'')}
+% \subsubsection{Systematic checklist (``algorithm'')}
 % To ensure no special cases are missed, proceed as follows.
 % \begin{enumerate}
 % \item \textbf{Compute and factor the discriminant} $\Disc_u(P(u;J,\ell))$ as a polynomial in $J$:
@@ -1792,9 +1798,7 @@ $J=1728$.
 % These loci stratify the $\ell$-line into chambers on which the covering $\phi_\ell$ has
 % constant degree and constant ramification profile.
 
-
-\subsection{Periods near $\ur = -\frac{8}{9}$}
-
+\subsubsection{Periods near $\ur = -\frac{8}{9}$}
 The third order Picard-Fuchs equation for the periods of local $\mathbb{F}_1$ can be written as $\mathcal{D}_3 \varpi(\ell, \ur) = 0$, with
 \begin{equation}
   \mathcal{D}_3 = \partial_\ur^3 + P(\ell, \ur) \partial_\ur^2 + Q(\ell, \ur) \partial_\ur,
@@ -1837,6 +1841,7 @@ The result is a set of ordinary differential equations for the coefficients $\al
     \alpha_2(\ell) = \frac{81 \left(\left(65536 \ell^2-3456 \ell+243\right) \alpha_1(\ell)-\left(27648 \ell^2+2916 \ell\right) \alpha_1'(\ell)\right)}{64 (256 \ell+27)^2}
   \end{gathered}
 \end{equation}
+
 
 \printbibliography[title={References}]
 
