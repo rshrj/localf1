@@ -106,6 +106,20 @@ KerrDoranQ2::usage =
 KerrDoranQ3::usage =
 "KerrDoranQ3[b] For Re[b]<0, Im[b]<0 TODO";
 
+KerrDoranQNew::usage =
+"KerrDoranQNew[b] evaluates the Kerr--Doran quantity Q(b) in the 'new' closed form used in this package, \
+written as an explicit combination of logarithms and PolyLog[2,·] terms.";
+
+KerrDoranC::usage =
+"KerrDoranC[b] gives the branch-correction term C(b) used in the Kerr--Doran prescription, \
+defined from Arg[b] and Log[Abs[...]].";
+
+KerrDoranP0::usage =
+"KerrDoranP0[b] gives the base Kerr--Doran quantity P0(b) built from Bloch--Wigner dilogarithms BW[b], BW[b^2], BW[b^3].";
+
+KerrDoranPNew::usage =
+"KerrDoranPNew[b] gives the corrected Kerr--Doran quantity P(b) used in the 'new' prescription, defined as P0(b) + C(b).";
+
 KerrDoranFormula::usage =
 "KerrDoranFormula[avec, bvec, dvec, evec, A, B] evaluates the Kerr--Doran dilogarithmic combination built from \
 the lists avec, bvec (complex parameters) with weights dvec, evec and scalars A, B. \
@@ -576,6 +590,26 @@ KerrDoranQ3[b_] :=
     3 Log[b] (Log[b] - 16 Log[1 + b] + 6 Log[1 + b + b^2]) +
     6 (5 PolyLog[2, b] - 4 PolyLog[2, b^2] + PolyLog[2, b^3]));
 
+KerrDoranQNew[b_] := 
+  1/(2 \[Pi]) (-Log[1 - b] Log[
+       1/b] - (Log[1/b^2] - Log[1/b]) Log[(-1 + b)/b] - 
+     Log[1 - 1/b^3] (Log[1/b^2] - Log[b]) + 
+     Log[1 - 1/b^2] (Log[1/b] - Log[b]) - 
+     Log[(-1 + b)/b] Log[b] + (Log[1/b] - Log[b]) Log[
+       1 - b^2] + (Log[1/b] + 
+        Log[b]) Log[-((b (1 + b + b^2))/(1 + b)^4)] + (Log[1/b^2] - 
+        Log[1/b] + Log[b]) Log[-((1 + b + b^2)/(1 + b)^2)] - 
+     PolyLog[2, 1/b^3] + PolyLog[2, 1/b^2] + 
+     2 (Log[1 - 1/b^2] Log[1/b^2] + PolyLog[2, 1/b^2]) - 
+     2 (Log[1/b] Log[(-1 + b)/b] + PolyLog[2, 1/b]) + PolyLog[2, b] + 
+     2 (Log[1 - b] Log[b] + PolyLog[2, b]) - PolyLog[2, b^2]);
+
+KerrDoranC[b_] := ((Arg[b] Log[Abs[(b (1 + b + b^2)^3)/(1 + b)^8]])/(2 \[Pi]));
+
+KerrDoranP0[b_] := (5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]);
+
+KerrDoranPNew[b_] := KerrDoranP0[b] + KerrDoranC[b];
+
 (* add KerrDoran direct from m, u *)
 
 KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_, 
@@ -840,8 +874,8 @@ QConditions[Coll_, m_, {s_, t_}] :=
   And @@ (ReZLV[#, {s, t}, m] < 0 & /@ Coll);
 ClearAll[QDomain];
 Options[QDomain] = Options[RegionPlot];
-QDomain[Coll_, m_, opt___ : OptionsPattern[]] := 
-  RegionPlot[QConditions[Coll, m, {s, t}], {s, -1, 2}, {t, 0, 1}, opt];
+QDomain[Coll_, m_, tooltip_, opt___ : OptionsPattern[]] := 
+  RegionPlot[Tooltip[QConditions[Coll, m, {s, t}], tooltip], {s, -1, 2}, {t, 0, 1}, opt];
 
 ExtFromStrong[Coll_]:=Module[{S,Si},
    S=Table[Euler[Coll[[i]],Coll[[j]]],{i,Length[Coll]},{j,Length[Coll]}];
