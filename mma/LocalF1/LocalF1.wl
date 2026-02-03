@@ -135,6 +135,40 @@ KerrDoranUrFromb::usage =
 
 KerrDoranElUrFromb::usage = "KerrDoranElUrFromb[b] returns {el, ur} as rational functions of the Kerr--Doran parameter b.";
 
+AnalyticContinuationOfRoots::usage =
+"AnalyticContinuationOfRoots[poly, x, t, t0, t1] numerically tracks the roots in x of the polynomial equation poly==0 \
+as the parameter t is continuously deformed from t0 to t1.\n\n\
+The function first solves poly /. t->t0 for x to obtain the initial root set, then follows these roots along a discrete \
+path in t by repeatedly solving poly at intermediate t-values and matching roots between consecutive steps by proximity.\n\n\
+Output:\n\
+Returns an Association with keys:\n\
+  \"tValues\"      -> list of sampled parameter values along the path,\n\
+  \"rootsPaths\"   -> list of root trajectories; each element is the sequence of one root tracked across \"tValues\",\n\
+  \"initialRoots\" -> roots at t=t0,\n\
+  \"finalRoots\"   -> roots at t=t1.\n\n\
+Options:\n\
+  Steps -> n (default 100)\n\
+    Number of sample points used along the t-path (including endpoints). Larger values typically improve tracking \
+    when roots move quickly or approach each other.\n\
+  Path -> \"Straight\" (default) or an explicit list\n\
+    If \"Straight\", uses a linear interpolation path t(s)=t0+(t1-t0)s sampled at Steps points.\n\
+    If a list is given, it is interpreted as an explicit sequence of t-values to traverse; the first element should \
+    equal t0 and the last should equal t1.\n\n\
+Algorithm notes:\n\
+At each step i, roots are computed by NSolve[poly /. t->tValues[[i]], x]. When the number of roots matches the previous \
+step, a distance matrix |x_j^{(i-1)}-x_k^{(i)}| is formed and a greedy nearest-neighbor assignment is used to permute \
+the new roots so that each tracked trajectory remains continuous.\n\n\
+Typical use cases:\n\
+  • Following algebraic branches across parameter space.\n\
+  • Detecting monodromy/permutations of roots after traversing loops (compare \"initialRoots\" and \"finalRoots\").\n\
+  • Visualizing root motion by plotting the entries of \"rootsPaths\" against \"tValues\".\n\n\
+Caveats:\n\
+  • If two roots become very close between steps (near a discriminant point), the greedy matching can swap branches; \
+    increase Steps or choose a path that avoids the collision.\n\
+  • If NSolve returns a different number/order of solutions between steps (e.g. due to numerical issues), tracking may fail \
+    or produce discontinuities.\n\
+  • This routine assumes poly is a polynomial in x (possibly with parameter t) and relies on numerical root finding.";
+
 BW::usage =
 "BW[z] is the Bloch--Wigner dilogarithm of z.";
 
@@ -275,7 +309,7 @@ XYParabolaY::usage =
 "XYParabolaY[x, mu, m2, psi] gives the parabola y(x) used in the XY-to-(s,t) mapping at parameters (mu,m2,psi).";
 
 InitialPositionXY::usage =
-"InitialPositionXY[gam, m] gives the initial point {x,y} of the ray for charge gam in the XY-plane. Only works for real m.";
+"InitialPositionXY[gam, m] gives the initial point {x,y} of the ray for charge gam in the XY-plane, the point where the cost function vanishes. Only works for real m.";
 
 XYTost::usage =
 "XYTost[{x,y}, psi, m] converts a point in XY-coordinates to {s,t} coordinates. Only works for real m.";
@@ -638,6 +672,56 @@ KerrDoranUrFromb[b_] := -((1 + b)^4/((1 + b + b^2) (1 + 4 b + b^2)));
 
 KerrDoranElUrFromb[b_] := {KerrDoranElFromb[b], KerrDoranUrFromb[b]};
 
+(*Options*)
+Options[AnalyticContinuationOfRoots] = {"Steps" -> 100, 
+   "Path" -> "Straight"};
+(**)(*Method:\
+Track roots along a path in parameter space by continuous deformation*)
+AnalyticContinuationOfRoots[poly_, x_, t_, t0_, t1_, 
+   OptionsPattern[]] := 
+  Module[{roots0, nSteps, tValues, rootsPath, currentRoots, nextRoots,
+     distances, permutation, minPos, usedIndices},(*Step 1:
+   Find initial roots at t=t0*)
+   roots0 = x /. NSolve[poly /. t -> t0, x];
+   (*Step 2:Create path from t0 to t1*)
+   nSteps = OptionValue["Steps"];
+   If[OptionValue["Path"] === "Straight",
+    tValues = Table[t0 + (t1 - t0) s, {s, 0, 1, 1/(nSteps - 1)}],
+    tValues = OptionValue["Path"]];
+   (*Step 3:Track roots along the path*)
+   rootsPath = {roots0};
+   currentRoots = roots0;
+   Do[(*Solve polynomial at next t value*)
+    nextRoots = x /. NSolve[poly /. t -> tValues[[i]], x];
+    (*Match roots by proximity using Hungarian-style greedy matching*)
+    If[Length[currentRoots] == Length[nextRoots],
+     (*Compute distance matrix*)
+     distances = 
+      Table[Abs[currentRoots[[j]] - nextRoots[[k]]], {j, 
+        Length[currentRoots]}, {k, Length[nextRoots]}];
+     (*Greedy assignment:for each current root,find closest next root*)
+     permutation = Table[0, {Length[currentRoots]}];
+     usedIndices = {};
+     Do[(*Find minimum in row j excluding already used columns*)
+      minPos = 0;
+      minVal = Infinity;
+      Do[
+       If[! MemberQ[usedIndices, k] && distances[[j, k]] < minVal, 
+        minVal = distances[[j, k]];
+        minPos = k;], {k, Length[nextRoots]}];
+      permutation[[j]] = minPos;
+      AppendTo[usedIndices, minPos];, {j, Length[currentRoots]}];
+     (*Reorder nextRoots according to permutation*)
+     nextRoots = nextRoots[[permutation]];];
+    currentRoots = nextRoots;
+    AppendTo[rootsPath, currentRoots];, {i, 2, Length[tValues]}
+    ];
+   (*Return association with path and roots*)
+   <|"tValues" -> tValues, "rootsPaths" -> Transpose[rootsPath], 
+    "finalRoots" -> Last[rootsPath], 
+    "initialRoots" -> First[rootsPath]|>];
+
+
 repCh = {Ch[mF_, mB_][1] :> -{1, mF, mB, -(mB^2/2) + mB mF}, 
    Ch[mF_, mB_] :> {1, mF, mB, -(mB^2/2) + mB mF}, 
    GV[mF_, mB_, n_] :> {0, mF, mB, n}};
@@ -804,9 +888,9 @@ XYTost[{x_, y_}, psi_, m_] := {x - (Sqrt[-(m^2/2) + m x + 4 x^2 + y] Tan[psi])/(
 
 RayStyleMap = <|
    0 -> Directive[Black, Thickness[.002]],
-   1 -> Directive[Opacity[.6, Red], Thickness[.0015]],
-   2 -> Directive[Opacity[.3, Blue], Thickness[.001]],
-   3 -> Directive[Opacity[.1, Green], Thickness[.0007]]
+   1 -> Directive[Opacity[1, Red], Thickness[.0017]],
+   2 -> Directive[Opacity[1, Blue], Thickness[.0015]],
+   3 -> Directive[Opacity[1, Green], Thickness[.0012]]
    |>;
 
 XYRaySegment[{c : {r_, dF_, dB_, ch2_}, z : {x0_, y0_}, ___, depth_}, mu_, 
