@@ -481,6 +481,12 @@ PicardFuchsD2::usage =
 "PicardFuchsD2[f, el, ur] applies the second original Picard--Fuchs differential operator for local F1 to the function f(el,ur). \
 This is a PDE operator in (el,ur), not the reduced third-order ODE in ur.";
 
+PicardFuchsD1BDelta::usage =
+"PicardFuchsD1BDelta[g, b, du] applies the second-order Picard--Fuchs differential operator D_1 (in b and du) to g, returning the resulting expression.";
+
+PicardFuchsD2BDelta::usage =
+"PicardFuchsD2BDelta[g, b, du] applies the second-order Picard--Fuchs differential operator D_2 (in b and du) to g, returning the resulting expression.";
+
 F1Series2::usage =
 "F1Series2[el, ur, Nn, Nr] computes large-volume series expansions in variables (el,ur), including first and second derivatives, \
 with Richardson acceleration of order Nr.";
@@ -1463,6 +1469,140 @@ PicardFuchsD1[f_, el_, ur_] := (-2 ur^3 D[f, ur] - ur^4 D[f, {ur, 2}] + 3 D[f, e
 PicardFuchsD2[f_, el_, ur_] := 
  ur (1 + ur) D[f, ur] + ur^2 (1 + ur) D[f, {ur, 2}] + 
   el (4 D[f, el] - ur (4 + 3 ur) D[f, ur, el] + 4 el D[f, {el, 2}]);
+
+PicardFuchsD1BDelta[g_, b_, du_] := (
+  (
+    (-1 + b)^5 (
+        -5 + 6 du - 6 du^2 + 2 du^3
+        + b^16 (-5 + 6 du - 6 du^2 + 2 du^3)
+        + 6 b^2  (-66 + 61 du - 69 du^2 + 26 du^3)
+        + 6 b^14 (-66 + 61 du - 69 du^2 + 26 du^3)
+        + b    (-64 + 72 du - 78 du^2 + 28 du^3)
+        + b^15 (-64 + 72 du - 78 du^2 + 28 du^3)
+        - 2 b^6  (8954 + 87 du - 111 du^2 + 50 du^3)
+        - 2 b^10 (8954 + 87 du - 111 du^2 + 50 du^3)
+        + 12 b^5  (-852 + 135 du - 150 du^2 + 56 du^3)
+        + 12 b^11 (-852 + 135 du - 150 du^2 + 56 du^3)
+        + 4 b^3  (-396 + 261 du - 297 du^2 + 113 du^3)
+        + 4 b^13 (-396 + 261 du - 297 du^2 + 113 du^3)
+        - 6 b^8 (4653 + 662 du - 738 du^2 + 276 du^3)
+        + 2 b^4  (-2298 + 894 du - 1008 du^2 + 377 du^3)
+        + 2 b^12 (-2298 + 894 du - 1008 du^2 + 377 du^3)
+        - 2 b^7 (12496 + 1368 du - 1533 du^2 + 568 du^3)
+        - 2 b^9 (12496 + 1368 du - 1533 du^2 + 568 du^3)
+      ) D[g, du]
+    +
+    (-1 + b)^7 du (
+        -3 + 6 du - 4 du^2 + du^3
+        + b^14 (-3 + 6 du - 4 du^2 + du^3)
+        + 4 b   (-9 + 21 du - 15 du^2 + 4 du^3)
+        + 4 b^13 (-9 + 21 du - 15 du^2 + 4 du^3)
+        + 4 b^3  (-174 + 504 du - 379 du^2 + 107 du^3)
+        + 4 b^11 (-174 + 504 du - 379 du^2 + 107 du^3)
+        + b^2  (-201 + 528 du - 392 du^2 + 109 du^3)
+        + b^12 (-201 + 528 du - 392 du^2 + 109 du^3)
+        + 24 b^7 (-198 + 704 du - 527 du^2 + 148 du^3)
+        + 4 b^5 (-759 + 2547 du - 1913 du^2 + 539 du^3)
+        + 4 b^9 (-759 + 2547 du - 1913 du^2 + 539 du^3)
+        + 3 b^6 (-1419 + 4970 du - 3724 du^2 + 1046 du^3)
+        + 3 b^8 (-1419 + 4970 du - 3724 du^2 + 1046 du^3)
+        + b^4  (-1683 + 5292 du - 3984 du^2 + 1124 du^3)
+        + b^10 (-1683 + 5292 du - 3984 du^2 + 1124 du^3)
+      ) D[g, {du, 2}]
+    +
+    (1 + b)^9 (1 + 5 b + 6 b^2 + 5 b^3 + b^4) (
+        3 (1 + 4 b + b^2)^2 (-1 - 7 b - 15 b^2 - 18 b^3 - 11 b^4 - 3 b^5 + b^6)
+          D[g, b]
+        +
+        (-1 + b) (
+            (-1 + b)^3 (
+                -1 + b^6 (-1 + du) + du
+                + b   (-2 + 9 du)
+                + b^5 (-2 + 9 du)
+                + b^2 (1 + 27 du)
+                + b^4 (1 + 27 du)
+                + b^3 (4 + 34 du)
+              ) D[g, b, du]
+            +
+            3 b (1 + b) (1 + 5 b + 6 b^2 + 5 b^3 + b^4)^2
+              D[g, {b, 2}]
+          )
+      )
+  ) / (3 (-1 + b) b (1 + b)^10 (1 + b + b^2)^3 (1 + 4 b + b^2)^3)
+);
+
+PicardFuchsD2BDelta[g_, b_, du_] :=
+ Module[
+  {
+   den,
+   a01, a02, a10, a11, a20,
+   pref
+  },
+
+  (* Common denominator *)
+  den = 4 (-1 + b) b^2 (1 + b)^2 (1 + b + b^2)^4 (1 + 4 b + b^2)^3;
+
+  (* Coefficients multiplying derivatives *)
+  a01 = (-1 + b)^5 (
+      (-1 + du) du
+      + b^12 (-1 + du) du
+      + b^5  (-454 + 82 du - 90 du^2)
+      + b^7  (-454 + 82 du - 90 du^2)
+      + b    (-5 - 10 du + 12 du^2)
+      + b^11 (-5 - 10 du + 12 du^2)
+      + b^4  (-272 - 35 du + 27 du^2)
+      + b^8  (-272 - 35 du + 27 du^2)
+      + b^2  (-34 - 37 du + 51 du^2)
+      + b^10 (-34 - 37 du + 51 du^2)
+      + b^3  (-117 - 64 du + 86 du^2)
+      + b^9  (-117 - 64 du + 86 du^2)
+      - 2 b^6 (270 - 65 du + 87 du^2)
+    );
+
+  a02 = (-1 + b)^7 du (
+      (-1 + du)^2
+      + b^10 (-1 + du)^2
+      + 2 b   (4 - 11 du + 7 du^2)
+      + 2 b^9 (4 - 11 du + 7 du^2)
+      + 3 b^2 (11 - 34 du + 26 du^2)
+      + 3 b^8 (11 - 34 du + 26 du^2)
+      + 12 b^5 (16 - 49 du + 41 du^2)
+      + 4 b^3 (22 - 69 du + 57 du^2)
+      + 4 b^7 (22 - 69 du + 57 du^2)
+      + b^4 (158 - 492 du + 405 du^2)
+      + b^6 (158 - 492 du + 405 du^2)
+    );
+
+  pref = b (1 + 6 b + 11 b^2 + 11 b^3 + 6 b^4 + b^5);
+
+  a10 = 4 (-1 - 6 b - 8 b^2 - 4 b^3 + b^4) (1 + 5 b + 6 b^2 + 5 b^3 + b^4)^2;
+
+  a11 = (-1 + b)^4 (
+      -1 - 2 du + 3 du^2
+      + b^8 (-1 - 2 du + 3 du^2)
+      + 2 b   (-2 - 7 du + 15 du^2)
+      + 2 b^7 (-2 - 7 du + 15 du^2)
+      + b^2 (-4 - 44 du + 111 du^2)
+      + b^6 (-4 - 44 du + 111 du^2)
+      + 2 b^4 (5 - 58 du + 132 du^2)
+      + b^3 (4 - 98 du + 210 du^2)
+      + b^5 (4 - 98 du + 210 du^2)
+    );
+
+  a20 = 4 b (-1 + b^2) (1 + b + b^2)^3 (1 + 4 b + b^2)^2;
+
+  (* Assemble operator *)
+  (
+    a01 D[g, du]
+    + a02 D[g, {du, 2}]
+    + pref (
+        a10 D[g, b]
+        + a11 D[g, b, du]
+        + a20 D[g, {b, 2}]
+      )
+  )/den
+ ];
+
 
 F1Series2[el_, ur_, Nn_ : 512, Nr_ : 10] := 
   Module[{varpi2tab, varpi3tab, varpi2dtab, varpi3dtab, varpi2ddtab, 
