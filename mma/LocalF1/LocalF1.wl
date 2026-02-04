@@ -110,6 +110,19 @@ KerrDoranQNew::usage =
 "KerrDoranQNew[b] evaluates the Kerr--Doran quantity Q(b) in the 'new' closed form used in this package, \
 written as an explicit combination of logarithms and PolyLog[2,·] terms.";
 
+KerrDoranFix0::usage =
+"KerrDoranFix0[b] returns a piecewise-constant correction term (a multiple of \\[Pi]) used to fix branch choices in the Kerr--Doran prescription. \
+It is implemented via HeavisideTheta conditions in the complex b-plane and is nonzero only in the left half-plane (Re[b]<0), \
+with additional subregion structure depending on |b| and angular wedges.";
+
+KerrDoranFix1::usage =
+"KerrDoranFix1[b] returns a piecewise-constant integer multiple of I used as the coefficient of Log[b] in the Kerr--Doran branch-fixing prescription. \
+It is supported in the region Re[b] < -1/2 and depends on the sign of Im[b], with wedge exclusions implemented via HeavisideTheta conditions.";
+
+KerrDoranQ1Fix::usage =
+"KerrDoranQ1Fix[b] gives the branch-corrected Kerr--Doran quantity Q1(b), defined as KerrDoranQ1[b] plus the constant correction KerrDoranFix0[b] \
+and the logarithmic correction KerrDoranFix1[b] Log[b].";
+
 KerrDoranC::usage =
 "KerrDoranC[b] gives the branch-correction term C(b) used in the Kerr--Doran prescription, \
 defined from Arg[b] and Log[Abs[...]].";
@@ -645,6 +658,17 @@ KerrDoranQNew[b_] :=
      2 (Log[1 - 1/b^2] Log[1/b^2] + PolyLog[2, 1/b^2]) - 
      2 (Log[1/b] Log[(-1 + b)/b] + PolyLog[2, 1/b]) + PolyLog[2, b] + 
      2 (Log[1 - b] Log[b] + PolyLog[2, b]) - PolyLog[2, b^2]);
+
+KerrDoranFix0[b_] := -Pi HeavisideTheta[-Re[b]] (Sign[1 - Abs[b]] + 
+   2 HeavisideTheta[Abs[b] - 1] HeavisideTheta[
+     Im[b] - Sqrt[3] Re[b]] HeavisideTheta[-Im[b] - Sqrt[3] Re[b]]);
+
+KerrDoranFix1[b_] := 3 I Sign[
+  Im[b]] HeavisideTheta[-(1/2) - Re[b]] (1 - 
+   HeavisideTheta[-Im[b] - Sqrt[3] Re[b]] HeavisideTheta[
+     Im[b] - Sqrt[3] Re[b]]);
+
+KerrDoranQ1Fix[b_] := KerrDoranQ1[b] + KerrDoranFix0[b] + KerrDoranFix1[b] Log[b];
 
 KerrDoranC[b_] := ((Arg[b] Log[Abs[(b (1 + b + b^2)^3)/(1 + b)^8]])/(2 \[Pi]));
 
