@@ -123,6 +123,7 @@
 \newcommand{\cO}{\mathcal{O}}
 \newcommand{\GV}{\mathrm{GV}}
 \newcommand{\ur}{\mathrm{u}}
+\newcommand{\sgn}{\operatorname{sgn}}
 
 % --- number systems ---
 \newcommand{\C}{\mathbb{C}}
@@ -140,6 +141,7 @@
 
 \newcommand{\ord}{\operatorname{ord}}
 \newcommand{\Branch}{\operatorname{Branch}}
+% \newcommand{\sgn}{\sgn}
 
 % --- operators ---
 \DeclareMathOperator{\Disc}{Disc} % discriminant
@@ -1188,11 +1190,52 @@ Note that there is a symmetry $b \to \frac{1}{b}$ due to the square root in the 
   \ell = -\frac{b \left(b^2+b+1\right)^3}{(b+1)^8}, \quad \ur = -\frac{(b+1)^4}{\left(b^2+b+1\right) \left(b^2+4 b+1\right)}, \quad \text{on} \quad \delta(\ell, \ur) = 0.
 \end{equation}
 For a fixed value of $\ell$, the first equation gives eight roots in total which are invariant under $b \to \tfrac{1}{b}$. Thus, only four of them satisfy the condition $\abs{b} > 1$ and correspond to the four $I_1$ fibers for generic values of $\ell$. Note that the Argeres-Douglas point $\ell = -\tfrac{27}{256}$, $\ur = -\tfrac89$ corresponds precisely to $b = 1$. Whereas, the local $\mathbb{P}^2$ limit seems to be $b \to e^{\tfrac{2\pi \ii}{3}}$.
-
+%
 Applying the Kerr-Doran formula, we obtain
 \begin{equation}
-  Q(b) = 
+\begin{aligned}
+Q(b)
+=\frac{1}{2\pi}\Bigg[
+&\,3\,\log b\,\log(1-b)
++3\,\log b\,\log\Bigl(1-\frac{1}{b^{3}}\Bigr)
+-6\,\log b\,\log\Bigl(1-\frac{1}{b^{2}}\Bigr)\\
+&\,-2\,\log b\,\log(1-b^{2})
++2\,\log b\,\log\Bigl(1-\frac{1}{b}\Bigr)
+-\Li_{2}\Bigl(\frac{1}{b^{3}}\Bigr)
++3\,\Li_{2}\Bigl(\frac{1}{b^{2}}\Bigr)\\
+&\,-2\,\Li_{2}\Bigl(\frac{1}{b}\Bigr)
++3\,\Li_{2}(b)
+-\Li_{2}(b^{2})
+\Bigg].
+\end{aligned}
 \end{equation}
+%
+This expression can be simplified using the various identities of the dilogarithm to
+\begin{equation}
+\begin{aligned}
+Q_{1}(b)
+=\;&\frac{1}{4\pi}\,\log b\Bigl(\log b-16\log(1+b)+6\log(1+b+b^{2})\Bigr)\\
+&+\frac{1}{2\pi}\Bigl(5\,\Li_{2}(b)-4\,\Li_{2}(b^{2})+\Li_{2}(b^{3})\Bigr).
+\end{aligned}
+\end{equation}
+
+Unfortunately, with the standard CAS implementation of $\Li_2$ and $\log$, we find $Q(b) \neq Q_1(b)$ for $Re(b) \leq 0$. Instead, branch redefinitions of $Q(b)$ differ in general by functions of the sort $\Delta Q(b) = P_0 + P_1 \log b$ where $P_0$ and $P_1$ are piecewise-constant functions of $b$. For $Q_1(b)$, we find the following $P_1$ and $P_0$,
+\begin{equation}
+  \begin{aligned}
+    P_0 &= -\pi\,\Theta\bigl(-\Re b\bigr)\left(
+      2\,\Theta\bigl(|b|-1\bigr)\,
+      \Theta\bigl(-\Im b-\sqrt{3}\,\Re b\bigr)\,
+      \Theta\bigl(\Im b-\sqrt{3}\,\Re b\bigr)
+      +\sgn\bigl(1-|b|\bigr)
+      \right). \\
+    P_1 &= 3i\,\Theta\Bigl(-\frac{1}{2}-\Re b\Bigr)\,
+      \Bigl(1-\Theta\bigl(-\Im b-\sqrt{3}\,\Re b\bigr)\,
+      \Theta\bigl(\Im b-\sqrt{3}\,\Re b\bigr)\Bigr)\,
+      \sgn\bigl(\Im b\bigr).
+  \end{aligned}
+\end{equation}
+where $\Theta(x)$ is the Heaviside step function.
+
 
 
 \subsubsection{Differential equations satisfied by Kerr--Doran \texorpdfstring{$Q$}{Q}}
