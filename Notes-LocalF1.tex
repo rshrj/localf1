@@ -1191,8 +1191,8 @@ Note that there is a symmetry $b \to \frac{1}{b}$ due to the square root in the 
 \end{equation}
 For a fixed value of $\ell$, the first equation gives eight roots in total which are invariant under $b \to \tfrac{1}{b}$. Thus, only four of them satisfy the condition $\abs{b} > 1$ and correspond to the four $I_1$ fibers for generic values of $\ell$. Note that the Argeres-Douglas point $\ell = -\tfrac{27}{256}$, $\ur = -\tfrac89$ corresponds precisely to $b = 1$. Whereas, the local $\mathbb{P}^2$ limit seems to be $b \to e^{\tfrac{2\pi \ii}{3}}$.
 %
-Applying the Kerr-Doran formula, we obtain
-\begin{equation}
+Applying the Kerr--Doran formula yields the following explicit expression:
+\begin{equation}\label{eqn:kerrdoranQ}
 \begin{aligned}
 Q(b)
 =\frac{1}{2\pi}\Bigg[
@@ -1210,8 +1210,8 @@ Q(b)
 \end{aligned}
 \end{equation}
 %
-This expression can be simplified using the various identities of the dilogarithm to
-\begin{equation}
+Using standard dilogarithm identities, this can be rearranged into the more compact form
+\begin{equation}\label{eqn:kerrdoranQ1}
 \begin{aligned}
 Q_{1}(b)
 =\;&\frac{1}{4\pi}\,\log b\Bigl(\log b-16\log(1+b)+6\log(1+b+b^{2})\Bigr)\\
@@ -1219,7 +1219,12 @@ Q_{1}(b)
 \end{aligned}
 \end{equation}
 
-Unfortunately, with the standard CAS implementation of $\Li_2$ and $\log$, we find $Q(b) \neq Q_1(b)$ for $Re(b) \leq 0$. Instead, branch redefinitions of $Q(b)$ differ in general by functions of the sort $\Delta Q(b) = P_0 + P_1 \log b$ where $P_0$ and $P_1$ are piecewise-constant functions of $b$. For $Q_1(b)$, we find the following $P_1$ and $P_0$,
+A subtlety arises from the multivaluedness of \(\log\) and \(\Li_{2}\). With the principal-branch conventions implemented in standard computer algebra systems, the functions \(Q(b)\) and \(Q_{1}(b)\) agree on the domain \(\Re(b)>0\), but they do not coincide globally: for \(\Re(b)\le 0\) one finds additional branch contributions. More precisely, different (but equally legitimate) branch choices lead to shifts of the form
+\[
+Q(b)\;\longmapsto\;Q(b)+\Delta Q(b),\qquad 
+\Delta Q(b)=P_{0}(b)+P_{1}(b)\,\log b,
+\]
+where \(P_{0}(b)\) and \(P_{1}(b)\) are piecewise-constant functions on the \(b\)-plane, determined by which branch cuts are crossed. For the representation \(Q_{1}(b)\) we obtain
 \begin{equation}
   \begin{aligned}
     P_0 &= -\pi\,\Theta\bigl(-\Re b\bigr)\left(
@@ -1234,7 +1239,7 @@ Unfortunately, with the standard CAS implementation of $\Li_2$ and $\log$, we fi
       \sgn\bigl(\Im b\bigr).
   \end{aligned}
 \end{equation}
-where $\Theta(x)$ is the Heaviside step function.
+where \(\Theta(x)\) denotes the Heaviside step function (with the convention for \(\Theta(0)\) left implicit).
 
 
 
