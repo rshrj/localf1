@@ -509,6 +509,8 @@ SystemMatrix2::usage =
 
 F1PeriodsLV::usage = "F1PeriodsLV[el, ur] or F1PeriodsLV[el, ur, Nn, Nr] TODO";
 
+TreeCharge::usage = "TreeCharge[tree] computes the total charge of a tree.";
+
 PrecomputedLVTrees::usage = "PrecomputedLVTrees[gam, m=-1/10] gives a few precomputed trees for m = -1/10.";
 
 Begin["`Private`"];
@@ -1695,6 +1697,10 @@ SystemMatrix2[{{v1_, v2_}, {v1p_, v2p_}, {v1pp_, v2pp_}}, el_,
 
 F1PeriodsLV[el_, ur_, Nn_ : 512, Nr_ : 10] := 
   SystemMatrix2[F1Series2[el, ur, Nn, Nr], el, ur];
+
+TreeCharge[arg : {r_, d1_, d2_, ch2_} /; FreeQ[arg, Ch]] := {r, d1, d2, ch2};
+TreeCharge[trees_List] := Total[TreeCharge /@ trees];
+TreeCharge[arg : Except[_List]] := arg /. repCh;
 
 (* precomputed trees for m = -1/10 *)
 PrecomputedLVTrees[{0, 0, 1, 1/2}, -1/10] = {{{-1, -1, 0, 0}, {1, 1, \
