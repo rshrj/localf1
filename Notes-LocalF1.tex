@@ -141,7 +141,7 @@
 
 \newcommand{\ord}{\operatorname{ord}}
 \newcommand{\Branch}{\operatorname{Branch}}
-% \newcommand{\sgn}{\sgn}
+\newcommand{\hypF}[4]{{}_2F_{1}\!\left(#1,#2;\,#3;\,#4\right)}
 
 % --- operators ---
 \DeclareMathOperator{\Disc}{Disc} % discriminant
@@ -768,218 +768,14 @@ Hence they are obtained by integrating once with respect to $u$,
 \bp{To be checked numerically}
 
 
-\subsection{Convergence domain of Frobenius solution as a function of \texorpdfstring{$m$}{m}}
 
-Consider the series
-\begin{equation}
-  f(u,m)
-  \;=\;
-  \log u \;+\; \sum_{n\ge 2} \sum_{3k+2\ell=n}
-  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell\,u^n\,.
-\end{equation}
-For fixed complex parameter $m$, this is a series in the complex variable $u$.
-We are interested in the radius of convergence $R(m)$ of the power--series part
-around $u=0$.
-
-The logarithmic term $\log u$ contributes a singularity at $u=0$, but it does
-\emph{not} affect the radius of convergence of the power--series part. Thus we
-focus on
-\begin{equation}
-  g(u,m) := \sum_{n\ge 2} a_n(m)\,u^n,
-  \qquad
-  a_n(m)
-  := \sum_{3k+2\ell=n}
-  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell.
-\end{equation}
-The radius of convergence for fixed $m$ is
-\begin{equation}
-  \frac{1}{R(m)}
-  = \limsup_{n\to\infty} |a_n(m)|^{1/n}.
-\end{equation}
-
-\subsubsection{Rewriting as a double series}
-
-It is convenient to write the power series directly as a sum over $(k,\ell)$:
-\begin{equation}
-  g(u,m) \;=\; \sum_{k,\ell\ge 0}
-  \frac{(3k+2\ell-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,
-  m^\ell\,u^{3k+2\ell}.
-\end{equation}
-For fixed $m$, $u$, the general term in absolute value is
-\begin{equation}
-  T_{k,\ell}(R,M) \;:=\;
-  \left|
-  \frac{(3k+2\ell-1)!}{(k+\ell)!\,(k!)^2\,\ell!}
-  \right|\,
-  R^{3k+2\ell}\,M^\ell,
-  \qquad
-  R = |u|,\quad M = |m|.
-\end{equation}
-The radius $R(m)$ is determined by the exponential growth of the coefficients in
-$n := 3k+2\ell$, i.e. by $\limsup |a_n(m)|^{1/n}$.
-
-\subsubsection{Saddle--point analysis via Stirling}
-
-For large $k,\ell$ with fixed ratio, we approximate factorials using Stirling's
-formula:
-\begin{equation}
-  n! \sim n^n e^{-n}\sqrt{2\pi n}.
-\end{equation}
-Introduce the scaling
-\begin{equation}
-  k = \alpha n,\qquad \ell = \beta n,\qquad
-  n := 3k+2\ell,
-\end{equation}
-so that
-\begin{equation}
-  3\alpha + 2\beta = 1,\qquad \alpha,\beta\ge 0.
-\end{equation}
-A single term in the inner sum defining $a_n(m)$ then behaves like
-\begin{equation}
-  \log\left|
-  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell
-  \right|
-  \sim n\,\phi(\alpha,\beta;M),
-\end{equation}
-for some function $\phi$ that can be extracted from the Stirling approximation.
-Using the constraint $3\alpha+2\beta=1$, we can solve
-\begin{equation}
-  \alpha = \frac{1-2\beta}{3},\qquad 0\le \beta\le \frac12.
-\end{equation}
-In terms of $\beta$ alone, one finds
-\begin{equation}
-  \phi(\beta;M)
-  \;=\;
-  \log\!\left(
-  \frac{M^\beta}{\alpha^{2\alpha}\,\beta^\beta\,(\alpha+\beta)^{\alpha+\beta}}
-  \right),
-  \qquad
-  \alpha = \frac{1-2\beta}{3},
-\end{equation}
-up to subleading (subexponential in $n$) terms.
-
-For large $n$, the sum over $\ell$ (equivalently over $\beta$) is dominated by
-the value of $\beta$ that maximizes $\phi(\beta;M)$ for fixed $M=|m|$. Hence
-\begin{equation}
-  \limsup_{n\to\infty} |a_n(m)|^{1/n}
-  = \exp\!\left(
-    \sup_{0\le \beta\le 1/2} \phi(\beta;M)
-  \right).
-\end{equation}
-Denote
-\begin{equation}
-  \log \Lambda(M)
-  := \sup_{0\le \beta\le 1/2} \phi(\beta;M).
-\end{equation}
-Then the radius of convergence is
-\begin{equation}
-  R(m) = \frac{1}{\Lambda(|m|)}.
-\end{equation}
-
-\subsubsection{Stationary point and parametric description}
-
-The dominant contribution comes from a saddle point $\beta_*(M)$ where
-\begin{equation}
-  \frac{d\phi}{d\beta}(\beta_*(M);M) = 0.
-\end{equation}
-A straightforward differentiation and simplification give
-\begin{equation}
-  \frac{d\phi}{d\beta}
-  =
-  \log\!\left(\frac{M}{3\beta(\beta+1)^{1/3}}\right)
-  + \frac{4}{3}\log(1-2\beta).
-\end{equation}
-The saddle condition thus reads
-\begin{equation}
-  \log\!\left(\frac{M}{3\beta(\beta+1)^{1/3}}\right)
-  = -\frac{4}{3}\log(1-2\beta),
-\end{equation}
-or equivalently
-\begin{equation}
-  M
-  = 3\beta(\beta+1)^{1/3}(1-2\beta)^{-4/3}.
-  \label{eq:M-beta-relation}
-\end{equation}
-For each $M = |m|>0$, there is (under suitable regularity assumptions) a unique
-$\beta_*(M)\in(0,1/2)$ solving this equation.
-
-Evaluating the growth factor $\Lambda(M)$ at the saddle, one finds that the
-corresponding exponential growth rate can be written as
-\begin{equation}
-  \Lambda(M) = E(\beta_*(M)),
-\end{equation}
-where
-\begin{equation}
-  E(\beta) = 3\,\frac{(1-2\beta)^{-2/3}}{(1+\beta)^{1/3}}.
-\end{equation}
-Therefore, the radius of convergence is
-\begin{equation}
-  R(m)
-  = \frac{1}{\Lambda(|m|)}
-  = \frac{1}{3}\,(1-2\beta_*)^{2/3}(1+\beta_*)^{1/3},
-\end{equation}
-with $\beta_* = \beta_*(|m|)$ determined implicitly by
-\eqref{eq:M-beta-relation}.
-
-In other words, we can give a parametric description of the boundary of the
-convergence domain in the $(|u|,|m|)$--plane. Introducing a real parameter
-$\beta \in (0,1/2)$, we set
-\begin{equation}
-  \boxed{
-  \begin{aligned}
-    M(\beta) &= 3\beta\,(1+\beta)^{1/3}(1-2\beta)^{-4/3},\\[3pt]
-    R(\beta) &= \frac{1}{3}\,(1-2\beta)^{2/3}(1+\beta)^{1/3},
-  \end{aligned}
-  }
-\end{equation}
-so that for fixed $m$ with $M=|m|$, one determines the corresponding $\beta$ via
-$M(\beta)=|m|$, and then the radius of convergence is $R(m)=R(\beta)$.
-
-\subsubsection{Special limits}
-
-\paragraph{The case $m=0$.}
-Taking the limit $M\to 0$ corresponds to $\beta\to 0$. From
-$M(\beta)\sim 3\beta$ as $\beta\to 0$, we have $\beta\sim M/3$, while
-\begin{equation}
-  R(\beta)\xrightarrow[\beta\to 0]{}\frac{1}{3}.
-\end{equation}
-Thus
-\begin{equation}
-  R(0) = \frac{1}{3}.
-\end{equation}
-
-\paragraph{Large \texorpdfstring{$|m|$}{|m|}.}
-For $|m|\to\infty$, the parameter $\beta$ approaches $1/2$ from below. From the
-parametric form one can extract the asymptotic behaviour
-\begin{equation}
-  R(m) \sim C\,|m|^{-1/2},
-  \qquad |m|\to\infty,
-\end{equation}
-for some explicit constant $C>0$ (which can be worked out from the leading
-behaviour of $M(\beta)$ and $R(\beta)$ near $\beta=1/2$).
-
-\subsubsection{Summary}
-
-For each fixed value of the parameter $m\in\mathbb{C}$, the power--series part
-of $f(u,m)$ in $u$ has a finite radius of convergence $R(m)$ given implicitly
-by a saddle--point analysis:
-\begin{itemize}
-  \item Introduce $M=|m|$ and a parameter $\beta\in(0,1/2)$.
-  \item The pair $(M,R)$ is parametrized by
-  \begin{equation}
-    M(\beta) = 3\beta\,(1+\beta)^{1/3}(1-2\beta)^{-4/3},\qquad
-    R(\beta) = \frac{1}{3}\,(1-2\beta)^{2/3}(1+\beta)^{1/3}.
-  \end{equation}
-  \item Given $m$, solve $M(\beta)=|m|$ for $\beta$ and then
-  $R(m)=R(\beta)$.
-\end{itemize}
-The logarithmic term $\log u$ does not affect the radius of convergence of the
-power--series part, though it introduces a singularity at $u=0$ itself.
 
 
 \subsection{Rational change of coordinates and the Kerr-Doran prescription}
 
-Nagell’s algorithm provides a systematic procedure to convert the mirror curve of local $\mathbb{F}_1$ into Weierstrass form, but it does so at the price of introducing a transcendental change of variables. A significantly simpler rational transformation, originally presented in \cite{Marino:LocalF1Notes}, is given by
+\subsubsection{Older analysis in the \texorpdfstring{$(m, u)$}{(m, u)} coordinates}
+
+Nagell's algorithm provides a systematic procedure to convert the mirror curve of local $\mathbb{F}_1$ into Weierstrass form, but it does so at the price of introducing a transcendental change of variables. A significantly simpler rational transformation, originally presented in \cite{Marino:LocalF1Notes}, is given by
 \begin{equation}
   x = \frac{36 u^2 (m+3 u)+6 X+\sqrt{2}\, Y-9}{6 u \left(12 m u^2+2 X-3\right)}, 
   \qquad 
@@ -1096,8 +892,7 @@ The full non-vanishing period follows from
 giving the explicit expression
 \begin{equation}
 \begin{aligned}
-  \mathcal{Q}(b)
-  &= \frac{1}{2\pi}\left[\Li_2(b^3) - 4\Li_2(b^2) + 5\Li_2(b)\right] \\
+  &\frac{1}{2\pi}\left[\Li_2(b^3) - 4\Li_2(b^2) + 5\Li_2(b)\right] \\
   &\quad + \frac{1}{4\pi}\log b\,
       \Bigl( 6\log(b^2+b+1) + \log b - 16\log(b+1) - 4\ii\pi \Bigr).
 \end{aligned}
@@ -1119,16 +914,15 @@ The mirror curve can be written as follows
 \begin{equation}\label{eq:mirrorcurveurel}
   \frac{\ell (y+1)}{x y}-\frac{1}{\ur}+x+y = 0,
 \end{equation}
-
-The following birational change of coordinates
+Inspired by \cite{Marino:LocalF1Notes}, we consider the rational coordinate transformation given by
 \begin{equation}
   x = \frac{b Y-\frac{a}{2}}{c+X}+\frac{1}{2 \ur}, \quad y = \frac{a}{c+X},
 \end{equation}
 with
 \begin{equation}
-  a = -36 \ell \ur^2, \quad b = \frac{1}{12 \ur}, \quad c = 12 \ell \ur^2-3,
+  a = -36 \ell \ur^2, \quad b = \frac{1}{12 \ur}, \quad c = 12 \ell \ur^2-3.
 \end{equation}
-can be used to convert \cref{eq:mirrorcurveurel} to short Weierstrass form
+It can be used to convert \cref{eq:mirrorcurveurel} to short Weierstrass form
 \begin{equation}
   Y^2 = 4X^3 - g_2(\ell, \ur) X - g_3(\ell, \ur),
 \end{equation}
@@ -1408,168 +1202,9 @@ The inhomogenous solution is given by
 \end{equation}
 
 
-\subsubsection{Domain, range, and branching structure of the map \texorpdfstring{$\ell(b)$}{el(b)}}
-
-Consider the rational map of Riemann spheres
-\begin{equation}
-  \ell:\PP^1_b \longrightarrow \PP^1_\ell,
-  \qquad
-  \ell(b) \;=\; -\frac{b\,(1+b+b^2)^3}{(1+b)^8}\,.
-\end{equation}
-Since $\ell$ is a non-constant holomorphic map $\PP^1\to\PP^1$, it is surjective onto $\PP^1_\ell$; the interesting features are its divisor, critical points, and branch values.
-
-\paragraph{Divisor data: zeros and poles.}
-The only pole occurs at $b=-1$, with order $8$:
-\begin{equation}
-  \ell(b) \sim -\frac{(-1)\,(1-1+1)^3}{(b+1)^8}
-  \quad\text{as } b\to -1,
-  \qquad\Rightarrow\qquad
-  \ord_{b=-1}(\ell)=-8,\ \ \ell(-1)=\infty.
-\end{equation}
-The numerator vanishes at $b=0$ (simple) and at the primitive cube roots of unity $b=\om,\om^2$ (each with multiplicity $3$). In addition, as $b\to\infty$,
-\begin{equation}
-  \ell(b)= -\frac{b(b^2)^3}{b^8}\,\bigl(1+O(1/b)\bigr)
-  = -\frac{1}{b}\,\bigl(1+O(1/b)\bigr),
-\end{equation}
-so $\ell(\infty)=0$ and the zero at $\infty$ is simple. Thus
-\begin{equation}
-  \ell^{-1}(0)=\{0,\infty,\om,\om^2\}
-  \quad\text{with multiplicities}\quad
-  1,\,1,\,3,\,3,
-\end{equation}
-and the total multiplicity equals $8$, anticipating $\deg(\ell)=8$.
-
-\paragraph{Degree.}
-The map has a unique pole of order $8$ at $b=-1$, hence
-\begin{equation}
-  \deg(\ell)=8.
-\end{equation}
-Equivalently, for generic $\ell_0\in\CC\subset\PP^1_\ell$, the equation $\ell(b)=\ell_0$ has $8$ solutions in $\PP^1_b$ counted with multiplicity.
-
-\paragraph{Involution symmetry and factorization.}
-A key simplification is the involutive symmetry
-\begin{equation}
-  \ell\!\left(\frac{1}{b}\right)=\ell(b),
-\end{equation}
-so $\ell$ factors through the $\ZZ_2$-quotient $\PP^1_b/\langle b\mapsto 1/b\rangle\cong\PP^1_\beta$ via the standard invariant coordinate
-\begin{equation}
-  \beta \;:=\; b+\frac{1}{b}.
-\end{equation}
-Using the identities $b^2+b+1=b(\beta+1)$ and $(b+1)^8=b^4(\beta+2)^4$, one obtains the compact expression
-\begin{equation}\label{eq:l-of-u}
-  \ell(b)= -\frac{(\beta+1)^3}{(\beta+2)^4},
-  \qquad \beta=b+\frac{1}{b}.
-\end{equation}
-Hence the map decomposes as
-\begin{equation}
-  \PP^1_b \xrightarrow{\ \deg 2\ } \PP^1_\beta \xrightarrow{\ \deg 4\ } \PP^1_\ell,
-\end{equation}
-and the total degree is $2\cdot 4=8$.
-
-\paragraph{Critical points and ramification.}
-Differentiating, one finds
-\begin{equation}\label{eq:derivative}
-  \frac{d\ell}{db}
-  = \frac{(b-1)^3\,(b^2+b+1)^2}{(b+1)^9}.
-\end{equation}
-Thus the critical points in $\PP^1_b$ are
-\begin{equation}
-  b=1,\qquad b=\om,\om^2,\qquad b=-1,
-\end{equation}
-where $b=-1$ is the pole (and hence a branch point in the sense of the map to $\PP^1_\ell$).
-From the local behavior implied by~\eqref{eq:derivative} (or directly by series expansion), the ramification indices are:
-\begin{align}
-  &e_{-1}=8, &&\ell(-1)=\infty\quad\text{(totally ramified)},\\
-  &e_{1}=4,  &&\ell(1)= -\frac{27}{256},\\
-  &e_{\om}=e_{\om^2}=3, &&\ell(\om)=\ell(\om^2)=0.
-\end{align}
-In particular, $\ell$ has exactly three branch values in $\PP^1_\ell$:
-\begin{equation}
-  \Branch(\ell)=\left\{\,0,\ -\frac{27}{256},\ \infty\,\right\}.
-\end{equation}
-Rescaling $\lambda:=-(256/27)\,\ell$ gives a Belyi normalization with branch locus $\{0,1,\infty\}$.
-
-\paragraph{Fibers over the branch values.}
-The full fiber structure (with multiplicities) over the three branch values is:
-\begin{align}
-  \ell^{-1}(\infty) &= \{-1\}\quad\text{with multiplicity }8,\\[3pt]
-  \ell^{-1}(0) &= \{0,\infty,\om,\om^2\}\quad\text{with multiplicities }1,1,3,3,\\[3pt]
-  \ell^{-1}\!\left(-\frac{27}{256}\right)
-  &= \{1\}\ \cup\ \{\text{four further points}\},
-\end{align}
-where $b=1$ appears with multiplicity $4$ (ramification index $4$), and the remaining four simple preimages are the roots of the reciprocal quartic
-\begin{equation}\label{eq:quartic-preimages}
-  27 b^4 + 68 b^3 + 98 b^2 + 68 b + 27 = 0.
-\end{equation}
-
-\paragraph{Riemann--Hurwitz check.}
-For a degree-$8$ map $\PP^1\to\PP^1$, Riemann--Hurwitz gives
-\begin{equation}
-  \sum_{p\in\PP^1_b}\bigl(e_p-1\bigr) = 2\deg(\ell)-2 = 14.
-\end{equation}
-Using the above ramification indices,
-\begin{equation}
-  (8-1)+(4-1)+(3-1)+(3-1)=7+3+2+2=14,
-\end{equation}
-so the branching data is consistent.
-
-\paragraph{Real locus: range on $\PP^1(\RR)$.}
-Restricting to $b\in\RR\cup\{\infty\}$, the invariant coordinate satisfies $u=b+1/b\in(-\infty,-2]\cup[2,\infty)$ (for $b\neq 0$), and~\eqref{eq:l-of-u} shows $\ell(b)\in\RR$. More precisely:
-\begin{itemize}
-  \item For $u\in[2,\infty)$ (equivalently $b>0$), $\ell$ increases from
-  \(\ell(1)=-27/256\) to \(\ell(\infty)=0\), hence
-  \[
-    \ell\bigl(\RR_{>0}\cup\{\infty\}\bigr)=[-27/256,\,0].
-  \]
-  \item For $u\in(-\infty,-2)$ (equivalently $b<0$, $b\neq -1$), $\ell$ decreases from
-  \(+\infty\) to \(0^+\), with the pole at $b=-1$, hence
-  \[
-    \ell\bigl(\RR_{<0}\bigr)=(0,\infty),\qquad \ell(-1)=\infty.
-  \]
-\end{itemize}
-In particular, no real $b$ maps to $\ell<-27/256$; crossing the real threshold $\ell=-27/256$ requires complex $b$.
-
-\paragraph{Summary.}
-The map $\ell(b)$ is a degree-$8$ rational function on $\PP^1_b$, invariant under $b\mapsto 1/b$, factoring through $u=b+1/b$ as
-\[
-  \ell = -\frac{(u+1)^3}{(u+2)^4}.
-\]
-Its branch locus in $\PP^1_\ell$ is precisely $\{0,-27/256,\infty\}$ with ramification profile
-\[
-  \infty:\ 8;\qquad
-  -\frac{27}{256}:\ 4,1,1,1,1;\qquad
-  0:\ 3,3,1,1,
-\]
-and this data satisfies Riemann--Hurwitz.
-
-
-
-\subsection{Large Volume Central Charge}
-
-We take $\mathbb{F}_1$ to be the blow-up of $\mathbb{P}^2$. We define a basis of compact curve classes on local $\mathbb{F}_1$. Let $C$ be the exceptional class, $C^2 = -1$ in the cup product. Let $H$ be the hyperplane class, $H^2 = 1$ and $H.C = 0$. We consider compactly supported coherent sheaves $E$ on local $\mathbb{F}_1$ with Chern vector $\gamma(E) = [r(E), \ c_1(E), \ \mathrm{ch}_2(E)]$, where $r$ is the rank of the sheaf on $\mathbb{F}_1$, $c_1(E)$ is the first Chern class
-
-
-\subsection{To organize}
-
-Sending $\log(\tilde{u}) \to \log(-\tilde{u})$ in the solutions $\varpi_2$ and $\varpi_3$ of the PF system transforms $(T, T_D)$ as follows
-\begin{equation}
-  T \to T - \frac{1}{2}, \quad T_D \to T_D - 4T -\frac{m}{2}+1.
-\end{equation}
-which at the level of charges corresponds to
-\begin{equation}
-  (r, d_F, d_B, \ch_2) \ \rightarrow \ \left( r, \ d_F + \tfrac32 r, \ d_B + r, \ \ch_2 + d_F + \tfrac12 d_B + r \right)
-\end{equation}
-Whereas, under the large volume monodromies sending $\log(\tilde{u}) \to \log(\tilde{u})+ 2 \pi \ii k$, we get
-\begin{equation}
-  T \to T - k, \quad T_D \to T_D - 8 k T - k m + 4 k^2.
-\end{equation}
-and the coordinates $(x, y)$ transform to
-\begin{equation}
-  x \to x - k, \quad y \to y + (8 x + \mu) k - 4k^2
-\end{equation}
-
-
 \subsection{Large Volume Scattering}
+
+We take $\mathbb{F}_1$ to be the blow-up of $\mathbb{P}^2$. We define a basis of compact curve classes on local $\mathbb{F}_1$. Let $C$ be the exceptional class, $C^2 = -1$ in the cup product. Let $H$ be the hyperplane class, $H^2 = 1$ and $H.C = 0$. We consider compactly supported coherent sheaves $E$ on local $\mathbb{F}_1$ with Chern vector $\gamma(E) = [r(E), \ c_1(E), \ \mathrm{ch}_2(E)]$, where $r$ is the rank of the sheaf on $\mathbb{F}_1$, $c_1(E)$ is the first Chern class [TODO]
 
 We take for the large volume central charge of an object $E$ of chern Character $\gamma = (r, \ d_F, \ d_B, \ \ch_2)$, the function
 \begin{equation}\label{eq:LVCentralCharge}
@@ -1631,56 +1266,27 @@ which makes the rays into straight lines
   x (d_B+2 d_F)+r y -\ch_2+\mu (d_F-d_B) = 0
 \end{equation}
 
-% \subsubsection{Determining initial rays from the domains of validity of strongly exceptional collections}
+\subsubsection{Monodromies}
 
-% We have three strongly exceptional collections. For each of them, I write the dual collection
+Sending $\log(\tilde{u}) \to \log(-\tilde{u})$ in the solutions $\varpi_2$ and $\varpi_3$ of the PF system transforms $(T, T_D)$ as follows
+\begin{equation}
+  T \to T - \frac{1}{2}, \quad T_D \to T_D - 4T -\frac{m}{2}+1.
+\end{equation}
+which at the level of charges corresponds to
+\begin{equation}
+  (r, d_F, d_B, \ch_2) \ \rightarrow \ \left( r, \ d_F + \tfrac32 r, \ d_B + r, \ \ch_2 + d_F + \tfrac12 d_B + r \right)
+\end{equation}
+Whereas, under the large volume monodromies sending $\log(\tilde{u}) \to \log(\tilde{u})+ 2 \pi \ii k$, we get
+\begin{equation}
+  T \to T - k, \quad T_D \to T_D - 8 k T - k m + 4 k^2.
+\end{equation}
+and the coordinates $(x, y)$ transform to
+\begin{equation}
+  x \to x - k, \quad y \to y + (8 x + \mu) k - 4k^2
+\end{equation}
 
-% \textbf{Bridgeland-Stern-Perling Collection}
-% \begin{equation}
-%   \mathcal{C}_B = \qty{ \ \chO(0, 0), \ \chO(-1, 0)[1], \ \chO(0, -1)[1], \ \chO(-1, -1) \ }
-% \end{equation}
 
-% \textbf{Arcara-Miles I Collection}
-% \begin{equation}
-%   \mathcal{C}_{AI} = \qty{ \ \chO(0, 0), \ \GV(0, 1, -\tfrac12), \ \chO(-2, -1), \ \chO(-1, 0)[1] \ }
-% \end{equation}
-
-% \textbf{Arcara-Miles II Collection}
-% \begin{equation}
-%   \mathcal{C}_{AII} = \qty{ \ \chO(0, 0), \ \GV(0, -1, \tfrac12), \ \chO(-2, -1), \ \chO(-1, -1)[1] \ }
-% \end{equation}
-
-% The domain of validity of a particular collection $\mathcal{C} = \{ \gamma_1, \ldots, \gamma_n \}$ is given by
-% \begin{equation}
-%   \mathrm{dom}_\psi\mathcal{C} = \{ \Re(e^{-\ii \psi} Z_{\gamma_k}) < 0, \ \forall \gamma_k \in \mathcal{C} \}
-% \end{equation}
-
-% Working in the $x$-$y$ coordinates defined in \cref{eq:xydef}, we can write the condition $\Re(e^{-\ii \psi} Z_{\gamma}) < 0$ as (assuming $0 \leq \psi < \frac{\pi}{2}$)
-% \begin{equation}
-%   r y + (d_B + 2 d_F) x + (d_F - d_B) \mu - \ch_2 < 0
-% \end{equation}
-% Thus the domain $\mathrm{dom} \mathcal{C}$ is given by a linear system of inequalities and in general is given by a polygon if it exists and is bounded \remark{Is it always bounded?}.
-
-% I now want to understand the domain of validity of the Bridgeland collection tensored with an arbitrary $\chO(m_F, m_B)$. We want the range of integer $m_F$ and $m_B$ such that the domain $\mathrm{dom}_0 \qty(\mathcal{C}_B \otimes \chO(m_F, m_B))$ is non-empty. \par
-% \textit{Bridgeland-Perling-Stern collection} (for $3 \mu \notin \mathbb{Z}$):
-% For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
-% \begin{equation}
-%   \mathcal{C}_B: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
-% \end{equation}
-
-% \textit{Arcara-Miles I collection} (for $3 \mu \notin \mathbb{Z}$):
-% For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
-% \begin{equation}
-%   \mathcal{C}_{AI}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 3}{3}}
-% \end{equation}
-
-% \textit{Arcara-Miles II collection} (for $3 \mu \notin \mathbb{Z}$):
-% For $m_F \in \mathbb{Z}$, there exist one and only one integer $m_B$,
-% \begin{equation}
-%   \mathcal{C}_{AII}: \qquad (m_F, m_B), \ m_B = \ceil*{\frac{2m_F + 3\mu - 1}{3}}
-% \end{equation}
-
-\subsubsection{Determining initial rays from domains of validity of strongly exceptional collections}
+\subsubsection{Initial rays from strongly exceptional collections}
 
 We consider three strongly exceptional collections and, for each, record the corresponding \emph{dual} collection:
 \medskip
@@ -2005,8 +1611,97 @@ Using the procedure described above, we find the following monodromies in the $(
 \end{equation}
 
 
-\subsection{Degenerations of the map \texorpdfstring{$\ur \mapsto J$}{ur -> J}}
-\label{subsec:degenerations-J-ur}
+
+
+% \subsubsection{Systematic checklist (``algorithm'')}
+% To ensure no special cases are missed, proceed as follows.
+% \begin{enumerate}
+% \item \textbf{Compute and factor the discriminant} $\Disc_u(P(u;J,\ell))$ as a polynomial in $J$:
+% its roots are the branch values; their multiplicities encode how many sheets collide.
+% \item \textbf{Compute and factor} $\mathrm{num}\!\left(\frac{dJ}{du}\right)$:
+% the critical factors (here $\ur$, $9u+8$, $Q$, $S$) determine preimages and ramification indices.
+% \item \textbf{Find special parameters} where the Hurwitz data changes:
+% \[
+% \Res_u(N,u^8E)=0,\quad
+% \Disc_u(Q)=0,\quad
+% \Disc_u(S)=0,
+% \]
+% and solve collision equations among branch values, e.g.
+% \[
+% J_B(\ell)\in\{0,1728,\infty\},\qquad
+% J_B(\ell)=J(\infty;\ell),\qquad
+% J(\infty;\ell)\in\{0,1728,\infty\}.
+% \]
+% \end{enumerate}
+% These loci stratify the $\ell$-line into chambers on which the covering $\phi_\ell$ has
+% constant degree and constant ramification profile.
+
+\subsection{Branch point analysis}
+\subsubsection{Period expansion near \texorpdfstring{$\ur = -\frac{8}{9}$}{ur = -8/9}}
+The third order Picard-Fuchs equation for the periods of local $\mathbb{F}_1$ can be written as $\mathcal{D}_3 \varpi(\ell, \ur) = 0$, with
+\begin{equation}
+  \mathcal{D}_3 = \partial_\ur^3 + P(\ell, \ur) \partial_\ur^2 + Q(\ell, \ur) \partial_\ur,
+\end{equation}
+\begin{equation}
+  \begin{aligned}
+    P(\ell, \ur) &= \frac{54 \ell (16 \ell-27) \ur^5+4 \ell (224 \ell-783) \ur^4-2016 \ell \ur^3+(27-320 \ell) \ur^2+50 \ur+24}{\delta(\ell, \ur)}, \\
+    Q(\ell, \ur) &= \frac{54 \ell (16 \ell-27) \ur^5+16 \ell (64 \ell-189) \ur^4-1860 \ell \ur^3+(9-256 \ell) \ur^2+16 \ur+8}{\ur \, \delta(\ell, \ur)}, \\
+    \delta(\ell, \ur) &= \ur (9 \ur+8) \left(\ell (16 \ell-27) \ur^4-36 \ell \ur^3-8 \ell \ur^2+\ur+1\right)
+  \end{aligned}
+\end{equation}
+
+The point $\ur = -\tfrac89$ is a regular singular point with local exponents $(0, 1, 3)$ for generic values of $\ell$ and $(0, \tfrac56, \tfrac76)$ at $\ell = -\frac{27}{256}$. The solutions can be written in terms of $\ur = -8/9 + z$ in the canonical Frobenius basis as follows
+\begin{equation}
+  \begin{aligned}
+    \varpi_0 &= 1, \\
+    \varpi_1 &= z+\frac{9 (512 \ell+27) z^2}{4096 \ell+432}-\frac{729 \left(67108864 \ell^3-4423680 \ell^2-559872 \ell-45927\right) z^4}{1024 (256 \ell+27)^3}+\mathcal{O}(z^5), \\
+    \varpi_2 &= z^3+\frac{27 (1024 \ell-99) z^4}{8192 \ell+864}+\frac{243 \left(1310720 \ell^2-211968 \ell+36207\right) z^5}{640 (256 \ell+27)^2}\\
+    &\qquad +\frac{729 \left(671088640 \ell^3-130940928 \ell^2+36951552 \ell-6187023\right) z^6}{2048 (256 \ell+27)^3} +\mathcal{O}(z^7)
+  \end{aligned}
+\end{equation}
+
+The periods are $\ell$-dependent combinations of $\varpi_i$,
+\begin{equation}
+  \varpi(\ell, \ur) = \alpha_0(\ell) \varpi_0 + \alpha_1(\ell) \varpi_1 + \alpha_2(\ell) \varpi_2
+\end{equation}
+
+We can fix the $\ell$ dependence by using the original Picard-Fuchs equations which read $\mathcal{D}_i \varpi(\ell, \ur) = 0$
+\begin{equation}\label{eq:PicardFuchsD1D2}
+  \begin{gathered}
+    \mathcal{D}_1 = -\ur^4 \partial_\ur^2-2 \ur^3 \partial_\ur-\ur \partial_\ur \partial_\ell+3 \partial_\ell+3 \ell \partial_\ell^2, \\
+    \mathcal{D}_2 = (\ur+1) \ur \left(\ur \partial_\ur^2+ \partial_\ur\right) +\ell \left(4 \partial_\ell-\ur (3 \ur+4) \partial_\ell \partial_\ur +4 \ell \partial_\ell^2\right).
+  \end{gathered}
+\end{equation}
+The result is a set of ordinary differential equations for the coefficients $\alpha_i(\ell)$,
+\begin{gather}
+  \ell (256 \ell+27)^2 \alpha_1''(\ell)+(512 \ell+27) (256 \ell+27) \alpha_1'(\ell)+(16384 \ell+1920) \alpha_1(\ell) = 0, \label{eq:pf-branch-point-1}\\
+  \ell \alpha_0''(\ell)+\alpha_0'(\ell)+\frac{8}{27}\alpha_1'(\ell)+\frac{512}{81}\frac{\alpha_1(\ell)}{256 \ell+27}=0, \\
+  \alpha_2(\ell) = \frac{81 \left(\left(65536 \ell^2-3456 \ell+243\right) \alpha_1(\ell)-\left(27648 \ell^2+2916 \ell\right) \alpha_1'(\ell)\right)}{64 (256 \ell+27)^2}
+\end{gather}
+
+The first equation can be solved in terms of hypergeometric functions. Let $z = -\tfrac{256}{27} \ell$, we make the gauge transformation,
+\begin{equation}
+  \alpha_1(z) = (1 - z)^{-\tfrac16} u(z),
+\end{equation}
+This transforms \cref{eq:pf-branch-point-1} into
+\begin{equation}
+  z (z-1) \, u''(z) + \qty(\frac{5 z}{3}-1) \, u'(z) + \frac19 u(z) = 0
+\end{equation}
+which can be recognized as the Gauss hypergeometric equation with $(a, b, c) = \qty(\tfrac13, \tfrac13, 1)$. Thus the solutions are
+\begin{equation}
+  \begin{aligned}
+    u_1(z) &= \hypF{\tfrac13}{\tfrac13}{1}{z}, \\
+    u_2(z) &= \hypF{\tfrac13}{\tfrac13}{1}{z} \log z + \sum_{k=0}^{\infty}\frac{\left(\frac{1}{3}\right)_{k}^{2}}{(k!)^{2}}\,z^{k}
+\left[\,2\,\psi\!\left(k+\frac{1}{3}\right)-2\,\psi(k+1)\right].
+  \end{aligned}
+\end{equation}
+
+
+
+\appendix
+
+\section{Degenerations of the map \texorpdfstring{$\ur \mapsto J$}{ur -> J}}
+\label{sec:degenerations-J-ur}
 
 Fix the parameter $\ell \in \C$ and consider the rational map
 \begin{equation}
@@ -2031,7 +1726,7 @@ For generic $\ell$, the map \eqref{eq:Jmap} defines a degree-$12$ cover
 \)
 (i.e.\ generically $12$ preimages for a given $J$).
 
-\subsubsection{Branch values via the discriminant method}
+\subsection{Branch values via the discriminant method}
 For fixed $\ell$, branch values $J_\ast$ are characterized by the condition that the fiber
 \(
 \phi_\ell^{-1}(J_\ast)
@@ -2062,7 +1757,7 @@ J \in \{0,\;1728,\;J_B(\ell),\;\infty\},
 J_B(\ell)=\frac{(256\ell+27)(256\ell+243)^3}{2^{24}\,\ell^3}.
 \end{equation}
 
-\subsubsection{Critical points and generic ramification profile}
+\subsection{Critical points and generic ramification profile}
 Critical points in the $\ur$-sphere are the zeros of $\frac{dJ}{d\ur}$.
 Writing $\frac{dJ}{d\ur}=\frac{\mathrm{num}}{\mathrm{den}}$, the numerator factorizes as
 \begin{equation}
@@ -2103,7 +1798,7 @@ unramified. Cycle type:
 \]
 \end{itemize}
 
-\subsubsection{What it means for the map to ``degenerate''}
+\subsection{What it means for the map to ``degenerate''}
 There are two distinct sources of degeneration.
 
 \paragraph{(I) Special branch values for fixed $\ell$.}
@@ -2124,7 +1819,7 @@ Equivalently, $\Res_\ur\bigl(N(\ur;\ell),u^8E(\ur;\ell)\bigr)=0$.
 the value $J(\infty)$ (see below).
 \end{enumerate}
 
-\subsubsection{Distinguished special values of \texorpdfstring{$\ell$}{el} (explicit list)}
+\subsection{Distinguished special values of \texorpdfstring{$\ell$}{el} (explicit list)}
 The following parameter values are singled out by the above mechanisms:
 \begin{itemize}
 \item \textbf{Ill-defined family point:} $\ell=0$ (the formula \eqref{eq:Jmap} has $\ell^3$
@@ -2155,7 +1850,7 @@ equivalently the roots of
 These are characterized by $\Disc_\ur(S(\ur;\ell))=0$ and simultaneously $J_B(\ell)=1728$.
 \end{itemize}
 
-\subsubsection{Behavior at \texorpdfstring{$u=\infty$}{u = infinity} and additional special values}
+\subsection{Behavior at \texorpdfstring{$u=\infty$}{u = infinity} and additional special values}
 The value of the map at infinity is obtained from the leading terms:
 \begin{equation}
 \label{eq:J-infty}
@@ -2171,72 +1866,349 @@ ramified (the local expansion starts at order $(1/\ur)^2$), producing extra bran
 $J=1728$.
 \end{itemize}
 
-% \subsubsection{Systematic checklist (``algorithm'')}
-% To ensure no special cases are missed, proceed as follows.
-% \begin{enumerate}
-% \item \textbf{Compute and factor the discriminant} $\Disc_u(P(u;J,\ell))$ as a polynomial in $J$:
-% its roots are the branch values; their multiplicities encode how many sheets collide.
-% \item \textbf{Compute and factor} $\mathrm{num}\!\left(\frac{dJ}{du}\right)$:
-% the critical factors (here $\ur$, $9u+8$, $Q$, $S$) determine preimages and ramification indices.
-% \item \textbf{Find special parameters} where the Hurwitz data changes:
-% \[
-% \Res_u(N,u^8E)=0,\quad
-% \Disc_u(Q)=0,\quad
-% \Disc_u(S)=0,
-% \]
-% and solve collision equations among branch values, e.g.
-% \[
-% J_B(\ell)\in\{0,1728,\infty\},\qquad
-% J_B(\ell)=J(\infty;\ell),\qquad
-% J(\infty;\ell)\in\{0,1728,\infty\}.
-% \]
-% \end{enumerate}
-% These loci stratify the $\ell$-line into chambers on which the covering $\phi_\ell$ has
-% constant degree and constant ramification profile.
 
-\subsubsection{Periods near \texorpdfstring{$\ur = -\frac{8}{9}$}{ur = -8/9}}
-The third order Picard-Fuchs equation for the periods of local $\mathbb{F}_1$ can be written as $\mathcal{D}_3 \varpi(\ell, \ur) = 0$, with
+\section{Domain, range, and branching structure of the map \texorpdfstring{$\ell(b)$}{el(b)}}
+\label{sec:domain-range-branching-ell-of-b}
+
+Consider the rational map of Riemann spheres
 \begin{equation}
-  \mathcal{D}_3 = \partial_\ur^3 + P(\ell, \ur) \partial_\ur^2 + Q(\ell, \ur) \partial_\ur,
+  \ell:\PP^1_b \longrightarrow \PP^1_\ell,
+  \qquad
+  \ell(b) \;=\; -\frac{b\,(1+b+b^2)^3}{(1+b)^8}\,.
 \end{equation}
+Since $\ell$ is a non-constant holomorphic map $\PP^1\to\PP^1$, it is surjective onto $\PP^1_\ell$; the interesting features are its divisor, critical points, and branch values.
+
+\subsection{Divisor data: zeros and poles}
+The only pole occurs at $b=-1$, with order $8$:
 \begin{equation}
+  \ell(b) \sim -\frac{(-1)\,(1-1+1)^3}{(b+1)^8}
+  \quad\text{as } b\to -1,
+  \qquad\Rightarrow\qquad
+  \ord_{b=-1}(\ell)=-8,\ \ \ell(-1)=\infty.
+\end{equation}
+The numerator vanishes at $b=0$ (simple) and at the primitive cube roots of unity $b=\om,\om^2$ (each with multiplicity $3$). In addition, as $b\to\infty$,
+\begin{equation}
+  \ell(b)= -\frac{b(b^2)^3}{b^8}\,\bigl(1+O(1/b)\bigr)
+  = -\frac{1}{b}\,\bigl(1+O(1/b)\bigr),
+\end{equation}
+so $\ell(\infty)=0$ and the zero at $\infty$ is simple. Thus
+\begin{equation}
+  \ell^{-1}(0)=\{0,\infty,\om,\om^2\}
+  \quad\text{with multiplicities}\quad
+  1,\,1,\,3,\,3,
+\end{equation}
+and the total multiplicity equals $8$, anticipating $\deg(\ell)=8$.
+
+\subsection{Degree}
+The map has a unique pole of order $8$ at $b=-1$, hence
+\begin{equation}
+  \deg(\ell)=8.
+\end{equation}
+Equivalently, for generic $\ell_0\in\CC\subset\PP^1_\ell$, the equation $\ell(b)=\ell_0$ has $8$ solutions in $\PP^1_b$ counted with multiplicity.
+
+\subsection{Involution symmetry and factorization}
+A key simplification is the involutive symmetry
+\begin{equation}
+  \ell\!\left(\frac{1}{b}\right)=\ell(b),
+\end{equation}
+so $\ell$ factors through the $\ZZ_2$-quotient $\PP^1_b/\langle b\mapsto 1/b\rangle\cong\PP^1_\beta$ via the standard invariant coordinate
+\begin{equation}
+  \beta \;:=\; b+\frac{1}{b}.
+\end{equation}
+Using the identities $b^2+b+1=b(\beta+1)$ and $(b+1)^8=b^4(\beta+2)^4$, one obtains the compact expression
+\begin{equation}\label{eq:l-of-u}
+  \ell(b)= -\frac{(\beta+1)^3}{(\beta+2)^4},
+  \qquad \beta=b+\frac{1}{b}.
+\end{equation}
+Hence the map decomposes as
+\begin{equation}
+  \PP^1_b \xrightarrow{\ \deg 2\ } \PP^1_\beta \xrightarrow{\ \deg 4\ } \PP^1_\ell,
+\end{equation}
+and the total degree is $2\cdot 4=8$.
+
+\subsection{Critical points and ramification}
+Differentiating, one finds
+\begin{equation}\label{eq:derivative}
+  \frac{d\ell}{db}
+  = \frac{(b-1)^3\,(b^2+b+1)^2}{(b+1)^9}.
+\end{equation}
+Thus the critical points in $\PP^1_b$ are
+\begin{equation}
+  b=1,\qquad b=\om,\om^2,\qquad b=-1,
+\end{equation}
+where $b=-1$ is the pole (and hence a branch point in the sense of the map to $\PP^1_\ell$).
+From the local behavior implied by~\eqref{eq:derivative} (or directly by series expansion), the ramification indices are:
+\begin{align}
+  &e_{-1}=8, &&\ell(-1)=\infty\quad\text{(totally ramified)},\\
+  &e_{1}=4,  &&\ell(1)= -\frac{27}{256},\\
+  &e_{\om}=e_{\om^2}=3, &&\ell(\om)=\ell(\om^2)=0.
+\end{align}
+In particular, $\ell$ has exactly three branch values in $\PP^1_\ell$:
+\begin{equation}
+  \Branch(\ell)=\left\{\,0,\ -\frac{27}{256},\ \infty\,\right\}.
+\end{equation}
+Rescaling $\lambda:=-(256/27)\,\ell$ gives a Belyi normalization with branch locus $\{0,1,\infty\}$.
+
+\subsection{Fibers over the branch values}
+The full fiber structure (with multiplicities) over the three branch values is:
+\begin{align}
+  \ell^{-1}(\infty) &= \{-1\}\quad\text{with multiplicity }8,\\[3pt]
+  \ell^{-1}(0) &= \{0,\infty,\om,\om^2\}\quad\text{with multiplicities }1,1,3,3,\\[3pt]
+  \ell^{-1}\!\left(-\frac{27}{256}\right)
+  &= \{1\}\ \cup\ \{\text{four further points}\},
+\end{align}
+where $b=1$ appears with multiplicity $4$ (ramification index $4$), and the remaining four simple preimages are the roots of the reciprocal quartic
+\begin{equation}\label{eq:quartic-preimages}
+  27 b^4 + 68 b^3 + 98 b^2 + 68 b + 27 = 0.
+\end{equation}
+
+\subsection{Riemann--Hurwitz check}
+For a degree-$8$ map $\PP^1\to\PP^1$, Riemann--Hurwitz gives
+\begin{equation}
+  \sum_{p\in\PP^1_b}\bigl(e_p-1\bigr) = 2\deg(\ell)-2 = 14.
+\end{equation}
+Using the above ramification indices,
+\begin{equation}
+  (8-1)+(4-1)+(3-1)+(3-1)=7+3+2+2=14,
+\end{equation}
+so the branching data is consistent.
+
+\subsection{Real locus: range on \texorpdfstring{$\PP^1(\RR)$}{P1(R)}}
+Restricting to $b\in\RR\cup\{\infty\}$, the invariant coordinate satisfies $u=b+1/b\in(-\infty,-2]\cup[2,\infty)$ (for $b\neq 0$), and~\eqref{eq:l-of-u} shows $\ell(b)\in\RR$. More precisely:
+\begin{itemize}
+  \item For $u\in[2,\infty)$ (equivalently $b>0$), $\ell$ increases from
+  \(\ell(1)=-27/256\) to \(\ell(\infty)=0\), hence
+  \[
+    \ell\bigl(\RR_{>0}\cup\{\infty\}\bigr)=[-27/256,\,0].
+  \]
+  \item For $u\in(-\infty,-2)$ (equivalently $b<0$, $b\neq -1$), $\ell$ decreases from
+  \(+\infty\) to \(0^+\), with the pole at $b=-1$, hence
+  \[
+    \ell\bigl(\RR_{<0}\bigr)=(0,\infty),\qquad \ell(-1)=\infty.
+  \]
+\end{itemize}
+In particular, no real $b$ maps to $\ell<-27/256$; crossing the real threshold $\ell=-27/256$ requires complex $b$.
+
+\subsection{Summary}
+The map $\ell(b)$ is a degree-$8$ rational function on $\PP^1_b$, invariant under $b\mapsto 1/b$, factoring through $u=b+1/b$ as
+\[
+  \ell = -\frac{(u+1)^3}{(u+2)^4}.
+\]
+Its branch locus in $\PP^1_\ell$ is precisely $\{0,-27/256,\infty\}$ with ramification profile
+\[
+  \infty:\ 8;\qquad
+  -\frac{27}{256}:\ 4,1,1,1,1;\qquad
+  0:\ 3,3,1,1,
+\]
+and this data satisfies Riemann--Hurwitz.
+
+
+
+\section{Convergence domain of Frobenius solution as a function of \texorpdfstring{$m$}{m}}
+\label{sec:convergence-domain-frobenius-m}
+
+Consider the series
+\begin{equation}
+  f(u,m)
+  \;=\;
+  \log u \;+\; \sum_{n\ge 2} \sum_{3k+2\ell=n}
+  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell\,u^n\,.
+\end{equation}
+For fixed complex parameter $m$, this is a series in the complex variable $u$.
+We are interested in the radius of convergence $R(m)$ of the power--series part
+around $u=0$.
+
+The logarithmic term $\log u$ contributes a singularity at $u=0$, but it does
+\emph{not} affect the radius of convergence of the power--series part. Thus we
+focus on
+\begin{equation}
+  g(u,m) := \sum_{n\ge 2} a_n(m)\,u^n,
+  \qquad
+  a_n(m)
+  := \sum_{3k+2\ell=n}
+  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell.
+\end{equation}
+The radius of convergence for fixed $m$ is
+\begin{equation}
+  \frac{1}{R(m)}
+  = \limsup_{n\to\infty} |a_n(m)|^{1/n}.
+\end{equation}
+
+\subsection{Rewriting as a double series}
+It is convenient to write the power series directly as a sum over $(k,\ell)$:
+\begin{equation}
+  g(u,m) \;=\; \sum_{k,\ell\ge 0}
+  \frac{(3k+2\ell-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,
+  m^\ell\,u^{3k+2\ell}.
+\end{equation}
+For fixed $m$, $u$, the general term in absolute value is
+\begin{equation}
+  T_{k,\ell}(R,M) \;:=\;
+  \left|
+  \frac{(3k+2\ell-1)!}{(k+\ell)!\,(k!)^2\,\ell!}
+  \right|\,
+  R^{3k+2\ell}\,M^\ell,
+  \qquad
+  R = |u|,\quad M = |m|.
+\end{equation}
+The radius $R(m)$ is determined by the exponential growth of the coefficients in
+$n := 3k+2\ell$, i.e. by $\limsup |a_n(m)|^{1/n}$.
+
+\subsection{Saddle--point analysis via Stirling}
+For large $k,\ell$ with fixed ratio, we approximate factorials using Stirling's
+formula:
+\begin{equation}
+  n! \sim n^n e^{-n}\sqrt{2\pi n}.
+\end{equation}
+Introduce the scaling
+\begin{equation}
+  k = \alpha n,\qquad \ell = \beta n,\qquad
+  n := 3k+2\ell,
+\end{equation}
+so that
+\begin{equation}
+  3\alpha + 2\beta = 1,\qquad \alpha,\beta\ge 0.
+\end{equation}
+A single term in the inner sum defining $a_n(m)$ then behaves like
+\begin{equation}
+  \log\left|
+  \frac{(n-1)!}{(k+\ell)!\,(k!)^2\,\ell!}\,m^\ell
+  \right|
+  \sim n\,\phi(\alpha,\beta;M),
+\end{equation}
+for some function $\phi$ that can be extracted from the Stirling approximation.
+Using the constraint $3\alpha+2\beta=1$, we can solve
+\begin{equation}
+  \alpha = \frac{1-2\beta}{3},\qquad 0\le \beta\le \frac12.
+\end{equation}
+In terms of $\beta$ alone, one finds
+\begin{equation}
+  \phi(\beta;M)
+  \;=\;
+  \log\!\left(
+  \frac{M^\beta}{\alpha^{2\alpha}\,\beta^\beta\,(\alpha+\beta)^{\alpha+\beta}}
+  \right),
+  \qquad
+  \alpha = \frac{1-2\beta}{3},
+\end{equation}
+up to subleading (subexponential in $n$) terms.
+
+For large $n$, the sum over $\ell$ (equivalently over $\beta$) is dominated by
+the value of $\beta$ that maximizes $\phi(\beta;M)$ for fixed $M=|m|$. Hence
+\begin{equation}
+  \limsup_{n\to\infty} |a_n(m)|^{1/n}
+  = \exp\!\left(
+    \sup_{0\le \beta\le 1/2} \phi(\beta;M)
+  \right).
+\end{equation}
+Denote
+\begin{equation}
+  \log \Lambda(M)
+  := \sup_{0\le \beta\le 1/2} \phi(\beta;M).
+\end{equation}
+Then the radius of convergence is
+\begin{equation}
+  R(m) = \frac{1}{\Lambda(|m|)}.
+\end{equation}
+
+\subsection{Stationary point and parametric description}
+The dominant contribution comes from a saddle point $\beta_*(M)$ where
+\begin{equation}
+  \frac{d\phi}{d\beta}(\beta_*(M);M) = 0.
+\end{equation}
+A straightforward differentiation and simplification give
+\begin{equation}
+  \frac{d\phi}{d\beta}
+  =
+  \log\!\left(\frac{M}{3\beta(\beta+1)^{1/3}}\right)
+  + \frac{4}{3}\log(1-2\beta).
+\end{equation}
+The saddle condition thus reads
+\begin{equation}
+  \log\!\left(\frac{M}{3\beta(\beta+1)^{1/3}}\right)
+  = -\frac{4}{3}\log(1-2\beta),
+\end{equation}
+or equivalently
+\begin{equation}
+  M
+  = 3\beta(\beta+1)^{1/3}(1-2\beta)^{-4/3}.
+  \label{eq:M-beta-relation}
+\end{equation}
+For each $M = |m|>0$, there is (under suitable regularity assumptions) a unique
+$\beta_*(M)\in(0,1/2)$ solving this equation.
+
+Evaluating the growth factor $\Lambda(M)$ at the saddle, one finds that the
+corresponding exponential growth rate can be written as
+\begin{equation}
+  \Lambda(M) = E(\beta_*(M)),
+\end{equation}
+where
+\begin{equation}
+  E(\beta) = 3\,\frac{(1-2\beta)^{-2/3}}{(1+\beta)^{1/3}}.
+\end{equation}
+Therefore, the radius of convergence is
+\begin{equation}
+  R(m)
+  = \frac{1}{\Lambda(|m|)}
+  = \frac{1}{3}\,(1-2\beta_*)^{2/3}(1+\beta_*)^{1/3},
+\end{equation}
+with $\beta_* = \beta_*(|m|)$ determined implicitly by
+\eqref{eq:M-beta-relation}.
+
+In other words, we can give a parametric description of the boundary of the
+convergence domain in the $(|u|,|m|)$--plane. Introducing a real parameter
+$\beta \in (0,1/2)$, we set
+\begin{equation}
+  \boxed{
   \begin{aligned}
-    P(\ell, \ur) &= \frac{54 \ell (16 \ell-27) \ur^5+4 \ell (224 \ell-783) \ur^4-2016 \ell \ur^3+(27-320 \ell) \ur^2+50 \ur+24}{\delta(\ell, \ur)}, \\
-    Q(\ell, \ur) &= \frac{54 \ell (16 \ell-27) \ur^5+16 \ell (64 \ell-189) \ur^4-1860 \ell \ur^3+(9-256 \ell) \ur^2+16 \ur+8}{\ur \, \delta(\ell, \ur)}, \\
-    \delta(\ell, \ur) &= \ur (9 \ur+8) \left(\ell (16 \ell-27) \ur^4-36 \ell \ur^3-8 \ell \ur^2+\ur+1\right)
+    M(\beta) &= 3\beta\,(1+\beta)^{1/3}(1-2\beta)^{-4/3},\\[3pt]
+    R(\beta) &= \frac{1}{3}\,(1-2\beta)^{2/3}(1+\beta)^{1/3},
   \end{aligned}
+  }
+\end{equation}
+so that for fixed $m$ with $M=|m|$, one determines the corresponding $\beta$ via
+$M(\beta)=|m|$, and then the radius of convergence is $R(m)=R(\beta)$.
+
+\subsection{Special limits}
+\paragraph{The case $m=0$.}
+Taking the limit $M\to 0$ corresponds to $\beta\to 0$. From
+$M(\beta)\sim 3\beta$ as $\beta\to 0$, we have $\beta\sim M/3$, while
+\begin{equation}
+  R(\beta)\xrightarrow[\beta\to 0]{}\frac{1}{3}.
+\end{equation}
+Thus
+\begin{equation}
+  R(0) = \frac{1}{3}.
 \end{equation}
 
-The point $\ur = -\tfrac89$ is a regular singular point with local exponents $(0, 1, 3)$ for generic values of $\ell$ and $(0, \tfrac56, \tfrac76)$ at $\ell = -\frac{27}{256}$. The solutions can be written in terms of $\ur = -8/9 + z$ in the canonical Frobenius basis as follows
+\paragraph{Large \texorpdfstring{$|m|$}{|m|}.}
+For $|m|\to\infty$, the parameter $\beta$ approaches $1/2$ from below. From the
+parametric form one can extract the asymptotic behaviour
 \begin{equation}
-  \begin{aligned}
-    \varpi_0 &= 1, \\
-    \varpi_1 &= z+\frac{9 (512 \ell+27) z^2}{4096 \ell+432}-\frac{729 \left(67108864 \ell^3-4423680 \ell^2-559872 \ell-45927\right) z^4}{1024 (256 \ell+27)^3}+\mathcal{O}(z^5), \\
-    \varpi_2 &= z^3+\frac{27 (1024 \ell-99) z^4}{8192 \ell+864}+\frac{243 \left(1310720 \ell^2-211968 \ell+36207\right) z^5}{640 (256 \ell+27)^2}\\
-    &\qquad +\frac{729 \left(671088640 \ell^3-130940928 \ell^2+36951552 \ell-6187023\right) z^6}{2048 (256 \ell+27)^3} +\mathcal{O}(z^7)
-  \end{aligned}
+  R(m) \sim C\,|m|^{-1/2},
+  \qquad |m|\to\infty,
 \end{equation}
+for some explicit constant $C>0$ (which can be worked out from the leading
+behaviour of $M(\beta)$ and $R(\beta)$ near $\beta=1/2$).
 
-The periods are $\ell$-dependent combinations of $\varpi_i$,
-\begin{equation}
-  \varpi(\ell, \ur) = \alpha_0(\ell) \varpi_0 + \alpha_1(\ell) \varpi_1 + \alpha_2(\ell) \varpi_2
-\end{equation}
+\subsection{Summary}
+For each fixed value of the parameter $m\in\mathbb{C}$, the power--series part
+of $f(u,m)$ in $u$ has a finite radius of convergence $R(m)$ given implicitly
+by a saddle--point analysis:
+\begin{itemize}
+  \item Introduce $M=|m|$ and a parameter $\beta\in(0,1/2)$.
+  \item The pair $(M,R)$ is parametrized by
+  \begin{equation}
+    M(\beta) = 3\beta\,(1+\beta)^{1/3}(1-2\beta)^{-4/3},\qquad
+    R(\beta) = \frac{1}{3}\,(1-2\beta)^{2/3}(1+\beta)^{1/3}.
+  \end{equation}
+  \item Given $m$, solve $M(\beta)=|m|$ for $\beta$ and then
+  $R(m)=R(\beta)$.
+\end{itemize}
+The logarithmic term $\log u$ does not affect the radius of convergence of the
+power--series part, though it introduces a singularity at $u=0$ itself.
 
-We can fix the $\ell$ dependence by using the original Picard-Fuchs equations which read $\mathcal{D}_i \varpi(\ell, \ur) = 0$
-\begin{equation}\label{eq:PicardFuchsD1D2}
-  \begin{gathered}
-    \mathcal{D}_1 = -\ur^4 \partial_\ur^2-2 \ur^3 \partial_\ur-\ur \partial_\ur \partial_\ell+3 \partial_\ell+3 \ell \partial_\ell^2, \\
-    \mathcal{D}_2 = (\ur+1) \ur \left(\ur \partial_\ur^2+ \partial_\ur\right) +\ell \left(4 \partial_\ell-\ur (3 \ur+4) \partial_\ell \partial_\ur +4 \ell \partial_\ell^2\right).
-  \end{gathered}
-\end{equation}
-The result is a set of ordinary differential equations for the coefficients $\alpha_i(\ell)$,
-\begin{equation}
-  \begin{gathered}
-    \ell (256 \ell+27)^2 \alpha_1''(\ell)+(512 \ell+27) (256 \ell+27) \alpha_1'(\ell)+(16384 \ell+1920) \alpha_1(\ell) = 0, \\
-    81 \ell \alpha_0''(\ell)+81 \alpha_0'(\ell)+24 \alpha_1'(\ell)+\frac{512 \alpha_1(\ell)}{256 \ell+27}=0, \\
-    \alpha_2(\ell) = \frac{81 \left(\left(65536 \ell^2-3456 \ell+243\right) \alpha_1(\ell)-\left(27648 \ell^2+2916 \ell\right) \alpha_1'(\ell)\right)}{64 (256 \ell+27)^2}
-  \end{gathered}
-\end{equation}
+
 
 
 \printbibliography[title={References}]
