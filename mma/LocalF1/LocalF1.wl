@@ -92,23 +92,45 @@ NodalCurvebFrommu::usage =
 "NodalCurvebFrommu[m, u] gives the parameter b as a function of (m,u).";
 
 KerrDoranP::usage =
-"KerrDoranP[b] evaluates the Kerr--Doran quantity P(b) built from Bloch--Wigner dilogarithms.";
+"KerrDoranP[b] evaluates the Kerr--Doran quantity P(b) built from Bloch--Wigner dilogarithms and the correction term.";
 
 KerrDoranQ::usage =
 "KerrDoranQ[b] evaluates the Kerr--Doran quantity Q(b) built from logarithms and dilogarithms.";
 
+(* Boris *)
+
+ToFund::usage =
+"ToFund[tau] maps a point tau in the upper half-plane to the standard SL(2,Z) fundamental domain \
+(by repeated application of tau -> tau - n to enforce -1/2 <= Re[tau] < 1/2 and, if |tau|<1, the inversion tau -> -1/tau). \
+The result satisfies -1/2 <= Re[tau] < 1/2 and Abs[tau] >= 1 (up to boundary conventions).";
+
+InverseJ::usage =
+"InverseJ[j, prec] returns a numerical value of tau in the SL(2,Z) fundamental domain such that j(tau) = j, \
+computed with numerical precision prec (default: MachinePrecision).\n\n\
+The inversion is performed via the classical hypergeometric uniformization: an auxiliary parameter a is obtained from \
+4 a (1 - a) == 1728/j, and tau is evaluated as\n\
+  tau = i * 2F1(1/6,5/6;1;1-a) / 2F1(1/6,5/6;1;a),\n\
+followed by reduction to the fundamental domain using ToFund.\n\n\
+Note: The inverse of the j-invariant is globally multivalued; this routine returns a single branch determined by the \
+chosen solution for a and the fundamental-domain reduction.";
+
+Mon3ToMon4::usage =
+"Mon3ToMon4[m0, M] embeds a 3x3 matrix M into a 4x4 matrix with a fixed 2x2 identity block in the upper-left, \
+using the complex parameter m0 to separate real and imaginary parts of the first-column data.\n\n\
+If Im[m0] != 0, the first-column entries are adjusted so that the dependence on m0 is made explicit and the remaining \
+coefficients are extracted from imaginary parts. The result is rounded to 10^-3.\n\
+If Im[m0] == 0, a fallback embedding is used (with a placeholder 999 in the (3,2) and (4,2) entries), and the result is \
+again rounded to 10^-3.";
+
+tauB::usage =
+"tauB[\\[ScriptL], prec] returns the modular parameter tau (in the SL(2,Z) fundamental domain) associated to the parameter \
+\\[ScriptL], computed with numerical precision prec (default: MachinePrecision).\n\n\
+It evaluates the j-invariant\n\
+  j(\\[ScriptL]) = (27 + 256 \\[ScriptL]) (243 + 256 \\[ScriptL])^3 / (2^24 \\[ScriptL]^3)\n\
+and then applies InverseJ[j(\\[ScriptL]), prec].";
+
 KerrDoranQ1::usage =
 "KerrDoranQ1[b] For Re[b]>0 TODO";
-
-KerrDoranQ2::usage =
-"KerrDoranQ2[b] For Re[b]<0, Im[b]>0 TODO";
-
-KerrDoranQ3::usage =
-"KerrDoranQ3[b] For Re[b]<0, Im[b]<0 TODO";
-
-KerrDoranQNew::usage =
-"KerrDoranQNew[b] evaluates the Kerr--Doran quantity Q(b) in the 'new' closed form used in this package, \
-written as an explicit combination of logarithms and PolyLog[2,·] terms.";
 
 KerrDoranFix0::usage =
 "KerrDoranFix0[b] returns a piecewise-constant correction term (a multiple of \\[Pi]) used to fix branch choices in the Kerr--Doran prescription. \
@@ -122,16 +144,6 @@ It is supported in the region Re[b] < -1/2 and depends on the sign of Im[b], wit
 KerrDoranQ1Fix::usage =
 "KerrDoranQ1Fix[b] gives the branch-corrected Kerr--Doran quantity Q1(b), defined as KerrDoranQ1[b] plus the constant correction KerrDoranFix0[b] \
 and the logarithmic correction KerrDoranFix1[b] Log[b].";
-
-KerrDoranC::usage =
-"KerrDoranC[b] gives the branch-correction term C(b) used in the Kerr--Doran prescription, \
-defined from Arg[b] and Log[Abs[...]].";
-
-KerrDoranP0::usage =
-"KerrDoranP0[b] gives the base Kerr--Doran quantity P0(b) built from Bloch--Wigner dilogarithms BW[b], BW[b^2], BW[b^3].";
-
-KerrDoranPNew::usage =
-"KerrDoranPNew[b] gives the corrected Kerr--Doran quantity P(b) used in the 'new' prescription, defined as P0(b) + C(b).";
 
 KerrDoranFormula::usage =
 "KerrDoranFormula[avec, bvec, dvec, evec, A, B] evaluates the Kerr--Doran dilogarithmic combination built from \
@@ -580,6 +592,8 @@ LiEval = {
   Li2[z_] :> PolyLog[2, z]
 };
 
+BW[x_] := Im[PolyLog[2, x]] + Arg[1 - x] Log[Abs[x]];
+
 
 RationalData[expr_, var_] := 
   Module[{t, num, den, fn, fd, all, 
@@ -613,9 +627,11 @@ NodalCurvebFromt1[t1_] := (-3 - 2 t1 + Sqrt[3] Sqrt[t1 (2 + t1)])/(3 + t1);
 NodalCurvebFrommu[m_, u_] := (1 - 2 Sqrt[1 + 12 m u^2] + Sqrt[
  3 + 36 m u^2 - 6 Sqrt[1 + 12 m u^2]])/(1 + Sqrt[1 + 12 m u^2]);
 
-KerrDoranP[b_] := (5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]);
+(* old routines *)
 
-KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
+(* KerrDoranP[b_] := (5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]); *)
+
+(* KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
      2/3)] + (Log[1/b^2] - Log[1/b] + Log[b]) Log[2 + 1/b + b] - 
    3 (Li2[1/b^3] - Li2[1/b^2] - Li2[b] + Li2[b^2] - 
       2 (Li2[1/b^2] + Log[1 - 1/b^2] Log[1/b^2]) + 
@@ -624,16 +640,46 @@ KerrDoranQ[b_] := 1/(6 \[Pi]) (3 (Log[1/b] + Log[b]) Log[1/(2 + 1/b + b)^(
       Log[1 - 1/b^3] (Log[1/b^2] - Log[b]) - 
       Log[1 - 1/b^2] (Log[1/b] - Log[b]) + Log[(-1 + b)/b] Log[b] - 
       2 (Li2[b] + Log[1 - b] Log[b]) - (Log[1/b] - Log[b]) Log[
-        1 - b^2]));
+        1 - b^2])); *)
 
 (* Boris *)
+
+ToFund[tau_] :=
+  Which[Re[tau] < -1/2 || Re[tau] >= 1/2,
+   ToFund[tau - Floor[Re[tau] + 1/2]], Abs[tau] < 1, -1/tau, True,
+   tau];
+
+InverseJ[j_, Pre__:MachinePrecision] :=
+  Module[{so, tau0, a}, so = Solve[4 a (1 - a) == 1728/j, a];
+   tau0 =
+    N[I Hypergeometric2F1[1/6, 5/6, 1, 1 - a /. Last[so]]/
+       Hypergeometric2F1[1/6, 5/6, 1, a /. Last[so]], Pre];
+   ToFund[tau0]];
+
+Mon3ToMon4[m0_, M_] :=
+  If[Im[m0] != 0,
+   Round[
+     1000 {{1, 0, 0, 0}, {0, 1, 0,
+        0}, {M[[2, 1]] - Im[M[[2, 1]]]/Im[m0] m0,
+        Im[M[[2, 1]]/Im[m0]], M[[2, 2]],
+        M[[2, 3]]}, {M[[3, 1]] - Im[M[[3, 1]]]/Im[m0] m0,
+        Im[M[[3, 1]]]/Im[m0], M[[3, 2]], M[[3, 3]]}}]/1000,
+   Round[
+     1000 {{1, 0, 0, 0}, {0, 1, 0, 0}, {M[[2, 1]], 999, M[[2, 2]],
+        M[[2, 3]]}, {M[[3, 1]], 999, M[[3, 2]], M[[3, 3]]}}]/1000];
+
+tauB[\[ScriptL]_, Pre__:MachinePrecision] :=
+  InverseJ[(27 + 256 \[ScriptL]) (243 + 256 \[ScriptL])^3/
+      2^24/\[ScriptL]^3, Pre];
+
+
 (* For Re[b]>0 *)
 KerrDoranQ1[b_] :=
   1/(2 Pi) (PolyLog[2, b^3] - 4 PolyLog[2, b^2] + 5 PolyLog[2, b]) +
    1/(4 Pi) Log[
-     b]*(6 Log[b^2 + b + 1] + Log[b] - 16  Log[b + 1] - 0 4 I Pi);
+     b]*(6 Log[b^2 + b + 1] + Log[b] - 16  Log[b + 1] - 0 4 I Pi) - \[Pi]/6;
 
-(* For Re[b]<0, Im[b]>0 *)
+(* For Re[b]<0, Im[b]>0
 KerrDoranQ2[b_] :=
   1/(12 \[Pi]) (-4 I \[Pi] (Log[b] - 8 Log[1 + b] +
         3 Log[1 + b + b^2]) +
@@ -645,9 +691,9 @@ KerrDoranQ3[b_] :=
  1/(12 \[Pi]) (4 I \[Pi] (Log[b] - 8 Log[1 + b] +
        3 Log[1 + b + b^2]) +
     3 Log[b] (Log[b] - 16 Log[1 + b] + 6 Log[1 + b + b^2]) +
-    6 (5 PolyLog[2, b] - 4 PolyLog[2, b^2] + PolyLog[2, b^3]));
+    6 (5 PolyLog[2, b] - 4 PolyLog[2, b^2] + PolyLog[2, b^3])); *)
 
-KerrDoranQNew[b_] := 
+KerrDoranQ[b_] := 
   1/(2 \[Pi]) (-Log[1 - b] Log[
        1/b] - (Log[1/b^2] - Log[1/b]) Log[(-1 + b)/b] - 
      Log[1 - 1/b^3] (Log[1/b^2] - Log[b]) + 
@@ -659,7 +705,7 @@ KerrDoranQNew[b_] :=
      PolyLog[2, 1/b^3] + PolyLog[2, 1/b^2] + 
      2 (Log[1 - 1/b^2] Log[1/b^2] + PolyLog[2, 1/b^2]) - 
      2 (Log[1/b] Log[(-1 + b)/b] + PolyLog[2, 1/b]) + PolyLog[2, b] + 
-     2 (Log[1 - b] Log[b] + PolyLog[2, b]) - PolyLog[2, b^2]);
+     2 (Log[1 - b] Log[b] + PolyLog[2, b]) - PolyLog[2, b^2]) - \[Pi]/6;
 
 KerrDoranFix0[b_] := -Pi HeavisideTheta[-Re[b]] (Sign[1 - Abs[b]] + 
    2 HeavisideTheta[Abs[b] - 1] HeavisideTheta[
@@ -672,18 +718,12 @@ KerrDoranFix1[b_] := 3 I Sign[
 
 KerrDoranQ1Fix[b_] := KerrDoranQ1[b] + KerrDoranFix0[b] + KerrDoranFix1[b] Log[b];
 
-KerrDoranC[b_] := ((Arg[b] Log[Abs[(b (1 + b + b^2)^3)/(1 + b)^8]])/(2 \[Pi]));
-
-KerrDoranP0[b_] := (5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]);
-
-KerrDoranPNew[b_] := KerrDoranP0[b] + KerrDoranC[b];
-
-(* add KerrDoran direct from m, u *)
+KerrDoranP[b_] := (5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]) + ((Arg[b] Log[Abs[(b (1 + b + b^2)^3)/(1 + b)^8]])/(2 \[Pi]));
 
 KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_, 
    B_] := -Sum[
      If[avec[[j]] === bvec[[k]], 0, 
-      dvec[[j]]*evec[[k]] (Li2[
+      dvec[[j]]*evec[[k]] (PolyLog[2, 
           avec[[j]]/bvec[[k]]] + (Log[avec[[j]]] - 
             Log[bvec[[k]]]) Log[1 - avec[[j]]/bvec[[k]]])], {j, 
       Length[dvec]}, {k, Length[evec]}] - 
@@ -693,7 +733,7 @@ KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_,
 KerrDoranFormulaExact[avec_, bvec_, dvec_, evec_, A_, 
    B_] := -Sum[
      If[avec[[j]] == bvec[[k]], 0, 
-      dvec[[j]]*evec[[k]] (Li2[
+      dvec[[j]]*evec[[k]] (PolyLog[2, 
           avec[[j]]/bvec[[k]]] + (Log[avec[[j]]] - 
             Log[bvec[[k]]]) Log[1 - avec[[j]]/bvec[[k]]])], {j, 
       Length[dvec]}, {k, Length[evec]}] - 
