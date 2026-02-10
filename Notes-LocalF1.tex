@@ -1758,7 +1758,7 @@ which can be recognized as the Fuchsian data of the Heun equation,
 \end{equation}
 with $a = \frac{28}{25}$, $\gamma=2$, $\delta = \tfrac23$, $\epsilon = -1$, $q = -\frac{8}{225}$, $\alpha = \beta = \tfrac13$. Thus the most general solution is
 \begin{equation}
-  u(z) = c_1 \HeunG\!\left(\frac{28}{25},-\frac{8}{225};\frac{1}{3},\frac{1}{3}, 2,\frac{2}{3};\,z\right) \, + \, \frac{c_2}{z} \HeunG\!\left(\frac{28}{25},\frac{49}{225};-\frac{2}{3},-\frac{2}{3}, 0,\frac{2}{3};\,z\right)
+  u(z) = c_2 \HeunG\!\left(\frac{28}{25},-\frac{8}{225};\frac{1}{3},\frac{1}{3}, 2,\frac{2}{3};\,z\right) \, + \, \frac{c_3}{z} \HeunG\!\left(\frac{28}{25},\frac{49}{225};-\frac{2}{3},-\frac{2}{3}, 0,\frac{2}{3};\,z\right)
 \end{equation}
 
 \paragraph{Strategy 2}
@@ -1816,10 +1816,19 @@ $z=\infty$ & $(-\tfrac23, -\tfrac23)$ \\
 \end{equation}
 which is another Heun equation. The solution is given by
 \begin{equation}
-  f(z) = c_1 \HeunG\!\left(\frac{28}{25},\frac{49}{225};-\frac{2}{3},-\frac{2}{3}, 0,\frac{2}{3};\,z\right) + c_2 \, z \HeunG\!\left(\frac{28}{25},-\frac{8}{225};\frac{1}{3},\frac{1}{3}, 2,\frac{2}{3};\,z\right)
+  f(z) = c_2' \HeunG\!\left(\frac{28}{25},\frac{49}{225};-\frac{2}{3},-\frac{2}{3}, 0,\frac{2}{3};\,z\right) + c_3' \, z \HeunG\!\left(\frac{28}{25},-\frac{8}{225};\frac{1}{3},\frac{1}{3}, 2,\frac{2}{3};\,z\right)
 \end{equation}
 which is the same as in strategy 1 upto a basis change and a gauge transformation.
 
+We are thus led to solving the equation
+\begin{equation}
+  \theta^2 \alpha_0(z) = \mathcal{D}_2^{-1}(0) = (z-1)^{-\tfrac76} f(z)
+\end{equation}
+
+Formally, the solution is given by
+\begin{equation}
+  \alpha_0(z) = C_0 + C_1 \log z + \int^z \frac{\dd{\xi}}{\xi} \int^{\xi} \dd{\eta} (\eta-1)^{-\tfrac76} \frac{f(\eta)}{\eta}
+\end{equation}
 
 \appendix
 
