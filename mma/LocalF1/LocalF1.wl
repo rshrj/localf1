@@ -129,6 +129,16 @@ It evaluates the j-invariant\n\
   j(\\[ScriptL]) = (27 + 256 \\[ScriptL]) (243 + 256 \\[ScriptL])^3 / (2^24 \\[ScriptL]^3)\n\
 and then applies InverseJ[j(\\[ScriptL]), prec].";
 
+Mon4ToMon3::usage =
+"Mon4ToMon3[m0, M] converts a 4x4 monodromy matrix M to a 3x3 monodromy matrix by restricting to the period subspace \
+and substituting the mass parameter m = m0 via the combination M[[i,1]] + m0 M[[i,2]] in the first column (rows 3 and 4).";
+
+FindPeriodCombination::usage =
+"FindPeriodCombination[m0, P0, x, m, Q] finds an integer linear relation among {1, m0, P0, x}. \
+If it finds integers {v1,v2,v3,v4} with v1 + v2 m0 + v3 P0 + v4 x == 0 and v4 != 0, it returns the corresponding \
+symbolic expression -(v1 + v2 m + v3 Q)/v4, i.e. x written as a linear combination of the symbols m and Q with the \
+same integer coefficients determined at (m0,P0,x). If v4 == 0, it returns {}.";
+
 KerrDoranQ1::usage =
 "KerrDoranQ1[b] For Re[b]>0 TODO";
 
@@ -159,6 +169,9 @@ KerrDoranUrFromb::usage =
 "KerrDoranUrFromb[b] gives the parameter ur as a rational function of the Kerr--Doran parameter b.";
 
 KerrDoranElUrFromb::usage = "KerrDoranElUrFromb[b] returns {el, ur} as rational functions of the Kerr--Doran parameter b.";
+
+KerrDoranbFromEl::usage =
+"KerrDoranbFromEl[el] solves KerrDoranElFromb[b] == el for b, selecting the branch with Abs[b] > 1 (or Abs[b] == 1 and Im[b] >= 0).";
 
 AnalyticContinuationOfRoots::usage =
 "AnalyticContinuationOfRoots[poly, x, t, t0, t1] numerically tracks the roots in x of the polynomial equation poly==0 \
@@ -672,12 +685,19 @@ tauB[\[ScriptL]_, Pre__:MachinePrecision] :=
   InverseJ[(27 + 256 \[ScriptL]) (243 + 256 \[ScriptL])^3/
       2^24/\[ScriptL]^3, Pre];
 
+Mon4ToMon3[m0_, M_] := {{1, 0, 0}, {M[[3, 1]] + m0 M[[3, 2]], M[[3, 3]],
+    M[[3, 4]]}, {M[[4, 1]] + m0 M[[4, 2]], M[[4, 3]], M[[4, 4]]}}; 
+
+FindPeriodCombination[m0_, P0_, x_, m_, Q_] :=
+ Module[{V}, V = FindIntegerNullVector[{1, m0, P0, x}];
+  If[V[[4]] == 0, {}, -(V[[1]] + m  V[[2]] + Q V[[3]])/V[[4]]]];
+
 
 (* For Re[b]>0 *)
 KerrDoranQ1[b_] :=
-  1/(2 Pi) (PolyLog[2, b^3] - 4 PolyLog[2, b^2] + 5 PolyLog[2, b]) +
+  1/(2 Pi) (1/(2 Pi) (PolyLog[2, b^3] - 4 PolyLog[2, b^2] + 5 PolyLog[2, b]) +
    1/(4 Pi) Log[
-     b]*(6 Log[b^2 + b + 1] + Log[b] - 16  Log[b + 1] - 0 4 I Pi) - \[Pi]/6;
+     b]*(6 Log[b^2 + b + 1] + Log[b] - 16  Log[b + 1] - 0 4 I Pi) - \[Pi]/6);
 
 (* For Re[b]<0, Im[b]>0
 KerrDoranQ2[b_] :=
@@ -694,7 +714,7 @@ KerrDoranQ3[b_] :=
     6 (5 PolyLog[2, b] - 4 PolyLog[2, b^2] + PolyLog[2, b^3])); *)
 
 KerrDoranQ[b_] := 
-  1/(2 \[Pi]) (-Log[1 - b] Log[
+  1/(2 \[Pi])(1/(2 \[Pi]) (-Log[1 - b] Log[
        1/b] - (Log[1/b^2] - Log[1/b]) Log[(-1 + b)/b] - 
      Log[1 - 1/b^3] (Log[1/b^2] - Log[b]) + 
      Log[1 - 1/b^2] (Log[1/b] - Log[b]) - 
@@ -705,7 +725,7 @@ KerrDoranQ[b_] :=
      PolyLog[2, 1/b^3] + PolyLog[2, 1/b^2] + 
      2 (Log[1 - 1/b^2] Log[1/b^2] + PolyLog[2, 1/b^2]) - 
      2 (Log[1/b] Log[(-1 + b)/b] + PolyLog[2, 1/b]) + PolyLog[2, b] + 
-     2 (Log[1 - b] Log[b] + PolyLog[2, b]) - PolyLog[2, b^2]) - \[Pi]/6;
+     2 (Log[1 - b] Log[b] + PolyLog[2, b]) - PolyLog[2, b^2]) - \[Pi]/6);
 
 KerrDoranFix0[b_] := -Pi HeavisideTheta[-Re[b]] (Sign[1 - Abs[b]] + 
    2 HeavisideTheta[Abs[b] - 1] HeavisideTheta[
@@ -718,7 +738,7 @@ KerrDoranFix1[b_] := 3 I Sign[
 
 KerrDoranQ1Fix[b_] := KerrDoranQ1[b] + KerrDoranFix0[b] + KerrDoranFix1[b] Log[b];
 
-KerrDoranP[b_] := (5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]) + ((Arg[b] Log[Abs[(b (1 + b + b^2)^3)/(1 + b)^8]])/(2 \[Pi]));
+KerrDoranP[b_] := 1/(2 \[Pi])((5 BW[b] - 4 BW[b^2] + BW[b^3])/(2 \[Pi]) + ((Arg[b] Log[Abs[(b (1 + b + b^2)^3)/(1 + b)^8]])/(2 \[Pi])));
 
 KerrDoranFormula[avec_, bvec_, dvec_, evec_, A_, 
    B_] := -Sum[
@@ -745,6 +765,8 @@ KerrDoranElFromb[b_] := -((b (1 + b + b^2)^3)/(1 + b)^8);
 KerrDoranUrFromb[b_] := -((1 + b)^4/((1 + b + b^2) (1 + 4 b + b^2)));
 
 KerrDoranElUrFromb[b_] := {KerrDoranElFromb[b], KerrDoranUrFromb[b]};
+
+KerrDoranbFromEl[el_] := b/.Solve[{KerrDoranElFromb[b]==el, (Abs[b]>1)||(Abs[b]==1&&Im[b]>=0)}, b];
 
 (*Options*)
 Options[AnalyticContinuationOfRoots] = {"Steps" -> 100, 
