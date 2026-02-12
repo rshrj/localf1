@@ -2341,6 +2341,106 @@ The logarithmic term $\log u$ does not affect the radius of convergence of the
 power--series part, though it introduces a singularity at $u=0$ itself.
 
 
+\section{An example of an Argyres--Douglas point: the pentagon theory}
+Consider the family of curves
+\begin{equation}
+  x^3+z^2-3 \Lambda^2 x+u=0,
+\end{equation}
+where $u$ and $\Lambda$ are parameters.
+The curve is already in short Weierstrass form. Changing coordinates to $z = 4 Y$ and $x = -4 X$, we find
+\begin{equation}
+  Y^2 = f(X) = 4 X^3 - g_2 X - g_3, \quad \text{with } g_2 = \frac{3 \Lambda^2}{4}, \quad g_3 = \frac{u}{16}.
+\end{equation}
+Thus,
+\begin{equation}
+  \Delta = g_2^3 - 27 g_3^2 = \frac{27}{256} \left(4 \Lambda^6-u^2\right), \qquad J = \frac{6912 \Lambda^6}{4 \Lambda^6-u^2}.
+\end{equation}
+We see that for $\Lambda \neq 0$, the cusps are located at $u_{\pm} = \pm 2 \Lambda^3$. Similarly, $u = 0$ is the order $2$ point $j = 1728$, and $u = \infty$ is the order $3$ point $j = 0$.
+
+The holomorphic one-form, and therefore the periods of the elliptic curve, are given by
+\begin{equation}
+  \omega = \frac{\dd{X}}{Y} = \frac{4 \dd{X}}{\sqrt{-12 \Lambda^2 X-u+64 X^3}}, \quad \Pi = \int \omega = \int \frac{4 \dd{X}}{\sqrt{-12 \Lambda^2 X-u+64 X^3}}.
+\end{equation}
+
+By differentiating $\omega$ with respect to $u$, and reducing modulo exact forms, we find the following Picard--Fuchs system for the family:
+\begin{equation}\label{eq:pent-pf}
+  (u^2 - 4 \Lambda^6) \, \partial_u^2 \Pi(u) + 2 u \, \partial_u \Pi(u) + \frac{5}{36} \, \Pi(u) = 0.
+\end{equation}
+
+To be precise, here is the reduction process. We want to write everything in terms of a standard de Rham basis:
+\begin{equation}
+  \omega = \frac{\dd{X}}{Y}, \quad \omega' = \frac{X \dd{X}}{Y}.
+\end{equation}
+We have
+\begin{equation}
+  \partial_u \omega = \frac{\dd{X}}{32 Y^3}, \quad \partial_u^2 \omega = \frac{3 \dd{X}}{2^{10} Y^5}.
+\end{equation}
+We use the following key identity, valid for any rational function $R(X)$:
+\begin{equation}
+  \dd{\qty(\frac{R(X)}{Y^{2k-1}})} = R'(X) \frac{\dd{X}}{Y} - \frac{2k-1}{2} R(X) f'(X) \frac{\dd{X}}{Y^{2k+1}},
+\end{equation}
+where $Y^2 = f(X)$ is the curve (hence $2 Y \dd{Y} = f'(X) \dd{X}$).
+For $\partial_u \omega$, pick $R(X) = \frac{1}{16 f'(X)} = -\frac{1}{12 \left(\Lambda^2-16 X^2\right)}$ and $k=1$ to get
+\begin{equation}
+  \partial_u \omega = \frac{\dd{X}}{32 Y^3} \equiv -\frac{8 X}{3 \left(\Lambda^2-16 X^2\right)^2} \frac{\dd{X}}{Y},
+\end{equation}
+where $\equiv$ means equality up to exact forms.
+To write this in terms of $\omega$ and $\omega'$, note that we can always add the following exact form to $Q(X)\,\frac{\dd{X}}{Y}$:
+\begin{equation}
+  \dd{(S(X) Y)} = \qty(S'(X) f(X) + \frac{1}{2} S(X) f'(X)) \frac{\dd{X}}{Y}.
+\end{equation}
+Therefore, we can always shift $Q \to Q + \qty(S' f + \frac{1}{2} S f')$. For $Q(X) = -\frac{8 X}{3 \left(\Lambda^2-16 X^2\right)^2}$, pick
+$S(X) = \frac{u-8 \Lambda^2 X}{24 \left(4 \Lambda^6-u^2\right) \left(\Lambda^2-16 X^2\right)}$ (guessed from the partial fraction decomposition of $Q(X)$). We then find
+\begin{equation}
+  \partial_u \omega \equiv -\frac{8 X}{3 \left(\Lambda^2-16 X^2\right)^2} \frac{\dd{X}}{Y}
+  \equiv \frac{u+8 \Lambda^2 X}{192 (4\Lambda^6 - u^2)} \frac{\dd{X}}{Y}
+  = \frac{u \, \omega + 8 \Lambda^2 \omega'}{192 (4\Lambda^6 - u^2)}.
+\end{equation}
+
+For $\partial_u^2 \omega$, pick $k = 2$ and $R(X) = -\frac{1}{384 \left(\Lambda^2-16 X^2\right)}$, and then $k = 1$ and $R(X) = \frac{2 X}{9 \left(\Lambda^2-16 X^2\right)^3}$:
+\begin{equation}
+  \partial_u^2 \omega = \frac{3 \dd{X}}{2^{10} Y^5} \equiv -\frac{X}{12 \left(\Lambda^2-16 X^2\right)^2} \frac{\dd{X}}{Y^3}
+  \equiv \frac{2 \left(\Lambda^2+80 X^2\right)}{9 \left(\Lambda^2-16 X^2\right)^4} \frac{\dd{X}}{Y}.
+\end{equation}
+Applying the same process as before, $Q \to Q + (S' f + \frac{1}{2} S f')$, to
+$Q(X) = \frac{2 \left(\Lambda^2+80 X^2\right)}{9 \left(\Lambda^2-16 X^2\right)^4}$, we pick
+\begin{equation}
+  S(X) = -\frac{1}{9 \Lambda^2 \left(2 \Lambda^3+u\right) (4 X-\Lambda)^3} + \ldots + \frac{1}{9 \Lambda^2 \left(2 \Lambda^3-u\right) (\Lambda+4 X)^3} + \ldots,
+\end{equation}
+(once again fixed from the partial fraction decomposition of $Q$). We then find
+\begin{equation}
+  \partial_u^2 \omega \equiv \frac{2 \left(\Lambda^2+80 X^2\right)}{9 \left(\Lambda^2-16 X^2\right)^4} \frac{\dd{X}}{Y}
+  \equiv \frac{20 \Lambda^6+96 \Lambda^2 u X+7 u^2}{36 \left(u^2-4 \Lambda^6\right)^2} \frac{\dd{X}}{Y}
+  = \frac{(20 \Lambda^6+7 u^2)\, \omega + 96 \Lambda^2 u \, \omega'}{36 \left(u^2-4 \Lambda^6\right)^2}.
+\end{equation}
+
+Finally, eliminating $\omega'$ and integrating over a cycle, we recover the Picard--Fuchs system in \cref{eq:pent-pf}.
+
+Let us now analyze the solutions of the Picard--Fuchs system. For $\Lambda \neq 0$, the system has three regular singular points, $u = u_{\pm} = \pm 2 \Lambda^3$ and $u = \infty$. The Fuchsian data is
+\begin{equation}
+\begin{tabular}{c|c}
+point & exponents \\
+\hline
+$u=u_+$      & $(0, 0)$ \\
+$u=u_-$      & $(0, 0)$ \\
+$u=\infty$ & $(\tfrac16, \tfrac56)$ \\
+\end{tabular}
+\end{equation}
+
+In fact, it is possible to solve the system exactly in terms of Legendre functions,
+\begin{equation}
+  \Pi_1(u) = P_{-1/6}\!\left(\frac{u}{2\Lambda^3}\right), \quad \Pi_2(u) = Q_{-1/6}\!\left(\frac{u}{2\Lambda^3}\right).
+\end{equation}
+These are related to the standard Frobenius basis around $u = u_{\pm}$ as follows: Take $\Lambda = 1$, consider first the expansion around $u = 2$, given by
+\begin{align}
+  \omega_1 &= 1-\frac{5 (u-2)}{144}+\frac{385 (u-2)^2}{82944}-\frac{85085 (u-2)^3}{107495424}+\frac{37182145 (u-2)^4}{247669456896}+\mathcal{O}\qty((u-2)^5), \\
+  \omega_2 &= \omega_1 \log(u-2)  -\frac{13 (u-2)}{72}+\frac{719 (u-2)^2}{27648}-\frac{1467821 (u-2)^3}{322486272}+O\left((u-2)^4\right)
+\end{align}
+We find,
+\begin{equation}
+  \Pi_1(u) = \omega_1, \quad \Pi_2(u) = \qty(\pi e^{\ii \tfrac56 \pi} + \tfrac{1}{2} \log(1728)) \omega_1 - \frac{1}{2} \omega_2
+\end{equation}
+
 
 
 \printbibliography[title={References}]
