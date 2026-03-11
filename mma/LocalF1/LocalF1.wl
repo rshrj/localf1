@@ -309,6 +309,9 @@ InitialPosition::usage =
 "InitialPosition[gam, m] gives the initial s-position where the ray of charge gam meets the real T-axis (t=0). \
 Only works for real m.";
 
+InitialPositionNoTest::usage = "InitialPositionNoTest[gam, m] gives the initial s-position where the ray of charge gam meets the real T-axis (t=0) without performing any checks on gam. \
+Only works for real m.";
+
 CollDBridgeland::usage =
 "CollDBridgeland is a list of Chern vectors for the dual (Ext) collection associated with the Bridgeland--Stern--Perling collection.";
 
@@ -923,14 +926,19 @@ DiscF1[{r_, dF_, dB_, ch2_}, m_] :=
   16 BogomolovDiscriminant[{r, dF, dB, ch2}] + (-3 dB + 2 dF + 
      3 m r)^2/r^2;
 
-InitialPosition[{r_, dF_, dB_, ch2_}, m_ : 0] :=
+InitialPosition[{r_, dF_, dB_, ch2_}, m_ : 0] := Module[{}, 
    If[! IntegerQ[SecondChernClass[{r,dF,dB,ch2}]], 
-    Print["Non integer second Chern class !"]];
+    Print["Non integer second Chern class !"]; Abort[];];
    If[r == 0,
     (ch2 + dB m - dF m)/(dB + 2 dF),
     (dB + 2 dF - m r)/8/r - 
      Sign[r]/8 Sqrt[Max[DiscF1[{r, dF, dB, ch2}, m], 0]]
-    ];
+    ]];
+
+InitialPositionNoTest[{r_, dF_, dB_, ch2_}, m_ : 0] := (dB + 2 dF - m r)/8/r - 
+     Sign[r]/8 Sqrt[Max[DiscF1[{r, dF, dB, ch2}, m], 0]];
+
+InitialPositionNoTest[{0, dF_, dB_, ch2_}, m_ : 0] := (ch2 + dB m - dF m)/(dB + 2 dF);
 
 CollDBridgeland = {{1, 0, 0, 0}, {1, 1, 0, 0}, {1, 1, 1, 1/2}, {1, 2, 1, 3/2}};
 
@@ -1535,8 +1543,8 @@ G10RepeatDomain[{kmin_, kmax_}] :=
      l_Line :> Translate[l, {8*k, 0}]}, {k, kmin, kmax}];
 
 MirrorCurve2[x_, y_, el_, ur_] := -(1/ur) + x + y + (el (1 + y))/(x y);
-MirrorCurveg22[el_, ur_] := 108 (1 + 16 el^2 ur^4 - 8 el ur^2 (1 + 3 ur));
-MirrorCurveg32[el_, ur_] := -216 (1 - 64 el^3 ur^6 - 12 el ur^2 (1 + 3 ur) + 
+MirrorCurveg22[el_, ur_] := 3(1 + 16 el^2 ur^4 - 8 el ur^2 (1 + 3 ur));
+MirrorCurveg32[el_, ur_] := -(1 - 64 el^3 ur^6 - 12 el ur^2 (1 + 3 ur) + 
    24 el^2 ur^4 (2 + 6 ur + 9 ur^2));
 MirrorCurveJ2[el_, ur_] := (1 + 16 el^2 ur^4 - 
   8 el ur^2 (1 + 3 ur))^3/(el^3 ur^8 (1 + ur - 8 el ur^2 - 
