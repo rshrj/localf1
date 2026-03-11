@@ -446,6 +446,30 @@ Assumes m is real. Output is a list of {charge, {x,y}, parent1, parent2, n1, n2,
 ConstructLVDiagramOpt::usage =
 "ConstructLVDiagramOpt[phimax, Nm, m, listRays] is an optimized version of ConstructLVDiagram with the same output conventions.";
 
+FindNonNegativeIntegerShift::usage =
+"FindNonNegativeIntegerShift[a, b, l] solves a == b for a nonnegative integer shift l. \
+It returns the first solution for l with l >= 0 and l ∈ Integers; if no such solution exists, it returns Missing[\"DoesNotReachBdy\"]. \
+The third argument defaults to the symbol l and is useful when b contains a symbolic shift parameter.";
+
+Initials::usage =
+"Initials[gam, m] determines the initial position s of the ray of charge gam at parameter m and compares the corresponding \
+standardized charge to the expected boundary charge in the fixed-m slice classification.\n\n\
+More precisely, the function:\n\
+  1. computes the initial position s = InitialPositionNoTest[gam, m],\n\
+  2. decomposes m as m = q + m1 with q = Floor[m + 1/3],\n\
+  3. shifts s to a standardized representative s1 = s - k with k = Ceiling[s + m1/2 - 1],\n\
+  4. applies the corresponding spectral-flow transformation to gam,\n\
+  5. compares the resulting standardized charge to the expected charge associated with the boundary reached in the given m1-window.\n\n\
+The output is {s, n}, where s is the original initial position and n records the boundary shift:\n\
+  • n = 0 if the standardized charge already matches the expected boundary charge,\n\
+  • n is a nonnegative integer if the match occurs after a shift by l = n,\n\
+  • Missing[\"DoesNotReachBdy\"] if the expected boundary is not reached,\n\
+  • Missing[\"NoExpectation\"] if the pair (m1, s1) does not match any case built into the classification.\n\n\
+Options:\n\
+  \"Verbose\" -> True (default)\n\
+    If True, prints diagnostic information including m, q, m1, s, k, s1, the standardized charge, and the expected charge.\n\n\
+Initials[gam, m, \"Verbose\" -> False] suppresses this diagnostic output.";
+
 
 (* Period expansions in Pi-Stability slice *)
 
@@ -1414,6 +1438,76 @@ ConstructLVDiagramOpt[phimax_, Nm_, m_, ListRays0_] :=
    ListRays
   ]
  ];
+
+
+FindNonNegativeIntegerShift[a_, b_, l_Symbol : l] := 
+  Module[{sol}, 
+   sol = Solve[a == b && l >= 0 && Element[l, Integers], l];
+   If[sol === {}, Missing["DoesNotReachBdy"], l /. First[sol]]];
+
+
+Options[Initials] = {"Verbose" -> True};
+Initials[gam_, m_, OptionsPattern[]] := 
+  Module[{q, m1, gamp, s, k, s1, decide, expected},
+   s = InitialPositionNoTest[gam, m];
+   q = Floor[m + 1/3];
+   m1 = m - q;
+   k = Ceiling[s + m1/2 - 1];
+   s1 = s - k;
+   gamp = SpectralFlow[gam, {-3 k, -2 k - q}];
+   
+   decide[r_, choices_] := Which[
+     r == 1, choices[[1]],
+     r == -1, choices[[2]],
+     True, choices[[3]]
+     ];
+   expected = Which[
+     -1/3 < m1 < 0 && s1 == (m1 + 1)/4, Ch[1, 1],
+     -1/3 < m1 < 0 && s1 == m1 + 1/2, GV[0, 1, 1/2],
+     -1/3 < m1 < 0 && s1 == (m1 + 2)/4, -Ch[1, 0],
+     -1/3 < m1 < 0 && s1 == (1 - m1)/2, 
+     decide[gamp[[1]], {Ch[2 + l, 1], -Ch[1 - l, 1], GV[1, 0, 1]}],
+     -1/3 < m1 < 0 && s1 == (m1 + 3)/4, -Ch[2, 1],
+     -1/3 < m1 < 0 && s1 == m1/4 + 1, Ch[3, 2],
+     -1/3 < m1 < 0 && s1 == 1 - m1/2, 
+     decide[gamp[[1]], {Ch[4 + l, 2], -Ch[3 - l, 2], GV[1, 0, 2]}],
+     
+     0 < m1 < 1/3 && s1 == m1/4, -Ch[0, 0],
+     0 < m1 < 1/3 && s1 == (m1 + 1)/4, Ch[1, 1],
+     0 < m1 < 1/3 && s1 == (1 - m1)/2, 
+     decide[gamp[[1]], {Ch[l + 2, 1], -Ch[1 - l, 1], GV[1, 0, 1]}],
+     0 < m1 < 1/3 && s1 == (m1 + 2)/4, Ch[2, 2],
+     0 < m1 < 1/3 && s1 == m1 + 1/2, GV[0, -1, -1/2],
+     0 < m1 < 1/3 && s1 == (m1 + 3)/4, -Ch[2, 1],
+     0 < m1 < 1/3 && s1 == 1 - m1/2, 
+     decide[gamp[[1]], {Ch[l + 3, 2], -Ch[2 - l, 2], GV[1, 0, 2]}],
+     
+     1/3 < m1 < 2/3 && s1 == (m1 - 1)/4, Ch[0, 1],
+     1/3 < m1 < 2/3 && s1 == m1 - 1/2, GV[0, 1, -1/2],
+     1/3 < m1 < 2/3 && s1 == m1/4, -Ch[0, 0],
+     1/3 < m1 < 2/3 && s1 == (1 - m1)/2, 
+     decide[gamp[[1]], {Ch[1 + l, 1], -Ch[-l, 1], GV[1, 0, 1]}],
+     1/3 < m1 < 2/3 && s1 == (m1 + 1)/4, -Ch[1, 1],
+     1/3 < m1 < 2/3 && s1 == (m1 + 2)/4, Ch[2, 2],
+     1/3 < m1 < 2/3 && s1 == 1 - m1/2, 
+     decide[gamp[[1]], {Ch[l + 3, 2], -Ch[2 - l, 2], GV[1, 0, 2]}],
+     
+     True, Missing["NoExpectation"]
+     ];
+   If[OptionValue["Verbose"],
+    Print["m = ", m, ", q = ", q, ", m1 = ", m1, ", s = ", s, ", k = ",
+      k, ", s1 = ", s1];
+    Print["standardized = ", gamp, ", expected = ", expected];
+    ];
+   
+   If[expected == Missing["NoExpectation"], 
+    Return[{s, Missing["NoExpectation"]}]];
+   
+   If[FreeQ[expected, l], 
+    If[(gamp == expected /. repCh), {s, 0}, {s, 
+      Missing["DoesNotReachBdy"]}], {s, 
+     FindNonNegativeIntegerShift[gamp, expected /. repCh, l]}]
+   ];
 
 
 
