@@ -2443,6 +2443,208 @@ We find,
 The expansion around $u = -2$ is similar (obtained by the transformation $L \to -L$).
 
 
+\section{On the impossibility of four rational \texorpdfstring{$\ur$}{u}-values above a rational \texorpdfstring{$\ell$}{l}}
+
+In this appendix we prove that there is no rational value of \(\ell\) such that all four values of \(\ur\) determined by
+\begin{equation}
+\ell = (t-1)t^3,
+\qquad
+\ur = \frac{1}{2t^2-3t}, \qquad \delta(\ell, \ur) = 0
+\end{equation}
+are rational.
+
+\subsection*{Statement}
+
+For fixed \(\ell\in \mathbb{Q}\), the corresponding values of \(t\) are the roots of
+\begin{equation}
+f(t) = t^4-t^3+\ell.
+\end{equation}
+In general there are four such roots (counted with multiplicity), and hence four corresponding values of
+\begin{equation}
+\ur = \frac{1}{2t^2-3t}.
+\end{equation}
+We will prove the following.
+
+\begin{quote}
+\emph{There is no rational value \(\ell\in \mathbb{Q}\) such that all four corresponding values of \(\ur\) are rational.}
+\end{quote}
+
+\subsection*{A basic observation}
+
+Suppose \(\ur\in \mathbb{Q}\). Then
+\begin{equation}
+2t^2-3t=\frac{1}{\ur}\in \mathbb{Q},
+\end{equation}
+so \(t\) satisfies a quadratic equation over \(\mathbb{Q}\), namely
+\begin{equation}
+2x^2-3x-\frac{1}{\ur}=0.
+\end{equation}
+Hence \(t\) is either rational, or else a quadratic irrational. In the latter case, its Galois conjugate is the other root of the same quadratic, namely
+\begin{equation}
+\frac{3}{2}-t.
+\end{equation}
+
+Therefore, if a root \(t_i\) of \(f(t)=t^4-t^3+\ell\) gives a rational value of \(\ur\), then either:
+\begin{itemize}
+    \item \(t_i\in \mathbb{Q}\), or
+    \item \(t_i\notin \mathbb{Q}\), in which case \(\frac32-t_i\) is also a root of \(f\).
+\end{itemize}
+
+Thus, if all four values of \(\ur\) were rational, the roots of \(f\) could only be distributed in one of the following ways:
+\begin{enumerate}
+    \item all four roots are rational;
+    \item two roots are rational and the remaining two form one conjugate pair \(t,\frac32-t\);
+    \item the four roots form two such conjugate pairs.
+\end{enumerate}
+We now rule out these three possibilities.
+
+\subsection*{Case 1: all four roots are rational}
+
+Assume that
+\begin{equation}
+f(t)=t^4-t^3+\ell
+\end{equation}
+splits completely over \(\mathbb{Q}\). Then we may write
+\begin{equation}
+f(t)=(t^2+at+b)(t^2+ct+d),
+\qquad a,b,c,d\in \mathbb{Q}.
+\end{equation}
+Comparing coefficients with \(t^4-t^3+\ell\), we obtain
+\begin{align}
+a+c &= -1, \\
+ac+b+d &= 0, \\
+ad+bc &= 0.
+\end{align}
+From \(c=-1-a\), the last two equations become
+\begin{align}
+b+d &= a(a+1), \\
+a d + (-1-a)b &= 0.
+\end{align}
+Solving for \(b\) and \(d\), one finds
+\begin{equation}
+b=\frac{a^2(a+1)}{2a+1},
+\qquad
+d=\frac{a(a+1)^2}{2a+1}.
+\end{equation}
+
+For both quadratics to split over \(\mathbb{Q}\), their discriminants must be rational squares. These are
+\begin{align}
+\Delta_1 &= a^2-4b
+= -\,\frac{a^2(2a+3)}{2a+1}, \\
+\Delta_2 &= c^2-4d
+= -\,\frac{(a+1)^2(2a-1)}{2a+1}.
+\end{align}
+Thus both
+\begin{equation}
+-\frac{2a+3}{2a+1},
+\qquad
+-\frac{2a-1}{2a+1}
+\end{equation}
+must be squares in \(\mathbb{Q}\). But their sum is
+\begin{equation}
+-\frac{2a+3}{2a+1}
+-
+\frac{2a-1}{2a+1}
+=
+-\frac{4a+2}{2a+1}
+=-2.
+\end{equation}
+This is impossible, since a sum of two rational squares cannot be negative. Hence \(f\) cannot split completely over \(\mathbb{Q}\).
+
+Therefore the case of four rational roots is impossible.
+
+\subsection*{Case 2: two rational roots and one conjugate pair}
+
+Assume next that two roots are rational and the remaining two form a conjugate pair \(t,\frac32-t\). Then \(f\) factors as
+\begin{equation}
+f(t) = \bigl(t^2-\tfrac32 t+m\bigr)\bigl(t^2+at+b\bigr),
+\qquad a,b,m\in \mathbb{Q},
+\end{equation}
+where the first quadratic corresponds to the non-rational conjugate pair.
+
+Expanding gives
+\begin{align}
+\bigl(t^2-\tfrac32 t+m\bigr)\bigl(t^2+at+b\bigr)
+&=
+t^4 + \Bigl(a-\frac32\Bigr)t^3
++ \Bigl(b-\frac32 a+m\Bigr)t^2 \nonumber\\
+&\quad
++ \Bigl(am-\frac32 b\Bigr)t
++ bm.
+\end{align}
+Comparing with \(t^4-t^3+\ell\), we obtain
+\begin{align}
+a-\frac32 &= -1, \\
+b-\frac32 a + m &= 0, \\
+am-\frac32 b &= 0.
+\end{align}
+The first equation gives
+\begin{equation}
+a=\frac12.
+\end{equation}
+Then the remaining two become
+\begin{align}
+b+m &= \frac34, \\
+\frac12 m - \frac32 b &= 0,
+\end{align}
+hence
+\begin{equation}
+m=3b,
+\qquad
+b+3b=\frac34.
+\end{equation}
+Therefore
+\begin{equation}
+b=\frac{3}{16},
+\qquad
+m=\frac{9}{16}.
+\end{equation}
+
+But then the quadratic factor corresponding to the putative rational roots is
+\begin{equation}
+t^2+\frac12 t+\frac{3}{16},
+\end{equation}
+whose discriminant is
+\begin{equation}
+\Delta = \frac14 - 4\cdot \frac{3}{16}
+= \frac14 - \frac34
+= -\frac12.
+\end{equation}
+This is not a square in \(\mathbb{Q}\), so this quadratic does not have rational roots. Contradiction.
+
+Hence this case is also impossible.
+
+\subsection*{Case 3: two conjugate pairs}
+
+Finally, assume that the four roots consist of two conjugate pairs. Then
+\begin{equation}
+f(t)=\bigl(t^2-\tfrac32 t+m\bigr)\bigl(t^2-\tfrac32 t+n\bigr),
+\qquad m,n\in \mathbb{Q}.
+\end{equation}
+But then the coefficient of \(t^3\) is
+\begin{equation}
+-\frac32-\frac32=-3,
+\end{equation}
+whereas in
+\begin{equation}
+f(t)=t^4-t^3+\ell
+\end{equation}
+the coefficient of \(t^3\) is \(-1\). This is impossible.
+
+So the case of two conjugate pairs is likewise excluded.
+
+\subsection*{Conclusion}
+
+All possible configurations of roots consistent with the assumption that all four values of \(\ur\) are rational lead to contradictions. We conclude that:
+
+\begin{equation}
+\boxed{
+\text{There is no rational value } \ell\in \mathbb{Q}
+\text{ such that all four corresponding values of } \ur \text{ are rational.}
+}
+\end{equation}
+
+
 
 \printbibliography[title={References}]
 
