@@ -561,6 +561,33 @@ SystemMatrix2::usage =
 
 F1PeriodsLV::usage = "F1PeriodsLV[el, ur] or F1PeriodsLV[el, ur, Nn, Nr] TODO";
 
+fS1::usage =
+"fS1[l, u, Nn, Nr] gives the Richardson-resummed series S1(l,u).";
+
+fS2::usage =
+"fS2[l, u, Nn, Nr] gives the Richardson-resummed series S2(l,u).";
+
+fS1d::usage =
+"fS1d[l, u, Nn, Nr] gives the u-derivative of the Richardson-resummed series S1(l,u).";
+
+fS2d::usage =
+"fS2d[l, u, Nn, Nr] gives the u-derivative of the Richardson-resummed series S2(l,u).";
+
+fX2::usage =
+"fX2[l, u, Nn, Nr] gives the logarithmic period X2 built from fS1.";
+
+fX3::usage =
+"fX3[l, u, Nn, Nr] gives the logarithmic period X3 built from fS1 and fS2.";
+
+fT::usage =
+"fT[l, u, Nn, Nr] gives the period T.";
+
+fTD::usage =
+"fTD[l, u, Nn, Nr] gives the dual period T_D.";
+
+fTau::usage =
+"fTau[l, u, Nn, Nr] gives the modular parameter \\[Tau] = d T_D / d T.";
+
 TreeCharge::usage = "TreeCharge[tree] computes the total charge of a tree.";
 
 PrecomputedLVTrees::usage = "PrecomputedLVTrees[gam, m=-1/10] gives a few precomputed trees for m = -1/10.";
@@ -1861,6 +1888,54 @@ SystemMatrix2[{{v1_, v2_}, {v1p_, v2p_}, {v1pp_, v2pp_}}, el_,
 
 F1PeriodsLV[el_, ur_, Nn_ : 512, Nr_ : 10] := 
   SystemMatrix2[F1Series2[el, ur, Nn, Nr], el, ur];
+
+fS1[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  RichardsonResum[
+   Accumulate[
+    Table[(n - 1)! u^n Sum[
+       l^r/(r! (n - 2 r)!^2 (3 r - n)!), {r, Ceiling[n/3], 
+        Floor[n/2]}], {n, 2, Nn}]], Nr];
+fS2[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  RichardsonResum[
+   Accumulate[
+    Table[-(n - 1)!/
+       4 (Sum[(-1)^(n - r) (n - 3 r - 1)!/(r! (n - 2 r)!^2) l^r, {r, 
+          0, Floor[(n - 1)/3]}] + 
+        Sum[l^r/(r! (n - 2 r)!^2 (3 r - n)!) (4 HarmonicNumber[
+              n - 2 r] + 3 HarmonicNumber[r] + 
+            HarmonicNumber[3 r - n] - 8 HarmonicNumber[n - 1]), {r, 
+          Ceiling[n/3], Floor[n/2]}]) u^n, {n, 1, Nn}]], Nr];
+fS1d[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  RichardsonResum[
+   Accumulate[
+    Table[n! u^(n - 1) Sum[
+       l^r/(r! (n - 2 r)!^2 (3 r - n)!), {r, Ceiling[n/3], 
+        Floor[n/2]}], {n, 2, Nn}]], Nr];
+fS2d[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  RichardsonResum[
+   Accumulate[
+    Table[-n!/
+       4 (Sum[(-1)^(n - r) (n - 3 r - 1)!/(r! (n - 2 r)!^2) l^r, {r, 
+          0, Floor[(n - 1)/3]}] + 
+        Sum[l^r/(r! (n - 2 r)!^2 (3 r - n)!) (4 HarmonicNumber[
+              n - 2 r] + 3 HarmonicNumber[r] + 
+            HarmonicNumber[3 r - n] - 8 HarmonicNumber[n - 1]), {r, 
+          Ceiling[n/3], Floor[n/2]}]) u^(n - 1), {n, 1, Nn}]], Nr];
+fX2[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  1/(2 Pi I) (Log[u] + fS1[l, u, Nn, Nr]);
+fX3[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  1/(2 Pi I)^2 (Log[u]^2 + 3/4 Log[l] Log[u] + 
+     1/8 Log[l]^2 + (2 Log[u] + 3/4 Log[l]) fS1[l, u, Nn, Nr] + 
+     fS2[l, u, Nn, Nr]);
+fT[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  fX2[l, u, Nn, Nr] + 1/3 (1/(2 Pi I) Log[l]);
+fTD[l_, u_, Nn_ : 256, Nr_ : 7] := 4 fX3[l, u, Nn, Nr] + 1/6;
+fTau[l_, u_, Nn_ : 256, Nr_ : 7] := (
+  3 Log[l] + 8 Log[u] + 8 fS1[l, u, Nn, Nr] + 
+   u (3 Log[l] + 8 Log[u]) fS1d[l, u, Nn, Nr] + 
+   4 u fS2d[l, u, Nn, Nr])/(1 + u fS1d[l, u, Nn, Nr]);
+
+
 
 TreeCharge[arg : {r_, d1_, d2_, ch2_} /; FreeQ[arg, Ch]] := {r, d1, d2, ch2};
 TreeCharge[trees_List] := Total[TreeCharge /@ trees];
