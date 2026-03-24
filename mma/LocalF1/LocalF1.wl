@@ -1930,10 +1930,10 @@ fX3[l_, u_, Nn_ : 256, Nr_ : 7] :=
 fT[l_, u_, Nn_ : 256, Nr_ : 7] := 
   fX2[l, u, Nn, Nr] + 1/3 (1/(2 Pi I) Log[l]);
 fTD[l_, u_, Nn_ : 256, Nr_ : 7] := 4 fX3[l, u, Nn, Nr] + 1/6;
-fTau[l_, u_, Nn_ : 256, Nr_ : 7] := (
-  3 Log[l] + 8 Log[u] + 8 fS1[l, u, Nn, Nr] + 
-   u (3 Log[l] + 8 Log[u]) fS1d[l, u, Nn, Nr] + 
-   4 u fS2d[l, u, Nn, Nr])/(1 + u fS1d[l, u, Nn, Nr]);
+fTau[l_, u_, Nn_ : 256, Nr_ : 7] := 
+  8 Log[u] + 3 Log[l] + (
+   8 fS1[l, u, Nn, Nr] + 4 u fS2d[l, u, Nn, Nr])/(
+   1 + u fS1d[l, u, Nn, Nr]);
 
 
 
