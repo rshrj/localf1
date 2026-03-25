@@ -597,6 +597,9 @@ ComputeQS::usage =
 ComputeU::usage =
 "ComputeU[CList, Nmax] computes the inverse series u(y) from the series data CList, where y = u q_s = q_8/l^(3/8).";
 
+ComputeC::usage =
+"ComputeC[o1List, UList, Nmax] computes the truncated coefficient list obtained by composing the series C(u) = del(u) o1(u)^3/(8 + 9 u) with the inverse series u = U(y), using the series data o1List and UList.";
+
 TreeCharge::usage = "TreeCharge[tree] computes the total charge of a tree.";
 
 PrecomputedLVTrees::usage = "PrecomputedLVTrees[gam, m=-1/10] gives a few precomputed trees for m = -1/10.";
@@ -1954,8 +1957,9 @@ polyConvTrunc[a_List, b_List, d_Integer] :=
        Min[lb, len - i + 1]}]], {i, 1, Min[la, len]}];
    res];
 
+(*   A = 4 u s2'(u) + 8 s1(u),   B = 1 + u s1'(u),   qs = q_8/l^(3/8)/u   *)
 ComputeQS[AList_, BList_, Nmax1_ : 0] := 
-  Module[{Nmax, deg, DList, CList, b00, dn, tmp, conv},
+  Module[{Nmax, deg, DList, QsList, b00, dn, tmp, conv},
    Nmax = 
     If[Nmax1 > 0, Min[Nmax1, Length[AList], Length[BList]] - 1, 
      Min[Length[AList], Length[BList]] - 1];
@@ -1963,10 +1967,10 @@ ComputeQS[AList_, BList_, Nmax1_ : 0] :=
    deg[n_] := Quotient[n, 2];
    
    DList = Table[ConstantArray[0, deg[n] + 1], {n, 0, Nmax}];
-   CList = Table[ConstantArray[0, deg[n] + 1], {n, 0, Nmax}];
+   QsList = Table[ConstantArray[0, deg[n] + 1], {n, 0, Nmax}];
    
    b00 = BList[[1, 1]];
-   CList[[1]] = {1};
+   QsList[[1]] = {1};
    
    Monitor[Do[dn = deg[n];
      tmp = AList[[n + 1]];
@@ -1974,15 +1978,16 @@ ComputeQS[AList_, BList_, Nmax1_ : 0] :=
       tmp[[1 ;; Length[conv]]] -= conv, {k, 1, n}];
      DList[[n + 1]] = Expand[tmp/b00];
      tmp = ConstantArray[0, dn + 1];
-     Do[conv = polyConvTrunc[DList[[m + 1]], CList[[n - m + 1]], dn];
+     Do[conv = polyConvTrunc[DList[[m + 1]], QsList[[n - m + 1]], dn];
       tmp[[1 ;; Length[conv]]] += (m/8) conv, {m, 1, n}];
-     CList[[n + 1]] = Expand[tmp/n], {n, 1, Nmax}], Row[{"n = ", n}]];
-   CList
+     QsList[[n + 1]] = Expand[tmp/n], {n, 1, Nmax}], Row[{"n = ", n}]];
+   QsList
    ];
 
-ComputeU[CList_, Nmax1_ : 0] := 
+(*   computes inverse of y = y(u) = u q_s = q_8/l^(3/8)    *)
+ComputeU[QsList_, Nmax1_ : 0] := 
   Module[{Nmax, deg, BList, CTab, dn, c, tmp, bn}, 
-   Nmax = If[Nmax1 > 0, Min[Nmax1, Length[CList]], Length[CList]];
+   Nmax = If[Nmax1 > 0, Min[Nmax1, Length[QsList]], Length[QsList]];
    
    deg[n_] := Quotient[n - 1, 2];
    
@@ -1998,11 +2003,112 @@ ComputeU[CList_, Nmax1_ : 0] :=
        c[[1 ;; Length[tmp]]] += tmp, {j, m - 1, n - 1}];
       CTab[[m, n]] = c, {m, 2, n}];
      bn = ConstantArray[0, dn + 1];
-     Do[tmp = polyConvTrunc[CList[[m]], CTab[[m, n]], dn];
+     Do[tmp = polyConvTrunc[QsList[[m]], CTab[[m, n]], dn];
       bn[[1 ;; Length[tmp]]] -= tmp, {m, 2, n}];
      BList[[n]] = bn;
      CTab[[1, n]] = bn, {n, 2, Nmax}], Row[{"n = ", n}]];
    BList
+   ];
+
+(*  Computes C = 8 * del/(8u + 9) om1^3, om1 ~ 1 + 2l u^2 + ...   *)
+ComputeC[o1List_, UList_, Nmax1_ : 0] := 
+  Module[{Nmax, degA, degC, zeroPoly, getA, getC, polyAddTo, polyAdd, 
+    polySub, PList, A2List, A3List, tmp, NumList, GList, PowTab, 
+    FList},
+   Nmax = 
+    If[Nmax1 > 0, Min[Nmax1, Length[o1List], Length[UList] - 1], 
+     Min[Length[o1List], Length[UList] - 1]];
+   
+   degA[n_] := Quotient[n, 2];
+   degC[n_] := Quotient[n - 1, 2];
+   
+   zeroPoly[d_] := ConstantArray[0, d + 1];
+   
+   getA[list_, n_] := 
+    If[0 <= n <= Length[list] - 1 && list[[n + 1]] =!= {}, 
+     list[[n + 1]], zeroPoly[degA[n]]];
+   
+   getC[list_, n_] := 
+    If[1 <= n <= Length[list] && list[[n]] =!= {}, list[[n]], 
+     zeroPoly[degC[n]]];
+   
+   polyAddTo[x_List, y_List] := 
+    Module[{z = x}, z[[1 ;; Length[y]]] += y;
+     z];
+   
+   polyAdd[a_List, b_List, d_Integer] := 
+    Module[{res = zeroPoly[d]}, res[[1 ;; Length[a]]] += a;
+     res[[1 ;; Length[b]]] += b;
+     res];
+   
+   polySub[a_List, b_List, d_Integer] := 
+    Module[{res = zeroPoly[d]}, res[[1 ;; Length[a]]] += a;
+     res[[1 ;; Length[b]]] -= b;
+     res];
+   
+   (*build P(u)=8(1+u-8lu^2-36lu^3+l(-27+16l)u^4)*)
+   PList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   PList[[1]] = {8};
+   If[Nmax >= 1, PList[[2]] = {8}];
+   If[Nmax >= 2, PList[[3]] = {0, -64}];
+   If[Nmax >= 3, PList[[4]] = {0, -288}];
+   If[Nmax >= 4, PList[[5]] = {0, -216, 128}];
+   
+   (*A^2,A^3*)
+   A2List = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   A3List = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   
+   Do[tmp = zeroPoly[degA[n]];
+    Do[tmp = 
+      polyAddTo[tmp, 
+       polyConvTrunc[getA[o1List, k], getA[o1List, n - k], 
+        degA[n]]], {k, 0, n}];
+    A2List[[n + 1]] = tmp, {n, 0, Nmax}];
+   
+   Do[tmp = zeroPoly[degA[n]];
+    Do[tmp = 
+      polyAddTo[tmp, 
+       polyConvTrunc[A2List[[k + 1]], getA[o1List, n - k], 
+        degA[n]]], {k, 0, n}];
+    A3List[[n + 1]] = tmp, {n, 0, Nmax}];
+   
+   (*numerator=P A^3*)
+   NumList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   Do[tmp = zeroPoly[degA[n]];
+    Do[tmp = 
+      polyAddTo[tmp, 
+       polyConvTrunc[PList[[k + 1]], A3List[[n - k + 1]], 
+        degA[n]]], {k, 0, n}];
+    NumList[[n + 1]] = tmp, {n, 0, Nmax}];
+   
+   (*divide by 8+9u*)
+   (*divide by 8+9u*)GList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   GList[[1]] = NumList[[1]]/8;
+   Do[GList[[n + 1]] = 
+     polySub[NumList[[n + 1]], 9 GList[[n]], degA[n]]/8, {n, 1, Nmax}];
+   
+   (*powers of C(y),with UList[[n]]=coeff of y^n*)
+   PowTab = Table[{}, {Nmax}, {Nmax}];
+   Do[PowTab[[1, n]] = getC[UList, n], {n, 1, Nmax}];
+   
+   Do[Do[tmp = zeroPoly[degA[n]];
+     Do[tmp = 
+       polyAdd[tmp, 
+        polyConvTrunc[PowTab[[m - 1, k]], getC[UList, n - k], degA[n]],
+         degA[n]], {k, m - 1, n - 1}];
+     PowTab[[m, n]] = tmp, {m, 2, n}], {n, 2, Nmax}];
+   
+   FList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   FList[[1]] = GList[[1]];
+   
+   Do[tmp = zeroPoly[degA[n]];
+    Do[tmp = 
+      polyAdd[tmp, 
+       polyConvTrunc[GList[[m + 1]], PowTab[[m, n]], degA[n]], 
+       degA[n]], {m, 1, n}];
+    FList[[n + 1]] = tmp, {n, 1, Nmax}];
+   
+   FList
    ];
 
 
