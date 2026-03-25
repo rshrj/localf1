@@ -2101,12 +2101,12 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
    FList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
    FList[[1]] = GList[[1]];
    
-   Do[tmp = zeroPoly[degA[n]];
+   Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAdd[tmp, 
        polyConvTrunc[GList[[m + 1]], PowTab[[m, n]], degA[n]], 
        degA[n]], {m, 1, n}];
-    FList[[n + 1]] = tmp, {n, 1, Nmax}];
+    FList[[n + 1]] = tmp, {n, 1, Nmax}], Row[{"n = ", n}]];
    
    FList
    ];
