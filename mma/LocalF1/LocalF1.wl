@@ -588,6 +588,15 @@ fTD::usage =
 fTau::usage =
 "fTau[l, u, Nn, Nr] gives the modular parameter \\[Tau] = d T_D / d T.";
 
+polyConvTrunc::usage =
+"polyConvTrunc[a, b, d] multiplies the coefficient lists a and b and truncates the result to degree d.";
+
+ComputeQS::usage =
+"ComputeQS[AList, BList, Nmax] computes the truncated coefficient list for q_s = Exp[(1/8) A(u)/B(u)] from the series data AList and BList.";
+
+ComputeU::usage =
+"ComputeU[CList, Nmax] computes the inverse series u(y) from the series data CList, where y = u q_s = q_8/l^(3/8).";
+
 TreeCharge::usage = "TreeCharge[tree] computes the total charge of a tree.";
 
 PrecomputedLVTrees::usage = "PrecomputedLVTrees[gam, m=-1/10] gives a few precomputed trees for m = -1/10.";
@@ -1934,6 +1943,67 @@ fTau[l_, u_, Nn_ : 256, Nr_ : 7] :=
   8 Log[u] + 3 Log[l] + (
    8 fS1[l, u, Nn, Nr] + 4 u fS2d[l, u, Nn, Nr])/(
    1 + u fS1d[l, u, Nn, Nr]);
+
+polyConvTrunc[a_List, b_List, d_Integer] := 
+  Module[{la = Length[a], lb = Length[b], len, res, i, j, ai}, 
+   len = Min[d + 1, la + lb - 1];
+   res = ConstantArray[0, len];
+   Do[ai = a[[i]];
+    If[ai =!= 0, 
+     Do[res[[i + j - 1]] += ai*b[[j]], {j, 1, 
+       Min[lb, len - i + 1]}]], {i, 1, Min[la, len]}];
+   res];
+
+ComputeQS[AList_, BList_, Nmax1_ : 0] := 
+  Module[{Nmax, deg, DList, CList, b00, dn, tmp, conv},
+   Nmax = 
+    If[Nmax1 > 0, Min[Nmax1, Length[AList], Length[BList]] - 1, 
+     Min[Length[AList], Length[BList]] - 1];
+   
+   deg[n_] := Quotient[n, 2];
+   
+   DList = Table[ConstantArray[0, deg[n] + 1], {n, 0, Nmax}];
+   CList = Table[ConstantArray[0, deg[n] + 1], {n, 0, Nmax}];
+   
+   b00 = BList[[1, 1]];
+   CList[[1]] = {1};
+   
+   Monitor[Do[dn = deg[n];
+     tmp = AList[[n + 1]];
+     Do[conv = polyConvTrunc[BList[[k + 1]], DList[[n - k + 1]], dn];
+      tmp[[1 ;; Length[conv]]] -= conv, {k, 1, n}];
+     DList[[n + 1]] = Expand[tmp/b00];
+     tmp = ConstantArray[0, dn + 1];
+     Do[conv = polyConvTrunc[DList[[m + 1]], CList[[n - m + 1]], dn];
+      tmp[[1 ;; Length[conv]]] += (m/8) conv, {m, 1, n}];
+     CList[[n + 1]] = Expand[tmp/n], {n, 1, Nmax}], Row[{"n = ", n}]];
+   CList
+   ];
+
+ComputeU[CList_, Nmax1_ : 0] := 
+  Module[{Nmax, deg, BList, CTab, dn, c, tmp, bn}, 
+   Nmax = If[Nmax1 > 0, Min[Nmax1, Length[CList]], Length[CList]];
+   
+   deg[n_] := Quotient[n - 1, 2];
+   
+   BList = Table[ConstantArray[0, deg[n] + 1], {n, 1, Nmax}];
+   BList[[1]] = {1};
+   
+   CTab = Table[{}, {Nmax}, {Nmax}];
+   CTab[[1, 1]] = {1};
+   
+   Monitor[Do[dn = deg[n];
+     Do[c = ConstantArray[0, dn + 1];
+      Do[tmp = polyConvTrunc[CTab[[m - 1, j]], BList[[n - j]], dn];
+       c[[1 ;; Length[tmp]]] += tmp, {j, m - 1, n - 1}];
+      CTab[[m, n]] = c, {m, 2, n}];
+     bn = ConstantArray[0, dn + 1];
+     Do[tmp = polyConvTrunc[CList[[m]], CTab[[m, n]], dn];
+      bn[[1 ;; Length[tmp]]] -= tmp, {m, 2, n}];
+     BList[[n]] = bn;
+     CTab[[1, n]] = bn, {n, 2, Nmax}], Row[{"n = ", n}]];
+   BList
+   ];
 
 
 
