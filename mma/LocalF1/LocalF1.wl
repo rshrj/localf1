@@ -526,6 +526,12 @@ MirrorCurveDelta2::usage =
 "MirrorCurveDelta2[el, ur] gives the order-4 factor in the discriminant of the local F1 mirror curve in variables (el,ur). \
 Its roots locate the discriminant locus in the (el,ur)-slice.";
 
+URoot2::usage =
+"URoot2[el, k] gives the k-th Root object ur solving MirrorCurveDelta2[el, ur] == 0.";
+
+URoots2::usage =
+"URoots2[el] returns the list of numerical roots u of MirrorCurveDelta2[el, ur] == 0.";
+
 PicardFuchsP2::usage =
 "PicardFuchsP2[el, ur] gives the coefficient P(el,ur) of f'' in the normalized third-order Picard--Fuchs equation in variables (el,ur).";
 
@@ -1683,6 +1689,11 @@ MirrorCurveJ2[el_, ur_] := (1 + 16 el^2 ur^4 -
   8 el ur^2 (1 + 3 ur))^3/(el^3 ur^8 (1 + ur - 8 el ur^2 - 
    36 el ur^3 + el (-27 + 16 el) ur^4));
 MirrorCurveDelta2[el_, ur_] := 1 + ur - 8 el ur^2 - 36 el ur^3 + el (-27 + 16 el) ur^4;
+
+URoot2[l_, k_] := Root[1 + # - 8 l #^2 - 36 l #^3 + l (-27 + 16 l) #^4 &, k];
+
+URoots2[l_] := u /. NSolve[MirrorCurveDelta2[l, u] == 0, u];
+
 PicardFuchsP2[el_, ur_] := (24 + 50 ur + (27 - 320 el) ur^2 - 2016 el ur^3 + 
  4 el (-783 + 224 el) ur^4 + 
  54 el (-27 + 16 el) ur^5)/(ur (8 + 9 ur) (1 + ur - 8 el ur^2 - 
