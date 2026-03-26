@@ -4,10 +4,12 @@
    :Context:  LocalF1`
    :Author:   Rishi Raj
    :Summary:  Utilities for local F1 geometry, periods, and BPS indices.
-   :Package Version: 0.1.0
+   :Package Version: 0.9.0
    :Mathematica Version: 14.3
    :History:
      0.1.0 - 2025-12-01 - Initial version.
+     0.9.0 - 2026-03-25 - Various
+
 *)
 
 
@@ -2069,45 +2071,48 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
    A2List = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
    A3List = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
    
-   Do[tmp = zeroPoly[degA[n]];
+   Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAddTo[tmp, 
        polyConvTrunc[getA[o1List, k], getA[o1List, n - k], 
         degA[n]]], {k, 0, n}];
-    A2List[[n + 1]] = tmp, {n, 0, Nmax}];
+    A2List[[n + 1]] = tmp, {n, 0, Nmax}], Row[{"Step 1: n = ", n}]];
    
-   Do[tmp = zeroPoly[degA[n]];
+   Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAddTo[tmp, 
        polyConvTrunc[A2List[[k + 1]], getA[o1List, n - k], 
         degA[n]]], {k, 0, n}];
-    A3List[[n + 1]] = tmp, {n, 0, Nmax}];
+    A3List[[n + 1]] = tmp, {n, 0, Nmax}], Row[{"Step 2: n = ", n}]];
    
    (*numerator=P A^3*)
    NumList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
-   Do[tmp = zeroPoly[degA[n]];
+   Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAddTo[tmp, 
        polyConvTrunc[PList[[k + 1]], A3List[[n - k + 1]], 
         degA[n]]], {k, 0, n}];
-    NumList[[n + 1]] = tmp, {n, 0, Nmax}];
+    NumList[[n + 1]] = tmp, {n, 0, Nmax}],Row[{"Step 3: n = ", n}]];
    
    (*divide by 8+9u*)
-   (*divide by 8+9u*)GList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
+   GList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
    GList[[1]] = NumList[[1]]/8;
-   Do[GList[[n + 1]] = 
-     polySub[NumList[[n + 1]], 9 GList[[n]], degA[n]]/8, {n, 1, Nmax}];
+   Monitor[Do[GList[[n + 1]] = 
+     polySub[NumList[[n + 1]], 9 GList[[n]], degA[n]]/8, {n, 1, Nmax}], Row[{"Step 4: n = ", n}]];
    
    (*powers of C(y),with UList[[n]]=coeff of y^n*)
    PowTab = Table[{}, {Nmax}, {Nmax}];
    Do[PowTab[[1, n]] = getC[UList, n], {n, 1, Nmax}];
    
-   Do[Do[tmp = zeroPoly[degA[n]];
-     Do[tmp = 
+   Monitor[
+    Do[
+      Do[
+        tmp = zeroPoly[degA[n]];
+        Do[tmp = 
        polyAdd[tmp, 
         polyConvTrunc[PowTab[[m - 1, k]], getC[UList, n - k], degA[n]],
          degA[n]], {k, m - 1, n - 1}];
-     PowTab[[m, n]] = tmp, {m, 2, n}], {n, 2, Nmax}];
+     PowTab[[m, n]] = tmp, {m, 2, n}], {n, 2, Nmax}], Row[{"Step 5: n = ", n}]];
    
    FList = Table[zeroPoly[degA[n]], {n, 0, Nmax}];
    FList[[1]] = GList[[1]];
@@ -2117,7 +2122,7 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
       polyAdd[tmp, 
        polyConvTrunc[GList[[m + 1]], PowTab[[m, n]], degA[n]], 
        degA[n]], {m, 1, n}];
-    FList[[n + 1]] = tmp, {n, 1, Nmax}], Row[{"n = ", n}]];
+    FList[[n + 1]] = tmp, {n, 1, Nmax}], Row[{"Step 6: n = ", n}]];
    
    FList
    ];
