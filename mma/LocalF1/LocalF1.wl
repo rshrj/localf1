@@ -1970,6 +1970,9 @@ polyConvTrunc[a_List, b_List, d_Integer] :=
        Min[lb, len - i + 1]}]], {i, 1, Min[la, len]}];
    res];
 
+polyConvTruncFast[a_List, b_List, d_Integer] := 
+ Take[ListConvolve[a, b, {1, -1}, 0], UpTo[Max[0, d + 1]]];
+
 (*   A = 4 u s2'(u) + 8 s1(u),   B = 1 + u s1'(u),   qs = q_8/l^(3/8)/u   *)
 ComputeQS[AList_, BList_, Nmax1_ : 0] := 
   Module[{Nmax, deg, DList, QsList, b00, dn, tmp, conv},
@@ -1987,11 +1990,11 @@ ComputeQS[AList_, BList_, Nmax1_ : 0] :=
    
    Monitor[Do[dn = deg[n];
      tmp = AList[[n + 1]];
-     Do[conv = polyConvTrunc[BList[[k + 1]], DList[[n - k + 1]], dn];
+     Do[conv = polyConvTruncFast[BList[[k + 1]], DList[[n - k + 1]], dn];
       tmp[[1 ;; Length[conv]]] -= conv, {k, 1, n}];
      DList[[n + 1]] = Expand[tmp/b00];
      tmp = ConstantArray[0, dn + 1];
-     Do[conv = polyConvTrunc[DList[[m + 1]], QsList[[n - m + 1]], dn];
+     Do[conv = polyConvTruncFast[DList[[m + 1]], QsList[[n - m + 1]], dn];
       tmp[[1 ;; Length[conv]]] += (m/8) conv, {m, 1, n}];
      QsList[[n + 1]] = Expand[tmp/n], {n, 1, Nmax}], Row[{"n = ", n}]];
    QsList
@@ -2012,11 +2015,11 @@ ComputeU[QsList_, Nmax1_ : 0] :=
    
    Monitor[Do[dn = deg[n];
      Do[c = ConstantArray[0, dn + 1];
-      Do[tmp = polyConvTrunc[CTab[[m - 1, j]], BList[[n - j]], dn];
+      Do[tmp = polyConvTruncFast[CTab[[m - 1, j]], BList[[n - j]], dn];
        c[[1 ;; Length[tmp]]] += tmp, {j, m - 1, n - 1}];
       CTab[[m, n]] = c, {m, 2, n}];
      bn = ConstantArray[0, dn + 1];
-     Do[tmp = polyConvTrunc[QsList[[m]], CTab[[m, n]], dn];
+     Do[tmp = polyConvTruncFast[QsList[[m]], CTab[[m, n]], dn];
       bn[[1 ;; Length[tmp]]] -= tmp, {m, 2, n}];
      BList[[n]] = bn;
      CTab[[1, n]] = bn, {n, 2, Nmax}], Row[{"n = ", n}]];
@@ -2074,14 +2077,14 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
    Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAddTo[tmp, 
-       polyConvTrunc[getA[o1List, k], getA[o1List, n - k], 
+       polyConvTruncFast[getA[o1List, k], getA[o1List, n - k], 
         degA[n]]], {k, 0, n}];
     A2List[[n + 1]] = tmp, {n, 0, Nmax}], Row[{"Step 1: n = ", n}]];
    
    Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAddTo[tmp, 
-       polyConvTrunc[A2List[[k + 1]], getA[o1List, n - k], 
+       polyConvTruncFast[A2List[[k + 1]], getA[o1List, n - k], 
         degA[n]]], {k, 0, n}];
     A3List[[n + 1]] = tmp, {n, 0, Nmax}], Row[{"Step 2: n = ", n}]];
    
@@ -2090,7 +2093,7 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
    Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAddTo[tmp, 
-       polyConvTrunc[PList[[k + 1]], A3List[[n - k + 1]], 
+       polyConvTruncFast[PList[[k + 1]], A3List[[n - k + 1]], 
         degA[n]]], {k, 0, n}];
     NumList[[n + 1]] = tmp, {n, 0, Nmax}],Row[{"Step 3: n = ", n}]];
    
@@ -2110,7 +2113,7 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
         tmp = zeroPoly[degA[n]];
         Do[tmp = 
        polyAdd[tmp, 
-        polyConvTrunc[PowTab[[m - 1, k]], getC[UList, n - k], degA[n]],
+        polyConvTruncFast[PowTab[[m - 1, k]], getC[UList, n - k], degA[n]],
          degA[n]], {k, m - 1, n - 1}];
      PowTab[[m, n]] = tmp, {m, 2, n}], {n, 2, Nmax}], Row[{"Step 5: n = ", n}]];
    
@@ -2120,7 +2123,7 @@ ComputeC[o1List_, UList_, Nmax1_ : 0] :=
    Monitor[Do[tmp = zeroPoly[degA[n]];
     Do[tmp = 
       polyAdd[tmp, 
-       polyConvTrunc[GList[[m + 1]], PowTab[[m, n]], degA[n]], 
+       polyConvTruncFast[GList[[m + 1]], PowTab[[m, n]], degA[n]], 
        degA[n]], {m, 1, n}];
     FList[[n + 1]] = tmp, {n, 1, Nmax}], Row[{"Step 6: n = ", n}]];
    
