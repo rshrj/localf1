@@ -1360,6 +1360,171 @@ m \\[2pt]
 \end{pmatrix}
 \end{equation}
 
+\paragraph{Recursive solution of the third-order Picard--Fuchs equation.}
+Consider a third-order Picard--Fuchs operator of the form
+\begin{equation}
+  \mathcal{D}
+  =
+  \partial_z^3
+  + f_2(z)\partial_z^2
+  + f_1(z)\partial_z ,
+\end{equation}
+where \(f_1\) and \(f_2\) are rational functions. We assume that \(z=0\) is a regular singular point with indicial exponents \((0,1,1)\). A Frobenius basis of local solutions then takes the form
+\begin{equation}
+  v_0 = 1, \qquad
+  v_1 = z + \sum_{m=2}^{\infty} a_m z^m, \qquad
+  v_2 = v_1 \log z + \sum_{m=2}^{\infty} b_m z^m .
+\end{equation}
+The following recursive procedure provides an efficient way to compute the coefficients
+\(a_m\) and \(b_m\) to high order.
+
+We first introduce the coefficients \(S_{n,i}\) by expanding the action of
+\(\mathcal{D}\) on monomials:
+\begin{equation}
+  \frac{\mathcal{D}(z^n)}{n z^{n-3}}
+  =
+  (n-1)^2
+  +
+  \sum_{i=1}^{\infty} S_{n,i} z^i .
+\end{equation}
+
+Writing
+\begin{equation}
+  v_1 = \sum_{m=1}^{\infty} a_m z^m,
+  \qquad a_1=1,
+\end{equation}
+and imposing \(\mathcal{D}v_1=0\), the coefficient of \(z^{m-3}\) gives, for
+\(m\geq 2\),
+\begin{equation}
+  m(m-1)^2 a_m
+  +
+  \sum_{n=1}^{m-1}
+  n a_n S_{n,m-n}
+  =
+  0.
+\end{equation}
+Hence the analytic solution is determined recursively by
+\begin{equation}
+  a_m
+  =
+  -
+  \frac{
+    \sum_{n=1}^{m-1}
+    n a_n S_{n,m-n}
+  }{
+    m(m-1)^2
+  },
+  \qquad m\geq 2.
+\end{equation}
+
+We now turn to the logarithmic solution. Define the non-logarithmic source
+\(H(z)\) by
+\begin{equation}
+  \mathcal{D}\bigl(v_1\log z\bigr)
+  =
+  \log z \, \mathcal{D}v_1
+  +
+  H(z).
+\end{equation}
+Since \(\mathcal{D}v_1=0\), only \(H(z)\) contributes. For the operator above,
+one finds
+\begin{equation}
+  H(z)
+  =
+  \frac{3v_1''}{z}
+  -
+  \frac{3v_1'}{z^2}
+  +
+  \frac{2v_1}{z^3}
+  +
+  f_2(z)
+  \left(
+    \frac{2v_1'}{z}
+    -
+    \frac{v_1}{z^2}
+  \right)
+  +
+  f_1(z)\frac{v_1}{z}.
+\end{equation}
+We write its Laurent expansion as
+\begin{equation}
+  H(z)
+  =
+  \sum_{m=1}^{\infty} h_m z^{m-3}.
+\end{equation}
+
+The coefficients \(h_m\) can also be expressed directly in terms of the
+coefficients \(a_m\) and \(S_{n,i}\). Using
+\begin{equation}
+  z^n \log z = \partial_n z^n,
+\end{equation}
+we have
+\begin{equation}
+  \mathcal{D}(z^n \log z)
+  =
+  \partial_n \mathcal{D}(z^n).
+\end{equation}
+Taking the non-logarithmic part gives
+\begin{equation}
+  h_m
+  =
+  (m-1)(3m-1)a_m
+  +
+  \sum_{k=1}^{m-1}
+  a_k
+  \left.
+  \partial_n
+  \left(
+    n S_{n,m-k}
+  \right)
+  \right|_{n=k}.
+\end{equation}
+
+Finally, let
+\begin{equation}
+  B(z)
+  =
+  \sum_{m=2}^{\infty} b_m z^m,
+  \qquad
+  v_2 = v_1 \log z + B(z).
+\end{equation}
+The condition \(\mathcal{D}v_2=0\) is equivalent to
+\begin{equation}
+  \mathcal{D}B(z) = -H(z).
+\end{equation}
+Comparing the coefficient of \(z^{m-3}\), we obtain, for \(m\geq 2\),
+\begin{equation}
+  m(m-1)^2 b_m
+  +
+  \sum_{n=2}^{m-1}
+  n b_n S_{n,m-n}
+  =
+  -h_m.
+\end{equation}
+Thus the logarithmic coefficients are determined recursively by
+\begin{equation}
+  b_m
+  =
+  -
+  \frac{
+    h_m
+    +
+    \sum_{n=2}^{m-1}
+    n b_n S_{n,m-n}
+  }{
+    m(m-1)^2
+  },
+  \qquad m\geq 2.
+\end{equation}
+
+This gives a triangular algorithm: first compute the coefficients \(a_m\),
+then compute the corresponding source coefficients \(h_m\), and finally compute
+the coefficients \(b_m\). Since each step only involves previously determined
+coefficients, the method avoids repeated symbolic substitution into the full
+operator and is substantially faster than a naive implementation using
+successive ansätze and symbolic solving.
+
+
 \subsection{Large Volume Scattering}
 
 We take $\mathbb{F}_1$ to be the blow-up of $\mathbb{P}^2$. We define a basis of compact curve classes on local $\mathbb{F}_1$. Let $C$ be the exceptional class, $C^2 = -1$ in the cup product. Let $H$ be the hyperplane class, $H^2 = 1$ and $H.C = 0$. We consider compactly supported coherent sheaves $E$ on local $\mathbb{F}_1$ with Chern vector $\gamma(E) = [r(E), \ c_1(E), \ \mathrm{ch}_2(E)]$, where $r$ is the rank of the sheaf on $\mathbb{F}_1$, $c_1(E)$ is the first Chern class [TODO]
