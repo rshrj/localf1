@@ -45,6 +45,19 @@
 \usepackage{cleveref}
 \usepackage{ulem}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+
+\tikzset{
+  qnode/.style={circle, draw, minimum size=18pt, inner sep=1pt},
+  qarr/.style={-Latex, thick}
+}
+\newcommand{\qvertices}{
+  \node[qnode] (1) at (90:1.05) {$1$};
+  \node[qnode] (2) at (210:1.05) {$2$};
+  \node[qnode] (3) at (330:1.05) {$3$};
+}
+
 % Titles
 \usepackage{titlesec}
 \titleformat
@@ -2151,7 +2164,340 @@ Formally, the solution is given by
   \alpha_0(z) = C_0 + C_1 \log z + \int^z \frac{\dd{\xi}}{\xi} \int^{\xi} \dd{\eta} (\eta-1)^{-\tfrac76} \frac{f(\eta)}{\eta}
 \end{equation}
 
+
+
+\section{4d Seiberg--Witten with \texorpdfstring{$N_f = 1$}{Nf=1} matter hypermultiplets}
+
+\subsection{Mutation class of a three-node quiver}
+
+Consider the three-node quiver
+\[
+2 \xrightarrow{2} 1,\qquad 1\to 3,\qquad 3\to 2 .
+\]
+Equivalently, using the skew-symmetric exchange matrix convention
+\[
+B_{ij}=\#(i\to j)-\#(j\to i),
+\]
+we have
+\[
+B_0=
+\begin{pmatrix}
+0&-2&1\\
+2&0&-1\\
+-1&1&0
+\end{pmatrix}.
+\]
+
+Mutation at a node \(k\) is defined by
+\[
+b'_{ij}=
+\begin{cases}
+-b_{ij}, & i=k\ \text{or}\ j=k,\\[4pt]
+b_{ij}+[b_{ik}]_+[b_{kj}]_+
+      -[-b_{ik}]_+[-b_{kj}]_+, & i,j\neq k,
+\end{cases}
+\]
+where \([x]_+=\max(x,0)\). In quiver language, this means: for every path
+\(i\to k\to j\), add an arrow \(i\to j\), then reverse all arrows incident
+on \(k\), and finally cancel oriented 2-cycles.
+
+For example, mutating \(B_0\) at node \(3\), the path
+\[
+1\to 3\to 2
+\]
+adds one arrow \(1\to 2\), which cancels one of the two arrows \(2\to 1\).
+After reversing the arrows adjacent to \(3\), one obtains
+\[
+2\to1,\qquad 3\to1,\qquad 2\to3.
+\]
+
+Iterating mutations at the three nodes gives a finite labelled mutation
+class with \(12\) quivers:
+\[
+\begin{array}{c|l}
+Q_0 & 2\xrightarrow{2}1,\ 1\to3,\ 3\to2\\
+Q_1 & 1\xrightarrow{2}2,\ 3\to1,\ 2\to3\\
+Q_2 & 2\to1,\ 3\to1,\ 2\to3\\
+Q_3 & 1\to2,\ 1\to3,\ 3\to2\\
+Q_4 & 1\to2,\ 1\to3,\ 2\to3\\
+Q_5 & 1\to2,\ 3\to1,\ 3\to2\\
+Q_6 & 2\to1,\ 3\to1,\ 3\to2\\
+Q_7 & 2\to1,\ 1\to3,\ 2\to3\\
+Q_8 & 2\to1,\ 1\xrightarrow{2}3,\ 3\to2\\
+Q_9 & 2\to1,\ 1\to3,\ 3\xrightarrow{2}2\\
+Q_{10} & 1\to2,\ 3\xrightarrow{2}1,\ 2\to3\\
+Q_{11} & 1\to2,\ 3\to1,\ 2\xrightarrow{2}3
+\end{array}
+\]
+
+Thus the labelled mutation class has size
+\[
+|\operatorname{Mut}(Q_0)|=12.
+\]
+Up to relabelling of the nodes, there are only two underlying shapes:
+a cyclic triangle with arrow multiplicities \((2,1,1)\), and an acyclic
+triangle with multiplicities \((1,1,1)\). In particular, the quiver is
+mutation-equivalent to an acyclic orientation of the affine
+\(\widetilde A_2\) triangle.
+
+
+
 \appendix
+
+\subsection{Mutation class of the three-node quiver for \(SU(2)\), \(N_f=1\)}
+
+The strong-coupling quiver of pure \(SU(2)\) Seiberg--Witten theory is the
+two-node, two-arrow Kronecker quiver. A convenient basis of charges for its two
+nodes is
+\[
+\gamma_a=(n_e,n_m)=(0,1),\qquad
+\gamma_b=(n_e,n_m)=(-1,1).
+\]
+If one adds a very massive quark and then later takes the decoupling limit
+\(m\to \infty\), the resulting theory must reduce back to the pure SW theory.
+Thus the \(N_f=1\) quiver should be obtained by adjoining one extra node to the
+two-node quiver. A natural choice for the third charge is
+\[
+\gamma_c=(-2,1).
+\]
+
+With the Dirac--Schwinger--Zwanziger pairing
+\[
+\langle (n_e,n_m),(n_e',n_m')\rangle
+= n_e n_m' - n_m n_e',
+\]
+one finds
+\[
+\langle \gamma_a,\gamma_b\rangle =1,\qquad
+\langle \gamma_b,\gamma_c\rangle =1,\qquad
+\langle \gamma_a,\gamma_c\rangle =2.
+\]
+Hence, up to the usual convention for arrow orientation and relabelling of the
+nodes, the seed quiver is the cyclic three-node quiver with arrow
+multiplicities \((2,1,1)\). We take as seed
+\[
+Q_0:\qquad 2\xrightarrow{2}1,\qquad 1\to3,\qquad 3\to2.
+\]
+Equivalently, in terms of the exchange matrix
+\[
+B_{ij}=\#(i\to j)-\#(j\to i),
+\]
+the seed is
+\[
+B_0=
+\begin{pmatrix}
+0&-2&1\\
+2&0&-1\\
+-1&1&0
+\end{pmatrix}.
+\]
+
+Mutation at node \(k\) is defined by
+\[
+b'_{ij}=
+\begin{cases}
+-b_{ij}, & i=k\ \text{or}\ j=k,\\[4pt]
+b_{ij}+[b_{ik}]_+[b_{kj}]_+
+      -[-b_{ik}]_+[-b_{kj}]_+, & i,j\neq k,
+\end{cases}
+\qquad [x]_+=\max(x,0).
+\]
+In quiver language: for every path \(i\to k\to j\), add an arrow \(i\to j\);
+then reverse all arrows incident on \(k\); finally cancel all oriented
+2-cycles.
+
+\paragraph{Remark on charges.}
+The mutation class below is the class of \emph{unlabelled quivers}. If one also
+wants the \((n_e,n_m)\)-charges carried by the nodes, one must choose either a
+left- or a right-mutation convention for the charge basis. For example, under a
+right mutation at node \(k\),
+\[
+\gamma_k'=-\gamma_k,\qquad
+\gamma_i'=\gamma_i+[B_{ik}]_+\,\gamma_k,\qquad i\neq k,
+\]
+while under a left mutation one uses
+\[
+\gamma_k'=-\gamma_k,\qquad
+\gamma_i'=\gamma_i+[B_{ki}]_+\,\gamma_k,\qquad i\neq k.
+\]
+Thus every quiver in the mutation class comes with a corresponding mutated
+charge basis \((\gamma_1',\gamma_2',\gamma_3')\), obtained recursively from the
+seed basis. For the purposes of the mutation \emph{class} itself, however, the
+unlabelled quivers are enough.
+
+\paragraph{Example.}
+Starting from \(Q_0\), mutation at node \(3\) gives
+\[
+Q_2:\qquad 2\to1,\qquad 3\to1,\qquad 2\to3.
+\]
+Indeed, the path \(1\to3\to2\) creates one arrow \(1\to2\), which cancels one
+of the two arrows \(2\to1\); then the arrows adjacent to node \(3\) are
+reversed.
+
+\paragraph{The full labelled mutation class.}
+Iterating mutations at nodes \(1,2,3\) produces a finite class of \(12\)
+labelled quivers.
+
+%------------------------------------------------------------
+% TikZ setup
+%------------------------------------------------------------
+\begin{center}
+\small
+
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_0\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (2) -- node[midway,left,fill=white,inner sep=1pt] {$2$} (1);
+\draw[qarr] (1) -- (3);
+\draw[qarr] (3) -- (2);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_1\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (1) -- node[midway,left,fill=white,inner sep=1pt] {$2$} (2);
+\draw[qarr] (3) -- (1);
+\draw[qarr] (2) -- (3);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_2\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (2) -- (1);
+\draw[qarr] (3) -- (1);
+\draw[qarr] (2) -- (3);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_3\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (1) -- (2);
+\draw[qarr] (1) -- (3);
+\draw[qarr] (3) -- (2);
+\end{tikzpicture}
+\end{minipage}
+
+\medskip
+
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_4\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (1) -- (2);
+\draw[qarr] (1) -- (3);
+\draw[qarr] (2) -- (3);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_5\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (1) -- (2);
+\draw[qarr] (3) -- (1);
+\draw[qarr] (3) -- (2);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_6\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (2) -- (1);
+\draw[qarr] (3) -- (1);
+\draw[qarr] (3) -- (2);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_7\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (2) -- (1);
+\draw[qarr] (1) -- (3);
+\draw[qarr] (2) -- (3);
+\end{tikzpicture}
+\end{minipage}
+
+\medskip
+
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_8\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (2) -- (1);
+\draw[qarr] (1) -- node[midway,right,fill=white,inner sep=1pt] {$2$} (3);
+\draw[qarr] (3) -- (2);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_9\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (2) -- (1);
+\draw[qarr] (1) -- (3);
+\draw[qarr] (3) -- node[midway,below,fill=white,inner sep=1pt] {$2$} (2);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_{10}\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (1) -- (2);
+\draw[qarr] (3) -- node[midway,right,fill=white,inner sep=1pt] {$2$} (1);
+\draw[qarr] (2) -- (3);
+\end{tikzpicture}
+\end{minipage}
+\begin{minipage}{0.24\textwidth}\centering
+\(Q_{11}\)
+
+\begin{tikzpicture}[baseline=(current bounding box.center),scale=1]
+\qvertices
+\draw[qarr] (1) -- (2);
+\draw[qarr] (3) -- (1);
+\draw[qarr] (2) -- node[midway,below,fill=white,inner sep=1pt] {$2$} (3);
+\end{tikzpicture}
+\end{minipage}
+
+\end{center}
+
+Therefore the labelled mutation class has size
+\[
+|\mathrm{Mut}(Q_0)|=12.
+\]
+Up to relabelling, there are only two underlying shapes:
+\begin{itemize}
+\item the cyclic quiver with multiplicities \((2,1,1)\);
+\item the acyclic quiver with multiplicities \((1,1,1)\).
+\end{itemize}
+Thus the seed quiver for \(SU(2)\), \(N_f=1\) is mutation-equivalent to an
+acyclic orientation of the affine \(\widetilde A_2\) triangle.
+
+\paragraph{Comment on the charges across the mutation class.}
+The seed basis may be taken to be
+\[
+(\gamma_1,\gamma_2,\gamma_3)\sim \bigl((0,1),\,(-1,1),\,(-2,1)\bigr),
+\]
+up to relabelling and overall sign conventions. Each quiver \(Q_i\) in the
+mutation class carries a basis of charges obtained by successive left or right
+mutations from this seed basis. The underlying quiver only remembers the DSZ
+pairings among the basis elements, whereas the actual node charges depend on the
+chosen mutation convention. Hence, when needed, it is best to keep the quiver
+diagram and the mutated charge basis as separate pieces of data.
+
+
 
 \section{Degenerations of the map \texorpdfstring{$\ur \mapsto J$}{ur -> J}}
 \label{sec:degenerations-J-ur}
