@@ -1,10 +1,10 @@
 (* ::Package:: *)
 
 (* ::Title:: *)
-(*SWNf1QuiverScattering - Generic quiver scattering diagram machinery*)
+(*SWNf1QuiverScattering*)
 
 
-Print["SWNf1QuiverScattering 1.0, June 2025 - Generic quiver scattering diagram machinery"];
+Print["SWNf1QuiverScattering 1.1, Aug 2026 - Generic quiver scattering diagrams machinery"];
 
 
 BeginPackage["SWNf1QuiverScattering`"]
@@ -19,6 +19,12 @@ Must be defined before using any McKay* or ConstructMcKayDiagram routines.";
 McKayDSZ::usage = "McKayDSZ[Nvec_,NNvec_] computes the antisymmetric DSZ pairing between two \
 dimension vectors, typically as Tr[{Nvec}.Mat.Transpose[{NNvec}]]. \
 Must be defined for the specific quiver (2-arg form, no mass parameter).";
+
+DSZ::usage = "DSZ[{q1,p1,...},{q2,p2,...}] computes the Dirac-Schwinger-Zwanziger pairing between \
+two charges given as (electric, magnetic, flavor...) vectors, basis-independent of any particular \
+quiver. Only the electric and magnetic entries (first two components) enter the pairing; any \
+flavor charges are ignored, since they lie in the kernel of the DSZ form. Useful for deriving a \
+quiver's Mat directly from its charge basis, e.g. Mat = Outer[DSZ, basis, basis, 1].";
 
 McKayVec::usage = "McKayVec[Nvec_] computes the positive direction vector along the scattering ray \
 associated to dimension vector Nvec. Must be defined for the specific quiver.";
@@ -166,8 +172,11 @@ produced by ConstructMcKayDiagram.";
 
 McKayPlotDiagram::usage = "McKayPlotDiagram[ListRays_,m_] plots the quiver scattering diagram \
 from a ray list produced by ConstructMcKayDiagram. \
-Options: \"RayLength\"->5 (arrow scale factor), \"UseMaTeX\"->True (use MaTeX for labels), \
-\"FontSize\"->11, \"LabelOffset\"->0.5, ImageSize->500.";
+Options: \"RayLength\"->6 (arrow scale factor), \"PlotRange\"->{{-1,1},{-1,1}}, \
+\"LabelFrac\"->0.72 (label position along ray, Figure mode only), \
+\"UseMaTeX\"->True (True: MaTeX-rendered labels; False: ordinary text), \
+\"LabelMode\"->\"Tooltip\" (\"None\"|\"Figure\"|\"Tooltip\"|\"Both\"), \
+\"FontSize\"->11, ImageSize->400.";
 
 
 Begin["`Private`"]
@@ -286,6 +295,12 @@ FOmbToOm[OmbList_] := Module[{n},
 
 (* ===== Generic McKay machinery ===== *)
 
+(* Basis-independent DSZ pairing on physical (electric,magnetic,flavor...) charges,
+   as opposed to McKayDSZ which pairs dimension vectors in a specific quiver's basis
+   via its Mat. Only the first two entries (q,p) enter; any flavor charges are ignored,
+   since they lie in the kernel of the DSZ form. *)
+DSZ[c1_List, c2_List] := c1[[1]] c2[[2]] - c2[[1]] c1[[2]];
+
 McKayRay[Nvec_,{u_,v_},{k1_,k2_},tx_] :=
   {Arrow[{{u,v}+k1 McKayVec[Nvec],{u,v}+k2 McKayVec[Nvec]}],
    Text[tx,{u,v}+(k2+.1)McKayVec[Nvec]]};
@@ -295,13 +310,13 @@ McKayIntersectRays[Nvec_,NNvec_,z_,zz_,m_] :=
   Module[{zi},
     If[McKayDSZ[Nvec,NNvec]!=0,
       zi=McKayIntersectRays[Nvec,NNvec,m];
-      If[(zi-z).McKayVec[Nvec]>=0&&(zi-zz).McKayVec[NNvec]>=0,zi,{}]]];
+      If[(zi-z) . McKayVec[Nvec]>=0&&(zi-zz) . McKayVec[NNvec]>=0,zi,{}]]];
 
 McKayIntersectRaysNoTest[Nvec_,NNvec_,z_,zz_,m_] :=
   Module[{zi},
     zi=Quiet[McKayIntersectRays[Nvec,NNvec,m]];
     If[!FreeQ[zi,DirectedInfinity|Indeterminate],{},
-      If[(zi-z).McKayVec[Nvec]>0&&(zi-zz).McKayVec[NNvec]>0,zi,{}]]];
+      If[(zi-z) . McKayVec[Nvec]>0&&(zi-zz) . McKayVec[NNvec]>0,zi,{}]]];
 
 McKayInitialRays[L_,m_] :=
   Graphics[Table[{Thick,Red,
@@ -512,31 +527,107 @@ McKayTreesFromListRays[ListRays_,Nvec_List,m_] :=
 
 
 
-(* ===== Massive Nf=1 SU(2) SW quiver (3 nodes) ===== *)
-(* Node basis: (electric, magnetic, flavor); simple roots: {0,1},{2,-1},{-1,0} *)
+(* ===== Massless Nf=1 SU(2) SW quiver (3 nodes) ===== *)
+(* Node basis: (electric, magnetic, flavor) = (q,p,S).
+   gamma1 = (0, 1, 1/2)   monopole
+   gamma2 = (1, 0, -1)    quark
+   gamma3 = (1, -1, 1/2)  dyon
+   [Alim-Cecotti-Cordova-Espahbodi-Rastogi-Vafa 1112.3984, eq (4.11),
+   with nodes 2 and 3 swapped relative to their own labeling.]
 
-Mat = {{0,-2,1},{2,0,-1},{-1,1,0}};
+   DSZ pairing only involves (q,p): <(q,p),(q',p')> = q p' - q' p.
+   Note gamma1+gamma3-gamma2 = (0,0,2): zero (q,p), i.e. this combination
+   is in the kernel of the DSZ pairing and carries only flavor charge.
+   For a dimension vector Nvec={n1,n2,n3}, the physical charge is
+     q = n2+n3  (electric),   p = n1-n3  (magnetic).
 
-McKayDSZ[Nvec_,NNvec_] := Tr[{Nvec}.Mat.Transpose[{NNvec}]];
+   Ray parametrization: slice zeta1 - zeta2 + zeta3 = 1, using the SYMMETRIC
+   barycentric embedding (same style as the massive quiver below, three
+   simple-root directions at 120 degrees apart). Absorb the relative minus
+   sign by setting beta1=zeta1, beta2=-zeta2, beta3=zeta3, so the constraint
+   becomes the ordinary barycentric condition beta1+beta2+beta3=1; then use
+     beta1 = 1/3 - u + Sqrt[3] v,  beta2 = 1/3 + 2u,  beta3 = 1/3 - u - Sqrt[3] v
+   (a partition of unity, verified beta1+beta2+beta3=1 identically), giving
+     zeta1 = beta1,  zeta2 = -beta2,  zeta3 = beta3.
+   The ray equation is the wall condition N1 zeta1 + N2 zeta2 + N3 zeta3 = 0:
+     (N1-N2+N3)/3 - (N1+2 N2+N3) u + Sqrt[3](N1-N3) v = 0.
+   This reproduces EXACTLY the massive quiver's equilateral triangle of
+   pairwise intersections {(1/3,0), (-1/6,-1/(2Sqrt[3])), (-1/6,1/(2Sqrt[3]))}
+   -- unsurprising, since it's the identical partition-of-unity formula, just
+   with the n2 slot sign-flipped to absorb -zeta2. As a consistency check,
+   plugging in the kernel/pure-flavor combination (N1,N2,N3)=(1,-1,1) gives
+   RayEq = 1, a nonzero constant with no (u,v) dependence at all: a state
+   with zero (q,p) has no direction to point in, so correctly fails to
+   define a line, rather than needing to be excluded by hand. *)
 
-McKayVec[{n1_,n2_,n3_}] := {Sqrt[3](-n1+n3), -n1+2n2-n3};
+Mat = {{0,-1,-1},{1,0,-1},{1,1,0}};
+
+McKayDSZ[Nvec_,NNvec_] := Tr[{Nvec} . Mat . Transpose[{NNvec}]];
+
+McKayVec[{n1_,n2_,n3_}] := {Sqrt[3](n3-n1), -(n1+2n2+n3)};
 
 McKayRayEq[{n1_,n2_,n3_},{u_,v_}] :=
-  n2(1/3+2u) + n3(1/3-u-Sqrt[3]v) + n1(1/3-u+Sqrt[3]v);
+  (n1-n2+n3)/3 - (n1+2n2+n3) u + Sqrt[3](n1-n3) v;
 
 McKayRayEq[{n1_,n2_,n3_},{u_,v_},m_] := McKayRayEq[{n1,n2,n3},{u,v}];
 
+(* closed-form intersection via Cramer's rule on
+     A1 u + B1 v + C1 = 0 ,  A2 u + B2 v + C2 = 0
+   with Ai=-(ni1+2ni2+ni3), Bi=Sqrt[3](ni1-ni3), Ci=(ni1-ni2+ni3)/3;
+   denominator D = A1 B2 - A2 B1 = -2 Sqrt[3] McKayDSZ[Nvec,NNvec] *)
 McKayIntersectRays[{n1_,n2_,n3_},{nn1_,nn2_,nn3_},m_] :=
-  {(n3(2nn1+nn2)+n2(nn1-nn3)-n1(nn2+2nn3)) /
-     (6(n3(nn1-nn2)+n1(nn2-nn3)+n2(-nn1+nn3))),
-   ((n1+n3)nn2-n2(nn1+nn3)) /
-     (2Sqrt[3](n3(-nn1+nn2)+n2(nn1-nn3)+n1(-nn2+nn3)))};
+  Module[{A1,B1,C1,A2,B2,C2,D},
+    A1 = -(n1+2n2+n3);  B1 = Sqrt[3](n1-n3);  C1 = (n1-n2+n3)/3;
+    A2 = -(nn1+2nn2+nn3); B2 = Sqrt[3](nn1-nn3); C2 = (nn1-nn2+nn3)/3;
+    D = A1 B2 - A2 B1;
+    {(C2 B1 - C1 B2)/D, (A2 C1 - A1 C2)/D}];
 
 InitialRaysOrigin[m_] := {{1/3,0},{-1/6,-1/(2Sqrt[3])},{-1/6,1/(2Sqrt[3])}};
 
 (* Pass-through rules: dimension vectors are used directly as {n1,n2,n3} lists *)
 repChn = {};
 repChO = {};
+
+(* ----- Previous (non-symmetric) version of this same slice, for reference -----
+   Uses zeta1=x, zeta2=y directly as Cartesian coordinates (so zeta3=y-x+1 is
+   solved for from the constraint); mathematically equivalent (same abstract
+   wall-crossing content, just a different, affinely related choice of (x,y)
+   on the same 2-plane of zeta's) but gives a lopsided, non-centered triangle
+   of pairwise intersections (0,0),(0,-1),(1,0) instead of the equilateral one.
+
+McKayVec[{n1_,n2_,n3_}] := {-(n2+n3), n1-n3};
+McKayRayEq[{n1_,n2_,n3_},{u_,v_}] := (n1-n3) u + (n2+n3) v + n3;
+McKayRayEq[{n1_,n2_,n3_},{u_,v_},m_] := McKayRayEq[{n1,n2,n3},{u,v}];
+McKayIntersectRays[{n1_,n2_,n3_},{nn1_,nn2_,nn3_},m_] :=
+  Module[{p1=n1-n3, q1=n2+n3, c1=n3, p2=nn1-nn3, q2=nn2+nn3, c2=nn3, D},
+    D = p1 q2 - p2 q1;
+    {(c2 q1 - c1 q2)/D, (p2 c1 - p1 c2)/D}];
+InitialRaysOrigin[m_] := {{0,0},{0,0},{1/2,-1/2}};
+*)
+
+(* ===== Alternative: Massive Nf=1 SU(2) SW quiver (3 nodes) =====
+   Node basis: (electric, magnetic); simple roots: {0,1},{2,-1},{-1,0}
+   [Alim et al 1112.3984, eq (4.8)-(4.9), related to the massless quiver
+   above by a single mutation at node 3: mu3(Mat) reproduces this Mat
+   exactly, node for node.]
+   To switch back to this quiver: comment out the active block above and
+   uncomment this one (only one set of these definitions can be active).
+
+Mat = {{0,-2,1},{2,0,-1},{-1,1,0}};
+McKayDSZ[Nvec_,NNvec_] := Tr[{Nvec}.Mat.Transpose[{NNvec}]];
+McKayVec[{n1_,n2_,n3_}] := {Sqrt[3](-n1+n3), -n1+2n2-n3};
+McKayRayEq[{n1_,n2_,n3_},{u_,v_}] :=
+  n2(1/3+2u) + n3(1/3-u-Sqrt[3]v) + n1(1/3-u+Sqrt[3]v);
+McKayRayEq[{n1_,n2_,n3_},{u_,v_},m_] := McKayRayEq[{n1,n2,n3},{u,v}];
+McKayIntersectRays[{n1_,n2_,n3_},{nn1_,nn2_,nn3_},m_] :=
+  {(n3(2nn1+nn2)+n2(nn1-nn3)-n1(nn2+2nn3)) /
+     (6(n3(nn1-nn2)+n1(nn2-nn3)+n2(-nn1+nn3))),
+   ((n1+n3)nn2-n2(nn1+nn3)) /
+     (2Sqrt[3](n3(-nn1+nn2)+n2(nn1-nn3)+n1(-nn2+nn3)))};
+InitialRaysOrigin[m_] := {{1/3,0},{-1/6,-1/(2Sqrt[3])},{-1/6,1/(2Sqrt[3])}};
+repChn = {};
+repChO = {};
+*)
 
 
 (* ===== Plotting ===== *)
@@ -572,43 +663,52 @@ Options[McKayPlotDiagram] = {
   "RayLength"  -> 6,
   "PlotRange"  -> {{-1, 1}, {-1, 1}},
   "LabelFrac"  -> 0.72,
-  "UseMaTeX"   -> True,
+  "UseMaTeX"   -> True,          (* True: MaTeX-rendered labels. False: ordinary text *)
+  "LabelMode"  -> "Tooltip",     (* "None" | "Figure" | "Tooltip" | "Both" *)
   "FontSize"   -> 11,
   ImageSize    -> 400};
 
 McKayPlotDiagram[ListRays_, m_, opts : OptionsPattern[]] :=
-  Module[{L, pRange, nLevels, levelColor, makeLabel, dir, tip, seg, labelPos},
+  Module[{L, pRange, nLevels, levelColor, labelContent, showFig, showTip,
+          dir, tip, seg, labelPos, rayPrim},
     L      = OptionValue["RayLength"];
     pRange = OptionValue["PlotRange"];
     nLevels = Max[ListRays[[All, 7]]];
+    showFig = MemberQ[{"Figure", "Both"}, OptionValue["LabelMode"]];
+    showTip = MemberQ[{"Tooltip", "Both"}, OptionValue["LabelMode"]];
 
     levelColor[lev_] := Blend[
       {RGBColor[0.13, 0.47, 0.71], RGBColor[0.17, 0.63, 0.17],
        RGBColor[1.00, 0.50, 0.05], RGBColor[0.84, 0.15, 0.16]},
       (lev - 2)/Max[nLevels - 2, 1]];
 
-    makeLabel[charge_, pos_] := If[TrueQ[OptionValue["UseMaTeX"]],
-      Inset[MaTeX`MaTeX[chargeToTeX[charge], "FontSize" -> OptionValue["FontSize"]], pos],
-      Text[Style[charge /. McKayrep, OptionValue["FontSize"]], pos]];
+    (* single source of label content; used for both figure text and tooltip *)
+    labelContent[charge_] := If[TrueQ[OptionValue["UseMaTeX"]],
+      MaTeX`MaTeX[chargeToTeX[charge], "FontSize" -> OptionValue["FontSize"]],
+      Style[charge /. McKayrep, OptionValue["FontSize"]]];
 
     Graphics[
       Table[
         dir = McKayVec[ListRays[[k, 1]]]/Max[1, GCD @@ ListRays[[k, 1]]];
         tip = ListRays[[k, 2]] + L dir;
-        (* visible segment within PlotRange via slab clip *)
-        seg = rayBoxClip[ListRays[[k, 2]], dir, pRange];
-        labelPos = If[seg === {},
-          ListRays[[k, 2]],  (* fallback: shouldn't occur *)
-          ListRays[[k, 2]] + ((1 - OptionValue["LabelFrac"]) seg[[1]] +
-                                  OptionValue["LabelFrac"]  seg[[2]]) dir];
-        {If[ListRays[[k, 3]] == 0,
-           {GrayLevel[0.30], AbsoluteThickness[1.2],
-            AbsoluteDashing[{5, 3}], Arrowheads[{{0.020, 1}}],
-            Arrow[{ListRays[[k, 2]], tip}]},
-           {levelColor[ListRays[[k, 7]]], AbsoluteThickness[1.2],
-            Arrowheads[{{0.020, 1}}],
-            Arrow[{ListRays[[k, 2]], tip}]}],
-         makeLabel[ListRays[[k, 1]], labelPos]},
+
+        rayPrim = Arrow[{ListRays[[k, 2]], tip}];
+        If[showTip, rayPrim = Tooltip[rayPrim, labelContent[ListRays[[k, 1]]]]];
+
+        Join[
+          {If[ListRays[[k, 3]] == 0,
+             {GrayLevel[0.30], AbsoluteThickness[1.2],
+              AbsoluteDashing[{5, 3}], Arrowheads[{{0.020, 1}}], rayPrim},
+             {levelColor[ListRays[[k, 7]]], AbsoluteThickness[1.2],
+              Arrowheads[{{0.020, 1}}], rayPrim}]},
+          If[showFig,
+            seg = rayBoxClip[ListRays[[k, 2]], dir, pRange];
+            labelPos = If[seg === {},
+              ListRays[[k, 2]],
+              ListRays[[k, 2]] + ((1 - OptionValue["LabelFrac"]) seg[[1]] +
+                                      OptionValue["LabelFrac"]  seg[[2]]) dir];
+            {Inset[labelContent[ListRays[[k, 1]]], labelPos]},
+            {}]],
         {k, Length[ListRays]}],
       PlotRange -> pRange,
       Frame -> True,
